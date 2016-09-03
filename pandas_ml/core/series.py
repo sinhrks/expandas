@@ -19,8 +19,11 @@ class ModelSeries(pd.Series, ModelTransformer):
 
     def _call(self, estimator, method_name, *args, **kwargs):
         method = self._check_attr(estimator, method_name)
-        data = self.values
+
+        # needed for preprocessing
+        data = self.values.reshape(-1, 1)
         result = method(data, *args, **kwargs)
+
         return result
 
     def _wrap_transform(self, transformed, columns=None):
@@ -28,7 +31,8 @@ class ModelSeries(pd.Series, ModelTransformer):
         Wrapper for transform methods
         """
         if len(transformed.shape) == 2:
-            if util._is_1d_harray(transformed):
+            if (util._is_1d_harray(transformed) or
+               util._is_1d_varray(transformed)):
                 transformed = transformed.flatten()
             else:
                 from pandas_ml.core.frame import ModelFrame

@@ -86,17 +86,17 @@ class TestPreprocessing(tm.TestCase):
         s = df['sepal length (cm)']
         self.assertTrue(isinstance(s, pdml.ModelSeries))
         result = s.preprocessing.binarize()
-        expected = pp.binarize(iris.data[:, 0])[0]
+        expected = pp.binarize(iris.data[:, 0].reshape(-1, 1))
 
         self.assertTrue(isinstance(result, pdml.ModelSeries))
-        self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assert_numpy_array_almost_equal(result.values, expected.flatten())
         self.assertEqual(result.name, 'sepal length (cm)')
 
         result = s.preprocessing.binarize(threshold=6)
-        expected = pp.binarize(iris.data[:, 0], threshold=6)[0]
+        expected = pp.binarize(iris.data[:, 0].reshape(-1, 1), threshold=6)
 
         self.assertTrue(isinstance(result, pdml.ModelSeries))
-        self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assert_numpy_array_almost_equal(result.values, expected.flatten())
         self.assertEqual(result.name, 'sepal length (cm)')
 
     def test_normalize(self):
@@ -221,6 +221,9 @@ class TestPreprocessing(tm.TestCase):
         df = pdml.ModelFrame(arr, index=idx, columns=['X'])
         self.assertEqual(len(df.columns), 1)
 
+        # reshape arr to 2d
+        arr = arr.reshape(-1, 1)
+
         if pd.compat.PY3:
             models = ['Binarizer', 'Imputer', 'StandardScaler']
             # MinMaxScalar raises TypeError in ufunc
@@ -259,6 +262,9 @@ class TestPreprocessing(tm.TestCase):
         df = pdml.ModelFrame(arr, index=idx, columns=['X'])
         self.assertEqual(len(df.columns), 1)
 
+        # reshape arr to 2d
+        arr = arr.reshape(-1, 1)
+
         models = ['Binarizer', 'Imputer', 'StandardScaler', 'MinMaxScaler']
         for model in models:
             mod1 = getattr(df.preprocessing, model)()
@@ -289,6 +295,9 @@ class TestPreprocessing(tm.TestCase):
     def test_transform_series_int(self):
         arr = np.array([1, 2, 3, 1, 2, 3, 1, 2, 3])
         s = pdml.ModelSeries(arr, index='a b c d e f g h i'.split(' '))
+
+        # reshape arr to 2d
+        arr = arr.reshape(-1, 1)
 
         if pd.compat.PY3:
             models = ['Binarizer', 'Imputer', 'StandardScaler']
@@ -322,6 +331,9 @@ class TestPreprocessing(tm.TestCase):
         arr = np.array([1, 2, 3, 1, 2, 3, 1, 2, 3], dtype=np.float)
         s = pdml.ModelSeries(arr, index='a b c d e f g h i'.split(' '))
 
+        # reshape arr to 2d
+        arr = arr.reshape(-1, 1)
+
         models = ['Binarizer', 'Imputer', 'StandardScaler', 'MinMaxScaler']
         for model in models:
             mod1 = getattr(s.preprocessing, model)()
@@ -349,7 +361,7 @@ class TestPreprocessing(tm.TestCase):
         arr = np.array([1, np.nan, 3, 2])
         s = pdml.ModelSeries(arr)
 
-        mod1 = s.pp.Imputer(axis=1)
+        mod1 = s.pp.Imputer(axis=0)
         s.fit(mod1)
         result = s.transform(mod1)
 
@@ -358,7 +370,7 @@ class TestPreprocessing(tm.TestCase):
         self.assertTrue(isinstance(result, pdml.ModelSeries))
         self.assert_numpy_array_almost_equal(result.values, expected)
 
-        mod1 = s.pp.Imputer(axis=1)
+        mod1 = s.pp.Imputer(axis=0)
         result = s.fit_transform(mod1)
 
         self.assertTrue(isinstance(result, pdml.ModelSeries))
