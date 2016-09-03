@@ -13,7 +13,7 @@ from pandas_ml.core.series import ModelSeries
 from pandas_ml.core.accessor import _AccessorMethods
 import pandas_ml.skaccessors as skaccessors
 import pandas_ml.smaccessors as smaccessors
-import pandas_ml.seaborn as seaborn
+import pandas_ml.snsaccessors as snsaccessors
 import pandas_ml.xgboost as xgboost
 import pandas_ml.util as util
 
@@ -484,20 +484,6 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
             warnings.warn(msg.format(estimator.__class__.__name__))
         return probability
 
-    def plot_estimator(self):
-        import pandas_ml.core.base as base
-        if isinstance(self.estimator, base._ClassifierMixin):
-            from pandas_ml.plotting import ClassifierPlotter
-            return ClassifierPlotter(self, self.estimator).plot()
-        elif isinstance(self.estimator, base._RegressorMixin):
-            from pandas_ml.plotting import RegressorPlotter
-            return RegressorPlotter(self, self.estimator).plot()
-        elif self.estimator is None:
-            raise ValueError("Unable to plot estimator because it is not set")
-        else:
-            msg = '{0} is not supported'.format(self.estimator.__class__.__name__)
-            raise NotImplementedError(msg)
-
     @Appender(_shared_docs['estimator_methods'] %
               dict(funcname='score', returned='returned : score'))
     def score(self, estimator, *args, **kwargs):
@@ -810,7 +796,7 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
 
     @cache_readonly
     def _seaborn(self):
-        return seaborn.SeabornMethods(self)
+        return snsaccessors.SeabornMethods(self)
 
     @property
     def xgb(self):

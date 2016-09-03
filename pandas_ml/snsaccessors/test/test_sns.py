@@ -64,8 +64,8 @@ class TestSeabornAttrs(SeabornCase):
         self.assertIs(df.sns.desaturate, sns.desaturate)
         self.assertIs(df.sns.saturate, sns.saturate)
         self.assertIs(df.sns.set_hls_values, sns.set_hls_values)
-        self.assertIs(df.sns.ci_to_errsize, sns.ci_to_errsize)
-        self.assertIs(df.sns.axlabel, sns.axlabel)
+        # self.assertIs(df.sns.ci_to_errsize, sns.ci_to_errsize)
+        # self.assertIs(df.sns.axlabel, sns.axlabel)
 
 
 class TestSeabornDistribution(SeabornCase):
