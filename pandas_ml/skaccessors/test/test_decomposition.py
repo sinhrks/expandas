@@ -12,18 +12,28 @@ class TestDecomposition(tm.TestCase):
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
         self.assertIs(df.decomposition.PCA, decomposition.PCA)
-        self.assertIs(df.decomposition.ProjectedGradientNMF, decomposition.ProjectedGradientNMF)
-        self.assertIs(df.decomposition.RandomizedPCA, decomposition.RandomizedPCA)
+        self.assertIs(df.decomposition.IncrementalPCA,
+                      decomposition.IncrementalPCA)
+        self.assertIs(df.decomposition.ProjectedGradientNMF,
+                      decomposition.ProjectedGradientNMF)
+        self.assertIs(df.decomposition.RandomizedPCA,
+                      decomposition.RandomizedPCA)
         self.assertIs(df.decomposition.KernelPCA, decomposition.KernelPCA)
-        self.assertIs(df.decomposition.FactorAnalysis, decomposition.FactorAnalysis)
+        self.assertIs(df.decomposition.FactorAnalysis,
+                      decomposition.FactorAnalysis)
         self.assertIs(df.decomposition.FastICA, decomposition.FastICA)
         self.assertIs(df.decomposition.TruncatedSVD, decomposition.TruncatedSVD)
         self.assertIs(df.decomposition.NMF, decomposition.NMF)
         self.assertIs(df.decomposition.SparsePCA, decomposition.SparsePCA)
-        self.assertIs(df.decomposition.MiniBatchSparsePCA, decomposition.MiniBatchSparsePCA)
+        self.assertIs(df.decomposition.MiniBatchSparsePCA,
+                      decomposition.MiniBatchSparsePCA)
         self.assertIs(df.decomposition.SparseCoder, decomposition.SparseCoder)
-        self.assertIs(df.decomposition.DictionaryLearning, decomposition.DictionaryLearning)
-        self.assertIs(df.decomposition.MiniBatchDictionaryLearning, decomposition.MiniBatchDictionaryLearning)
+        self.assertIs(df.decomposition.DictionaryLearning,
+                      decomposition.DictionaryLearning)
+        self.assertIs(df.decomposition.MiniBatchDictionaryLearning,
+                      decomposition.MiniBatchDictionaryLearning)
+        self.assertIs(df.decomposition.LatentDirichletAllocation,
+                      decomposition.LatentDirichletAllocation)
 
     def test_fastica(self):
         iris = datasets.load_iris()

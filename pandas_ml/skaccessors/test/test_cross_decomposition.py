@@ -33,7 +33,6 @@ class TestCrossDecomposition(tm.TestCase):
         self.assert_numpy_array_almost_equal(mod1.y_weights_[:, 0], mod2.y_weights_[:, 0])
 
         result = df.transform(mod1)
-        print(result)
         expected = mod2.transform(X, Y)
 
         self.assertTrue(isinstance(result, pdml.ModelFrame))
@@ -54,10 +53,10 @@ class TestCrossDecomposition(tm.TestCase):
             X = latents + np.random.normal(size=4 * n).reshape((n, 4))
             Y = latents + np.random.normal(size=4 * n).reshape((n, 4))
 
-        X_train = X[:n / 2]
-        Y_train = Y[:n / 2]
-        X_test = X[n / 2:]
-        Y_test = Y[n / 2:]
+        X_train = X[:n // 2]
+        Y_train = Y[:n // 2]
+        X_test = X[n // 2:]
+        Y_test = Y[n // 2:]
 
         train = pdml.ModelFrame(X_train, target=Y_train)
         test = pdml.ModelFrame(X_test, target=Y_test)

@@ -12,17 +12,30 @@ class TestEnsemble(tm.TestCase):
 
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
-        self.assertIs(df.ensemble.AdaBoostClassifier, ensemble.AdaBoostClassifier)
-        self.assertIs(df.ensemble.AdaBoostRegressor, ensemble.AdaBoostRegressor)
-        self.assertIs(df.ensemble.BaggingClassifier, ensemble.BaggingClassifier)
-        self.assertIs(df.ensemble.BaggingRegressor, ensemble.BaggingRegressor)
-        self.assertIs(df.ensemble.ExtraTreesClassifier, ensemble.ExtraTreesClassifier)
-        self.assertIs(df.ensemble.ExtraTreesRegressor, ensemble.ExtraTreesRegressor)
-        self.assertIs(df.ensemble.GradientBoostingClassifier, ensemble.GradientBoostingClassifier)
-        self.assertIs(df.ensemble.GradientBoostingRegressor, ensemble.GradientBoostingRegressor)
-        self.assertIs(df.ensemble.RandomForestClassifier, ensemble.RandomForestClassifier)
-        self.assertIs(df.ensemble.RandomTreesEmbedding, ensemble.RandomTreesEmbedding)
-        self.assertIs(df.ensemble.RandomForestRegressor, ensemble.RandomForestRegressor)
+        self.assertIs(df.ensemble.AdaBoostClassifier,
+                      ensemble.AdaBoostClassifier)
+        self.assertIs(df.ensemble.AdaBoostRegressor,
+                      ensemble.AdaBoostRegressor)
+        self.assertIs(df.ensemble.BaggingClassifier,
+                      ensemble.BaggingClassifier)
+        self.assertIs(df.ensemble.BaggingRegressor,
+                      ensemble.BaggingRegressor)
+        self.assertIs(df.ensemble.ExtraTreesClassifier,
+                      ensemble.ExtraTreesClassifier)
+        self.assertIs(df.ensemble.ExtraTreesRegressor,
+                      ensemble.ExtraTreesRegressor)
+        self.assertIs(df.ensemble.GradientBoostingClassifier,
+                      ensemble.GradientBoostingClassifier)
+        self.assertIs(df.ensemble.GradientBoostingRegressor,
+                      ensemble.GradientBoostingRegressor)
+        self.assertIs(df.ensemble.RandomForestClassifier,
+                      ensemble.RandomForestClassifier)
+        self.assertIs(df.ensemble.RandomTreesEmbedding,
+                      ensemble.RandomTreesEmbedding)
+        self.assertIs(df.ensemble.RandomForestRegressor,
+                      ensemble.RandomForestRegressor)
+        self.assertIs(df.ensemble.VotingClassifier,
+                      ensemble.VotingClassifier)
 
     def test_Regressions(self):
         iris = datasets.load_iris()

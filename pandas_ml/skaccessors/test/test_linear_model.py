@@ -25,6 +25,7 @@ class TestLinearModel(tm.TestCase):
         self.assertIs(df.linear_model.LassoLarsIC, lm.LassoLarsIC)
         self.assertIs(df.linear_model.LinearRegression, lm.LinearRegression)
         self.assertIs(df.linear_model.LogisticRegression, lm.LogisticRegression)
+        self.assertIs(df.linear_model.LogisticRegressionCV, lm.LogisticRegressionCV)
         self.assertIs(df.linear_model.MultiTaskLasso, lm.MultiTaskLasso)
         self.assertIs(df.linear_model.MultiTaskElasticNet, lm.MultiTaskElasticNet)
         self.assertIs(df.linear_model.MultiTaskLassoCV, lm.MultiTaskLassoCV)
@@ -43,6 +44,7 @@ class TestLinearModel(tm.TestCase):
         self.assertIs(df.linear_model.RidgeCV, lm.RidgeCV)
         self.assertIs(df.linear_model.SGDClassifier, lm.SGDClassifier)
         self.assertIs(df.linear_model.SGDRegressor, lm.SGDRegressor)
+        self.assertIs(df.linear_model.TheilSenRegressor, lm.TheilSenRegressor)
 
     def test_lars_path(self):
         diabetes = datasets.load_diabetes()

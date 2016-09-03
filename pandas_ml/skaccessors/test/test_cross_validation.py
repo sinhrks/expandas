@@ -13,13 +13,20 @@ class TestCrossValidation(tm.TestCase):
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
         self.assertIs(df.cross_validation.KFold, cv.KFold)
-        self.assertIs(df.cross_validation.LeaveOneLabelOut, cv.LeaveOneLabelOut)
+        self.assertIs(df.cross_validation.LabelKFold, cv.LabelKFold)
+        self.assertIs(df.cross_validation.LabelShuffleSplit,
+                      cv.LabelShuffleSplit)
+        self.assertIs(df.cross_validation.LeaveOneLabelOut,
+                      cv.LeaveOneLabelOut)
         self.assertIs(df.cross_validation.LeaveOneOut, cv.LeaveOneOut)
         self.assertIs(df.cross_validation.LeavePLabelOut, cv.LeavePLabelOut)
         self.assertIs(df.cross_validation.LeavePOut, cv.LeavePOut)
+        self.assertIs(df.cross_validation.ShuffleSplit, cv.ShuffleSplit)
         self.assertIs(df.cross_validation.StratifiedKFold, cv.StratifiedKFold)
-        self.assertIs(df.cross_validation.ShuffleSplit, cv.ShuffleSplit)
-        self.assertIs(df.cross_validation.ShuffleSplit, cv.ShuffleSplit)
+
+        # StratifiedShuffleSplit is wrapped by accessor
+        self.assertIsNot(df.cross_validation.StratifiedShuffleSplit,
+                         cv.StratifiedShuffleSplit)
 
     def test_iterate(self):
         df = pdml.ModelFrame(datasets.load_iris())

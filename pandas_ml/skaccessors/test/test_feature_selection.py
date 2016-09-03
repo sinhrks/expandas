@@ -11,15 +11,19 @@ class TestFeatureSelection(tm.TestCase):
 
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
-        self.assertIs(df.feature_selection.GenericUnivariateSelect, fs.GenericUnivariateSelect)
-        self.assertIs(df.feature_selection.SelectPercentile, fs.SelectPercentile)
+        self.assertIs(df.feature_selection.GenericUnivariateSelect,
+                      fs.GenericUnivariateSelect)
+        self.assertIs(df.feature_selection.SelectPercentile,
+                      fs.SelectPercentile)
         self.assertIs(df.feature_selection.SelectKBest, fs.SelectKBest)
         self.assertIs(df.feature_selection.SelectFpr, fs.SelectFpr)
+        self.assertIs(df.feature_selection.SelectFromModel, fs.SelectFromModel)
         self.assertIs(df.feature_selection.SelectFdr, fs.SelectFdr)
         self.assertIs(df.feature_selection.SelectFwe, fs.SelectFwe)
         self.assertIs(df.feature_selection.RFE, fs.RFE)
         self.assertIs(df.feature_selection.RFECV, fs.RFECV)
-        self.assertIs(df.feature_selection.VarianceThreshold, fs.VarianceThreshold)
+        self.assertIs(df.feature_selection.VarianceThreshold,
+                      fs.VarianceThreshold)
 
     def test_chi2(self):
         iris = datasets.load_iris()

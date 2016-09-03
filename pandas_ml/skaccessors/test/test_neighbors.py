@@ -11,11 +11,16 @@ class TestNeighbors(tm.TestCase):
 
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
-        self.assertIs(df.neighbors.NearestNeighbors, neighbors.NearestNeighbors)
-        self.assertIs(df.neighbors.KNeighborsClassifier, neighbors.KNeighborsClassifier)
-        self.assertIs(df.neighbors.RadiusNeighborsClassifier, neighbors.RadiusNeighborsClassifier)
-        self.assertIs(df.neighbors.KNeighborsRegressor, neighbors.KNeighborsRegressor)
-        self.assertIs(df.neighbors.RadiusNeighborsRegressor, neighbors.RadiusNeighborsRegressor)
+        self.assertIs(df.neighbors.NearestNeighbors,
+                      neighbors.NearestNeighbors)
+        self.assertIs(df.neighbors.KNeighborsClassifier,
+                      neighbors.KNeighborsClassifier)
+        self.assertIs(df.neighbors.RadiusNeighborsClassifier,
+                      neighbors.RadiusNeighborsClassifier)
+        self.assertIs(df.neighbors.KNeighborsRegressor,
+                      neighbors.KNeighborsRegressor)
+        self.assertIs(df.neighbors.RadiusNeighborsRegressor,
+                      neighbors.RadiusNeighborsRegressor)
         self.assertIs(df.neighbors.NearestCentroid, neighbors.NearestCentroid)
         self.assertIs(df.neighbors.BallTree, neighbors.BallTree)
         self.assertIs(df.neighbors.KDTree, neighbors.KDTree)

@@ -11,10 +11,12 @@ class TestKernelApproximation(tm.TestCase):
 
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
-        self.assertIs(df.kernel_approximation.AdditiveChi2Sampler, ka.AdditiveChi2Sampler)
+        self.assertIs(df.kernel_approximation.AdditiveChi2Sampler,
+                      ka.AdditiveChi2Sampler)
         self.assertIs(df.kernel_approximation.Nystroem, ka.Nystroem)
         self.assertIs(df.kernel_approximation.RBFSampler, ka.RBFSampler)
-        self.assertIs(df.kernel_approximation.SkewedChi2Sampler, ka.SkewedChi2Sampler)
+        self.assertIs(df.kernel_approximation.SkewedChi2Sampler,
+                      ka.SkewedChi2Sampler)
 
     def test_Classifications(self):
         iris = datasets.load_iris()

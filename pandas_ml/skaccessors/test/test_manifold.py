@@ -12,7 +12,8 @@ class TestManifold(tm.TestCase):
 
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
-        self.assertIs(df.manifold.LocallyLinearEmbedding, manifold.LocallyLinearEmbedding)
+        self.assertIs(df.manifold.LocallyLinearEmbedding,
+                      manifold.LocallyLinearEmbedding)
         self.assertIs(df.manifold.Isomap, manifold.Isomap)
         self.assertIs(df.manifold.MDS, manifold.MDS)
         self.assertIs(df.manifold.SpectralEmbedding, manifold.SpectralEmbedding)

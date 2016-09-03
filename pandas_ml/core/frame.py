@@ -490,6 +490,19 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
         score = self._call(estimator, 'score', *args, **kwargs)
         return score
 
+
+    @property
+    @Appender(_shared_docs['skaccessor_nolink'] %
+              dict(module='calibration'))
+    def calibration(self):
+        return self._calibration
+
+    @cache_readonly
+    def _calibration(self):
+        attrs = ['CalibratedClassifierCV']
+        return _AccessorMethods(self, module_name='sklearn.calibration',
+                                attrs=attrs)
+
     @property
     @Appender(_shared_docs['skaccessor'] % dict(module='cluster'))
     def cluster(self):
@@ -541,6 +554,23 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
     @cache_readonly
     def _decomposition(self):
         return skaccessors.DecompositionMethods(self)
+
+    @property
+    @Appender(_shared_docs['skaccessor_nolink'] %
+              dict(module='discriminant_analysis'))
+    def discriminant_analysis(self):
+        return self._da
+
+    @property
+    @Appender(_shared_docs['skaccessor_nolink'] %
+              dict(module='discriminant_analysis'))
+    def da(self):
+        return self._da
+
+    @cache_readonly
+    def _da(self):
+        return _AccessorMethods(self,
+                                module_name='sklearn.discriminant_analysis')
 
     @property
     @Appender(_shared_docs['skaccessor_nolink'] % dict(module='dummy'))
@@ -618,13 +648,22 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
                                 attrs=attrs)
 
     @property
-    @Appender(_shared_docs['skaccessor_nolink'] % dict(module='lda'))
-    def lda(self):
-        return self._lda
+    @Appender(_shared_docs['skaccessor_nolink'] % dict(module='kernel_ridge'))
+    def kernel_ridge(self):
+        return self._kernel_ridge
 
     @cache_readonly
-    def _lda(self):
-        return _AccessorMethods(self, module_name='sklearn.lda')
+    def _kernel_ridge(self):
+        attrs = ['KernelRidge']
+        return _AccessorMethods(self, module_name='sklearn.kernel_ridge',
+                                attrs=attrs)
+
+    @property
+    @Appender(_shared_docs['skaccessor_nolink'] % dict(module='lda'))
+    def lda(self):
+        msg = '.lda is deprecated. Use .da or .diccriminant_analysis'
+        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        return self._da
 
     @property
     @Appender(_shared_docs['skaccessor'] % dict(module='learning_curve'))
@@ -742,11 +781,9 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
     @property
     @Appender(_shared_docs['skaccessor_nolink'] % dict(module='qda'))
     def qda(self):
-        return self._qda
-
-    @cache_readonly
-    def _qda(self):
-        return _AccessorMethods(self, module_name='sklearn.qda')
+        msg = '.qda is deprecated. Use .da or .diccriminant_analysis'
+        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        return self._da
 
     @property
     @Appender(_shared_docs['skaccessor'] % dict(module='random_projection'))

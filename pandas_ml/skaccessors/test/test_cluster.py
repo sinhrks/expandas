@@ -16,16 +16,18 @@ class TestCluster(tm.TestCase):
         df = pdml.ModelFrame([])
         self.assertIs(df.cluster.AffinityPropagation, cluster.AffinityPropagation)
         self.assertIs(df.cluster.AgglomerativeClustering, cluster.AgglomerativeClustering)
+        self.assertIs(df.cluster.Birch, cluster.Birch)
         self.assertIs(df.cluster.DBSCAN, cluster.DBSCAN)
         self.assertIs(df.cluster.FeatureAgglomeration, cluster.FeatureAgglomeration)
         self.assertIs(df.cluster.KMeans, cluster.KMeans)
         self.assertIs(df.cluster.MiniBatchKMeans, cluster.MiniBatchKMeans)
         self.assertIs(df.cluster.MeanShift, cluster.MeanShift)
         self.assertIs(df.cluster.SpectralClustering, cluster.SpectralClustering)
-        self.assertIs(df.cluster.Ward, cluster.Ward)
 
-        self.assertIs(df.cluster.bicluster.SpectralBiclustering, cluster.bicluster.SpectralBiclustering)
-        self.assertIs(df.cluster.bicluster.SpectralCoclustering, cluster.bicluster.SpectralCoclustering)
+        self.assertIs(df.cluster.bicluster.SpectralBiclustering,
+                      cluster.bicluster.SpectralBiclustering)
+        self.assertIs(df.cluster.bicluster.SpectralCoclustering,
+                      cluster.bicluster.SpectralCoclustering)
 
     def test_estimate_bandwidth(self):
         iris = datasets.load_iris()
