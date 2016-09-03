@@ -20,7 +20,7 @@ class TestIsotonic(tm.TestCase):
 
         result = df.isotonic.isotonic_regression()
         expected = isotonic.isotonic_regression(data)
-        self.assertTrue(isinstance(result, pdml.ModelSeries))
+        self.assertIsInstance(result, pdml.ModelSeries)
         self.assert_index_equal(result.index, df.index)
         self.assert_numpy_array_equal(result.values, expected)
 
@@ -60,7 +60,7 @@ class TestIsotonic(tm.TestCase):
         # result = df.predict(mod1)
         # expected = mod2.predict(iris.data)
 
-        # self.assertTrue(isinstance(result, pdml.ModelSeries))
+        # self.assertIsInstance(result, pdml.ModelSeries)
         # self.assert_numpy_array_almost_equal(result.values, expected)
         """
 

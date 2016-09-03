@@ -29,7 +29,7 @@ class TestSemiSupervised(tm.TestCase):
             result = df.predict(mod1)
             expected = mod2.predict(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelSeries))
+            self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
 

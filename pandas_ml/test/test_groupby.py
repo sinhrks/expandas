@@ -19,17 +19,17 @@ class TestModelFrameGroupBy(tm.TestCase):
         s = pd.Series([1, 2, 3, 4])
 
         mdf = pdml.ModelFrame(df, target=s)
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
 
         grouped = mdf.groupby('A')
-        self.assertTrue(isinstance(grouped, pdml.core.groupby.ModelFrameGroupBy))
+        self.assertIsInstance(grouped, pdml.core.groupby.ModelFrameGroupBy)
 
         df = grouped.get_group(1)
-        self.assertTrue(isinstance(df, pdml.ModelFrame))
+        self.assertIsInstance(df, pdml.ModelFrame)
 
         expected = pd.Series([1, 3], index=[0, 2], name='.target')
         self.assert_series_equal(df.target, expected)
-        self.assertTrue(isinstance(df.target, pdml.ModelSeries))
+        self.assertIsInstance(df.target, pdml.ModelSeries)
 
     def test_transform_standard(self):
         # check pandas standard transform works
@@ -46,21 +46,21 @@ class TestModelFrameGroupBy(tm.TestCase):
         df = pdml.ModelFrame(datasets.load_iris())
         df['sepal length (cm)'] = df['sepal length (cm)'].pp.binarize(threshold=5.8)
         grouped = df.groupby('sepal length (cm)')
-        self.assertTrue(isinstance(grouped, pdml.core.groupby.ModelFrameGroupBy))
+        self.assertIsInstance(grouped, pdml.core.groupby.ModelFrameGroupBy)
         for name, group in grouped:
-            self.assertTrue(isinstance(group, pdml.ModelFrame))
+            self.assertIsInstance(group, pdml.ModelFrame)
             self.assertEqual(group.target_name, '.target')
             self.assertTrue(group.has_target())
             self.assert_index_equal(group.columns, df.columns)
         svc = df.svm.SVC(random_state=self.random_state)
         gclf = grouped.fit(svc)
-        self.assertTrue(isinstance(gclf, pdml.core.groupby.GroupedEstimator))
+        self.assertIsInstance(gclf, pdml.core.groupby.GroupedEstimator)
         self.assertEqual(len(gclf.groups), 2)
 
         results = grouped.predict(gclf)
-        self.assertTrue(isinstance(results, pdml.core.groupby.ModelSeriesGroupBy))
-        self.assertTrue(isinstance(results.get_group(0), pdml.ModelSeries))
-        self.assertTrue(isinstance(results.get_group(1), pdml.ModelSeries))
+        self.assertIsInstance(results, pdml.core.groupby.ModelSeriesGroupBy)
+        self.assertIsInstance(results.get_group(0), pdml.ModelSeries)
+        self.assertIsInstance(results.get_group(1), pdml.ModelSeries)
         # test indexes are preserved
         self.assert_index_equal(results.get_group(0).index, grouped.get_group(0).index)
         self.assert_index_equal(results.get_group(1).index, grouped.get_group(1).index)
@@ -83,23 +83,23 @@ class TestModelFrameGroupBy(tm.TestCase):
     def test_grouped_estimator_PCA(self):
         df = pdml.ModelFrame(datasets.load_iris())
         grouped = df.groupby('.target')
-        self.assertTrue(isinstance(grouped, pdml.core.groupby.ModelFrameGroupBy))
+        self.assertIsInstance(grouped, pdml.core.groupby.ModelFrameGroupBy)
         for name, group in grouped:
-            self.assertTrue(isinstance(group, pdml.ModelFrame))
+            self.assertIsInstance(group, pdml.ModelFrame)
             self.assertEqual(group.target_name, '.target')
             self.assertTrue(group.has_target())
             self.assert_index_equal(group.columns, df.columns)
         pca = df.decomposition.PCA()
         gclf = grouped.fit(pca)
-        self.assertTrue(isinstance(gclf, pdml.core.groupby.GroupedEstimator))
+        self.assertIsInstance(gclf, pdml.core.groupby.GroupedEstimator)
         self.assertEqual(len(gclf.groups), 3)
 
         results = grouped.transform(gclf)
-        self.assertTrue(isinstance(results, pdml.core.groupby.ModelFrameGroupBy))
+        self.assertIsInstance(results, pdml.core.groupby.ModelFrameGroupBy)
 
-        self.assertTrue(isinstance(results.get_group(0), pdml.ModelFrame))
-        self.assertTrue(isinstance(results.get_group(1), pdml.ModelFrame))
-        self.assertTrue(isinstance(results.get_group(2), pdml.ModelFrame))
+        self.assertIsInstance(results.get_group(0), pdml.ModelFrame)
+        self.assertIsInstance(results.get_group(1), pdml.ModelFrame)
+        self.assertIsInstance(results.get_group(2), pdml.ModelFrame)
         # test indexes are preserved
         self.assert_index_equal(results.get_group(0).index, grouped.get_group(0).index)
         self.assert_index_equal(results.get_group(1).index, grouped.get_group(1).index)
@@ -119,13 +119,13 @@ class TestModelSeriesGroupBy(tm.TestCase):
 
     def test_series_groupby(self):
         s = pdml.ModelSeries([1, 2, 1, 2], name='X')
-        self.assertTrue(isinstance(s, pdml.ModelSeries))
+        self.assertIsInstance(s, pdml.ModelSeries)
 
         grouped = s.groupby([1, 1, 1, 2])
-        self.assertTrue(isinstance(grouped, pdml.core.groupby.ModelSeriesGroupBy))
+        self.assertIsInstance(grouped, pdml.core.groupby.ModelSeriesGroupBy)
 
         gs = grouped.get_group(1)
-        self.assertTrue(isinstance(gs, pdml.ModelSeries))
+        self.assertIsInstance(gs, pdml.ModelSeries)
         expected = pd.Series([1, 2, 1], index=[0, 1, 2], name='X')
         self.assert_series_equal(gs, expected)
         self.assertEqual(gs.name, 'X')

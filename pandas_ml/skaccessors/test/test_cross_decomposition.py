@@ -29,13 +29,15 @@ class TestCrossDecomposition(tm.TestCase):
         mod2.fit(X, Y)
 
         # 2nd cols are different on travis-CI
-        self.assert_numpy_array_almost_equal(mod1.x_weights_[:, 0], mod2.x_weights_[:, 0])
-        self.assert_numpy_array_almost_equal(mod1.y_weights_[:, 0], mod2.y_weights_[:, 0])
+        self.assert_numpy_array_almost_equal(mod1.x_weights_[:, 0],
+                                             mod2.x_weights_[:, 0])
+        self.assert_numpy_array_almost_equal(mod1.y_weights_[:, 0],
+                                             mod2.y_weights_[:, 0])
 
         result = df.transform(mod1)
         expected = mod2.transform(X, Y)
 
-        self.assertTrue(isinstance(result, pdml.ModelFrame))
+        self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result.data.values.reshape(4),
                                              expected[0].reshape(4))
         self.assert_numpy_array_almost_equal(result.target.values.reshape(4),
@@ -82,8 +84,10 @@ class TestCrossDecomposition(tm.TestCase):
             mod2.fit(X_train, Y_train)
 
             # 2nd cols are different on travis-CI
-            self.assert_numpy_array_almost_equal(mod1.x_weights_[:, 0], mod2.x_weights_[:, 0])
-            self.assert_numpy_array_almost_equal(mod1.y_weights_[:, 0], mod2.y_weights_[:, 0])
+            self.assert_numpy_array_almost_equal(mod1.x_weights_[:, 0],
+                                                 mod2.x_weights_[:, 0])
+            self.assert_numpy_array_almost_equal(mod1.y_weights_[:, 0],
+                                                 mod2.y_weights_[:, 0])
 
             result_tr = train.transform(mod1)
             result_test = test.transform(mod1)
@@ -91,12 +95,16 @@ class TestCrossDecomposition(tm.TestCase):
             expected_tr = mod2.transform(X_train, Y_train)
             expected_test = mod2.transform(X_test, Y_test)
 
-            self.assertTrue(isinstance(result_tr, pdml.ModelFrame))
-            self.assertTrue(isinstance(result_test, pdml.ModelFrame))
-            self.assert_numpy_array_almost_equal(result_tr.data.values[:, 0], expected_tr[0][:, 0])
-            self.assert_numpy_array_almost_equal(result_tr.target.values[:, 0], expected_tr[1][:, 0])
-            self.assert_numpy_array_almost_equal(result_test.data.values[:, 0], expected_test[0][:, 0])
-            self.assert_numpy_array_almost_equal(result_test.target.values[:, 0], expected_test[1][:, 0])
+            self.assertIsInstance(result_tr, pdml.ModelFrame)
+            self.assertIsInstance(result_test, pdml.ModelFrame)
+            self.assert_numpy_array_almost_equal(result_tr.data.values[:, 0],
+                                                 expected_tr[0][:, 0])
+            self.assert_numpy_array_almost_equal(result_tr.target.values[:, 0],
+                                                 expected_tr[1][:, 0])
+            self.assert_numpy_array_almost_equal(result_test.data.values[:, 0],
+                                                 expected_test[0][:, 0])
+            self.assert_numpy_array_almost_equal(result_test.target.values[:, 0],
+                                                 expected_test[1][:, 0])
 
     def test_PLSRegression(self):
 
@@ -117,7 +125,7 @@ class TestCrossDecomposition(tm.TestCase):
         pls2.fit(X, Y)
         expected = pls2.predict(X)
 
-        self.assertTrue(isinstance(result, pdml.ModelFrame))
+        self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result.values, expected)
 
 if __name__ == '__main__':

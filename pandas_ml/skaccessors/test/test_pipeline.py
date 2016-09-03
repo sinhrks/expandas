@@ -33,7 +33,7 @@ class TestPipeline(tm.TestCase):
 
         result = df.predict(pipe1)
         expected = pipe2.predict(iris.data)
-        self.assertTrue(isinstance(result, pdml.ModelSeries))
+        self.assertIsInstance(result, pdml.ModelSeries)
         self.assert_numpy_array_almost_equal(result.values, expected)
 
 

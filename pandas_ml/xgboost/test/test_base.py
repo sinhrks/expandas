@@ -33,7 +33,7 @@ class TestXGBoost(tm.TestCase):
             result = df.predict(mod1)
             expected = mod2.predict(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelSeries))
+            self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_XGBRegressor(self):
@@ -57,10 +57,10 @@ class TestXGBoost(tm.TestCase):
             result = df.predict(mod1)
             expected = mod2.predict(X)
 
-            self.assertTrue(isinstance(result, pdml.ModelSeries))
+            self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
-            self.assertTrue(isinstance(df.predicted, pdml.ModelSeries))
+            self.assertIsInstance(df.predicted, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(df.predicted.values, expected)
 
     def test_grid_search(self):
@@ -79,7 +79,7 @@ class TestXGBoost(tm.TestCase):
                                  'max_depth': [3, 3, 4, 4],
                                  'n_estimators': [50, 100, 50, 100]},
                                 columns=['mean', 'std', 'max_depth', 'n_estimators'])
-        self.assertTrue(isinstance(result, pdml.ModelFrame))
+        self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_frame_equal(result, expected)
 
     def test_plotting(self):
@@ -108,17 +108,18 @@ class TestXGBoost(tm.TestCase):
         from graphviz import Digraph
 
         ax = df.xgb.plot_importance()
-        assert isinstance(ax, Axes)
+        self.assertIsInstance(ax, Axes)
         assert ax.get_title() == 'Feature importance'
         assert ax.get_xlabel() == 'F score'
         assert ax.get_ylabel() == 'Features'
         assert len(ax.patches) == 4
 
         g = df.xgb.to_graphviz(num_trees=0)
-        assert isinstance(g, Digraph)
+        self.assertIsInstance(g, Digraph)
 
         ax = df.xgb.plot_tree(num_trees=0)
-        assert isinstance(ax, Axes)
+        self.assertIsInstance(ax, Axes)
+
 
 if __name__ == '__main__':
     import nose

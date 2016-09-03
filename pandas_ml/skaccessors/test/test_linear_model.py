@@ -56,7 +56,7 @@ class TestLinearModel(tm.TestCase):
         self.assertEqual(len(result), 3)
         self.assert_numpy_array_equal(result[0], expected[0])
         self.assert_numpy_array_equal(result[1], expected[1])
-        self.assertTrue(isinstance(result[2], pdml.ModelFrame))
+        self.assertIsInstance(result[2], pdml.ModelFrame)
         self.assert_index_equal(result[2].index, df.data.columns)
         self.assert_numpy_array_equal(result[2].values, expected[2])
 
@@ -69,7 +69,7 @@ class TestLinearModel(tm.TestCase):
 
         self.assertEqual(len(result), 3)
         self.assert_numpy_array_equal(result[0], expected[0])
-        self.assertTrue(isinstance(result[1], pdml.ModelFrame))
+        self.assertIsInstance(result[1], pdml.ModelFrame)
         self.assert_index_equal(result[1].index, df.data.columns)
         self.assert_numpy_array_equal(result[1].values, expected[1])
         self.assert_numpy_array_equal(result[2], expected[2])
@@ -77,7 +77,7 @@ class TestLinearModel(tm.TestCase):
         result = df.linear_model.lasso_path(return_models=True)
         expected = lm.lasso_path(diabetes.data, diabetes.target, return_models=True)
         self.assertEqual(len(result), len(expected))
-        self.assertTrue(isinstance(result, tuple))
+        self.assertIsInstance(result, tuple)
         self.assert_numpy_array_equal(result[0], result[0])
         self.assert_numpy_array_equal(result[1], result[1])
         self.assert_numpy_array_equal(result[2], result[2])
@@ -93,7 +93,7 @@ class TestLinearModel(tm.TestCase):
         self.assertEqual(len(result), 2)
         self.assert_numpy_array_equal(result[0], expected[0])
 
-        self.assertTrue(isinstance(result[1], pdml.ModelFrame))
+        self.assertIsInstance(result[1], pdml.ModelFrame)
         self.assert_index_equal(result[1].index, df.data.columns)
         self.assert_numpy_array_equal(result[1].values, expected[1])
 
@@ -135,7 +135,7 @@ class TestLinearModel(tm.TestCase):
             result = df.predict(mod1)
             expected = mod2.predict(diabetes.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelSeries))
+            self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_Lasso_Path(self):
@@ -194,7 +194,7 @@ class TestLinearModel(tm.TestCase):
 
             expected = mod1.predict(X)
             predicted = df.predict(mod2)
-            self.assertTrue(isinstance(predicted, pdml.ModelSeries))
+            self.assertIsInstance(predicted, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(predicted.values, expected)
 
     def test_SGD(self):
@@ -208,7 +208,7 @@ class TestLinearModel(tm.TestCase):
 
         expected = clf1.predict(iris.data)
         predicted = df.predict(clf2)
-        self.assertTrue(isinstance(predicted, pdml.ModelSeries))
+        self.assertIsInstance(predicted, pdml.ModelSeries)
         self.assert_numpy_array_almost_equal(predicted.values, expected)
 
     def test_Perceptron(self):
@@ -221,7 +221,7 @@ class TestLinearModel(tm.TestCase):
 
         expected = clf1.predict(iris.data)
         predicted = df.predict(clf2)
-        self.assertTrue(isinstance(predicted, pdml.ModelSeries))
+        self.assertIsInstance(predicted, pdml.ModelSeries)
         self.assert_numpy_array_almost_equal(predicted.values, expected)
 
 

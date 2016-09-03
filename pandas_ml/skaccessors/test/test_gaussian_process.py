@@ -69,10 +69,10 @@ class TestGaussianProcess(tm.TestCase):
         y_result, sigma2_result = tdf.predict(g1, eval_MSE=True)
         y_expected, sigma2_expected = g2.predict(x, eval_MSE=True)
 
-        self.assertTrue(isinstance(y_result, pdml.ModelSeries))
+        self.assertIsInstance(y_result, pdml.ModelSeries)
         self.assert_index_equal(y_result.index, tdf.index)
 
-        self.assertTrue(isinstance(sigma2_result, pdml.ModelSeries))
+        self.assertIsInstance(sigma2_result, pdml.ModelSeries)
         self.assert_index_equal(sigma2_result.index, tdf.index)
 
         self.assert_numpy_array_almost_equal(y_result.values, y_expected)
@@ -82,7 +82,7 @@ class TestGaussianProcess(tm.TestCase):
         y_result = tdf.predict(g1)
         y_expected = g2.predict(x)
 
-        self.assertTrue(isinstance(y_result, pdml.ModelSeries))
+        self.assertIsInstance(y_result, pdml.ModelSeries)
         self.assert_index_equal(y_result.index, tdf.index)
 
         self.assert_numpy_array_almost_equal(y_result, y_expected)

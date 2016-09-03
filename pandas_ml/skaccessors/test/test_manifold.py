@@ -27,7 +27,7 @@ class TestManifold(tm.TestCase):
         expected = manifold.locally_linear_embedding(iris.data, 3, 3)
 
         self.assertEqual(len(result), 2)
-        self.assertTrue(isinstance(result[0], pdml.ModelFrame))
+        self.assertIsInstance(result[0], pdml.ModelFrame)
         self.assert_index_equal(result[0].index, df.index)
         self.assert_numpy_array_equal(result[0].values, expected[0])
 
@@ -44,7 +44,7 @@ class TestManifold(tm.TestCase):
         result = df.manifold.spectral_embedding(random_state=self.random_state)
         expected = manifold.spectral_embedding(m, random_state=self.random_state)
 
-        self.assertTrue(isinstance(result, pdml.ModelFrame))
+        self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_index_equal(result.index, df.index)
         # signs can be inversed
         self.assert_numpy_array_almost_equal(np.abs(result.data.values),
@@ -65,7 +65,7 @@ class TestManifold(tm.TestCase):
             result = df.transform(mod1)
             expected = mod2.transform(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelFrame))
+            self.assertIsInstance(result, pdml.ModelFrame)
             self.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.data.values, expected)
 
@@ -81,7 +81,7 @@ class TestManifold(tm.TestCase):
             result = df.fit_transform(mod1)
             expected = mod2.fit_transform(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelFrame))
+            self.assertIsInstance(result, pdml.ModelFrame)
             self.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.data.values, expected)
 
@@ -99,7 +99,7 @@ class TestManifold(tm.TestCase):
             np.random.seed(1)
             expected = mod2.fit_transform(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelFrame))
+            self.assertIsInstance(result, pdml.ModelFrame)
             self.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.data.shape, expected.shape)
 

@@ -18,7 +18,7 @@ class TestModelFrame(tm.TestCase):
         mdf = pdml.ModelFrame(df, target=s)
 
         result = mdf.transform('A ~ B + C')
-        self.assertTrue(isinstance(result, pdml.ModelFrame))
+        self.assertIsInstance(result, pdml.ModelFrame)
         self.assertEqual(result.shape, (3, 4))
         self.assert_index_equal(result.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(result.columns, pd.Index(['A', 'Intercept', 'B', 'C']))
@@ -45,7 +45,7 @@ class TestModelFrame(tm.TestCase):
         mdf = pdml.ModelFrame(df, target=s)
 
         result = mdf.transform('B + C')
-        self.assertTrue(isinstance(result, pdml.ModelFrame))
+        self.assertIsInstance(result, pdml.ModelFrame)
         self.assertEqual(result.shape, (3, 3))
         self.assert_index_equal(result.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(result.columns, pd.Index(['Intercept', 'B', 'C']))

@@ -77,7 +77,7 @@ class TestFeatureSelection(tm.TestCase):
 
             result = df.transform(mod1)
             expected = mod2.transform(diabetes.data)
-            self.assertTrue(isinstance(result, pdml.ModelFrame))
+            self.assertIsInstance(result, pdml.ModelFrame)
             self.assert_numpy_array_almost_equal(result.data.values, expected)
 
 

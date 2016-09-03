@@ -35,8 +35,8 @@ class TestCrossValidation(tm.TestCase):
         df = pdml.ModelFrame(datasets.load_iris())
         kf = df.cross_validation.KFold(4, n_folds=2, random_state=self.random_state)
         for train_df, test_df in df.cross_validation.iterate(kf):
-            self.assertTrue(isinstance(train_df, pdml.ModelFrame))
-            self.assertTrue(isinstance(test_df, pdml.ModelFrame))
+            self.assertIsInstance(train_df, pdml.ModelFrame)
+            self.assertIsInstance(test_df, pdml.ModelFrame)
             self.assert_index_equal(df.columns, train_df.columns)
             self.assert_index_equal(df.columns, test_df.columns)
 
@@ -59,18 +59,23 @@ class TestCrossValidation(tm.TestCase):
 
         folded = [f for f in df.cross_validation.iterate(kf, reset_index=True)]
         self.assertEqual(len(folded), 3)
-        self.assert_frame_equal(folded[0][0], df.iloc[3:, :].reset_index(drop=True))
-        self.assert_frame_equal(folded[0][1], df.iloc[:3, :].reset_index(drop=True))
+        self.assert_frame_equal(folded[0][0],
+                                df.iloc[3:, :].reset_index(drop=True))
+        self.assert_frame_equal(folded[0][1],
+                                df.iloc[:3, :].reset_index(drop=True))
         self.assert_frame_equal(folded[1][0],
                                 df.iloc[[0, 1, 2, 6, 7], :].reset_index(drop=True))
-        self.assert_frame_equal(folded[1][1], df.iloc[3:6, :].reset_index(drop=True))
-        self.assert_frame_equal(folded[2][0], df.iloc[:6, :].reset_index(drop=True))
-        self.assert_frame_equal(folded[2][1], df.iloc[6:, :].reset_index(drop=True))
+        self.assert_frame_equal(folded[1][1],
+                                df.iloc[3:6, :].reset_index(drop=True))
+        self.assert_frame_equal(folded[2][0],
+                                df.iloc[:6, :].reset_index(drop=True))
+        self.assert_frame_equal(folded[2][1],
+                                df.iloc[6:, :].reset_index(drop=True))
 
     def test_train_test_split(self):
 
         df = pdml.ModelFrame(datasets.load_digits())
-        self.assertTrue(isinstance(df, pdml.ModelFrame))
+        self.assertIsInstance(df, pdml.ModelFrame)
 
         train_df, test_df = df.cross_validation.train_test_split()
         self.assert_index_equal(df.columns, train_df.columns)
@@ -95,7 +100,7 @@ class TestCrossValidation(tm.TestCase):
     def test_train_test_split_abbr(self):
 
         df = pdml.ModelFrame(datasets.load_digits())
-        self.assertTrue(isinstance(df, pdml.ModelFrame))
+        self.assertIsInstance(df, pdml.ModelFrame)
 
         train_df, test_df = df.crv.train_test_split()
         self.assert_index_equal(df.columns, train_df.columns)
@@ -174,7 +179,7 @@ class TestCrossValidation(tm.TestCase):
 
         df = pdml.ModelFrame(iris)
         result = df.cross_validation.check_cv(cv=5)
-        self.assertTrue(isinstance(result, cv.KFold))
+        self.assertIsInstance(result, cv.KFold)
 
     def test_StratifiedShuffleSplit(self):
         iris = datasets.load_iris()
@@ -189,8 +194,8 @@ class TestCrossValidation(tm.TestCase):
         with tm.assert_produces_warning(UserWarning):
             # StratifiedShuffleSplit is not a subclass of PartitionIterator
             for train_df, test_df in df.cross_validation.iterate(sf1):
-                self.assertTrue(isinstance(train_df, pdml.ModelFrame))
-                self.assertTrue(isinstance(test_df, pdml.ModelFrame))
+                self.assertIsInstance(train_df, pdml.ModelFrame)
+                self.assertIsInstance(test_df, pdml.ModelFrame)
                 self.assert_index_equal(df.columns, train_df.columns)
                 self.assert_index_equal(df.columns, test_df.columns)
 

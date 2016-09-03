@@ -32,10 +32,10 @@ class TestTree(tm.TestCase):
             result = df.predict(mod1)
             expected = mod2.predict(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelSeries))
+            self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
-            self.assertTrue(isinstance(df.predicted, pdml.ModelSeries))
+            self.assertIsInstance(df.predicted, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(df.predicted.values, expected)
 
     def test_Classifications(self):
@@ -53,7 +53,7 @@ class TestTree(tm.TestCase):
             result = df.predict(mod1)
             expected = mod2.predict(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelSeries))
+            self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
 

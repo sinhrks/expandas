@@ -54,7 +54,7 @@ class TestEnsemble(tm.TestCase):
             result = df.predict(mod1)
             expected = mod2.predict(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelSeries))
+            self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_Classifications(self):
@@ -72,7 +72,7 @@ class TestEnsemble(tm.TestCase):
             result = df.predict(mod1)
             expected = mod2.predict(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelSeries))
+            self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_partial_dependence(self):
@@ -103,9 +103,9 @@ class TestEnsemble(tm.TestCase):
         fig, axes = df.ensemble.partial_dependence.plot_partial_dependence(clf, [0, (0, 1)])
 
         import matplotlib
-        self.assertTrue(isinstance(fig, matplotlib.figure.Figure))
+        self.assertIsInstance(fig, matplotlib.figure.Figure)
         self.assertTrue(len(axes), 2)
-        self.assertTrue(isinstance(axes[0], matplotlib.axes.Axes))
+        self.assertIsInstance(axes[0], matplotlib.axes.Axes)
         """
 
     def test_GradientBoostingRegression(self):
@@ -122,7 +122,7 @@ class TestEnsemble(tm.TestCase):
 
         expected = clf1.predict(boston.data)
         predicted = df.predict(clf2)
-        self.assertTrue(isinstance(predicted, pdml.ModelSeries))
+        self.assertIsInstance(predicted, pdml.ModelSeries)
         self.assert_numpy_array_almost_equal(predicted.values, expected)
 
         self.assertAlmostEqual(df.metrics.mean_squared_error(),

@@ -21,13 +21,13 @@ class TestModelFrame(tm.TestCase):
     def test_frame_instance(self):
 
         df = pdml.ModelFrame(datasets.load_digits())
-        self.assertTrue(isinstance(df, pdml.ModelFrame))
+        self.assertIsInstance(df, pdml.ModelFrame)
 
         train_df, test_df = df.cross_validation.train_test_split()
 
-        self.assertTrue(isinstance(train_df, pdml.ModelFrame))
-        self.assertTrue(isinstance(test_df, pdml.ModelFrame))
-        self.assertTrue(isinstance(train_df.iloc[:, 2:3], pdml.ModelFrame))
+        self.assertIsInstance(train_df, pdml.ModelFrame)
+        self.assertIsInstance(test_df, pdml.ModelFrame)
+        self.assertIsInstance(train_df.iloc[:, 2:3], pdml.ModelFrame)
 
     def test_frame_init_df_series(self):
         # initialization by dataframe and no-named series
@@ -39,7 +39,7 @@ class TestModelFrame(tm.TestCase):
         s = pd.Series([1, 2, 3], index=['a', 'b', 'c'], name='.target')
 
         mdf = pdml.ModelFrame(df, target=s)
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 4))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['.target', 'A', 'B', 'C']))
@@ -54,7 +54,7 @@ class TestModelFrame(tm.TestCase):
 
         s = pd.Series([1, 2, 3], index=['a', 'b', 'c'], name='XXX')
         mdf = pdml.ModelFrame(df, target=s)
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 4))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['XXX', 'A', 'B', 'C']))
@@ -72,7 +72,7 @@ class TestModelFrame(tm.TestCase):
                           columns=['A', 'B', 'C'])
 
         mdf = pdml.ModelFrame(df, target='A')
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 3))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['A', 'B', 'C']))
@@ -94,7 +94,7 @@ class TestModelFrame(tm.TestCase):
                           columns=['A', 'B', 'C'])
         s = [1, 2, 3]
         mdf = pdml.ModelFrame(df, target=s)
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 4))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['.target', 'A', 'B', 'C']))
@@ -109,7 +109,7 @@ class TestModelFrame(tm.TestCase):
               'C': [7, 8, 9]}
         s = [1, 2, 3]
         mdf = pdml.ModelFrame(df, target=s)
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 4))
         self.assert_index_equal(mdf.index, pd.Index([0, 1, 2]))
         self.assert_index_equal(mdf.columns, pd.Index(['.target', 'A', 'B', 'C']))
@@ -121,7 +121,7 @@ class TestModelFrame(tm.TestCase):
         self.assertEqual(mdf.target_name, '.target')
 
         mdf = pdml.ModelFrame(df, target='A')
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 3))
         self.assert_index_equal(mdf.index, pd.Index([0, 1, 2]))
         self.assert_index_equal(mdf.columns, pd.Index(['A', 'B', 'C']))
@@ -136,7 +136,7 @@ class TestModelFrame(tm.TestCase):
                                'C': [7, 8, 9]},
                               index=['a', 'b', 'c'],
                               columns=['A', 'B', 'C'])
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 3))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['A', 'B', 'C']))
@@ -149,7 +149,7 @@ class TestModelFrame(tm.TestCase):
                                         [7, 8, 9]]), target=s,
                               index=['a', 'b', 'c'], columns=['A', 'B', 'C'])
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 4))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['.target', 'A', 'B', 'C']))
@@ -168,7 +168,7 @@ class TestModelFrame(tm.TestCase):
         target = pd.Series([9, 8, 7], name='X', index=['a', 'b', 'c'])
         mdf = pdml.ModelFrame(df, target=target)
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 4))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['X', 'A', 'B', 'C']))
@@ -187,7 +187,7 @@ class TestModelFrame(tm.TestCase):
                           columns=['A', 'B', 'C'])
 
         mdf = pdml.ModelFrame(df, target=None)
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 3))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['A', 'B', 'C']))
@@ -232,7 +232,7 @@ class TestModelFrame(tm.TestCase):
         s = pd.Series([1, 2, 3], index=['a', 'b', 'c'], name='.target')
         mdf = pdml.ModelFrame(None, target=s)
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 1))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['.target']))
@@ -250,12 +250,12 @@ class TestModelFrame(tm.TestCase):
         self.assertEqual(df.columns.tolist(), expected)
 
         s = df['.target']
-        self.assertTrue(isinstance(s, pdml.ModelSeries))
+        self.assertIsInstance(s, pdml.ModelSeries)
         s = s[1:5]
-        self.assertTrue(isinstance(s, pdml.ModelSeries))
+        self.assertIsInstance(s, pdml.ModelSeries)
 
         s = df[['.target']]
-        self.assertTrue(isinstance(s, pdml.ModelFrame))
+        self.assertIsInstance(s, pdml.ModelFrame)
 
     def test_frame_data_proparty(self):
         df = pd.DataFrame({'A': [1, 2, 3],
@@ -266,7 +266,7 @@ class TestModelFrame(tm.TestCase):
         s = pd.Series([1, 2, 3], index=['a', 'b', 'c'], name='.target')
 
         mdf = pdml.ModelFrame(df, target=s)
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
 
         new = pd.DataFrame({'X': [1, 2, 3],
                             'Y': [4, 5, 6]},
@@ -275,7 +275,7 @@ class TestModelFrame(tm.TestCase):
         # set data property
         mdf.data = new
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 3))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['.target', 'X', 'Y']))
@@ -292,7 +292,7 @@ class TestModelFrame(tm.TestCase):
         # set data property
         mdf.data = new
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 3))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['.target', 'M', 'N']))
@@ -317,7 +317,7 @@ class TestModelFrame(tm.TestCase):
 
         # set delete property
         del mdf.data
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 1))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['.target']))
@@ -367,7 +367,7 @@ class TestModelFrame(tm.TestCase):
         # set target property
         mdf.target = new
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 4))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['.target', 'A', 'B', 'C']))
@@ -381,7 +381,7 @@ class TestModelFrame(tm.TestCase):
             # set target property
             mdf.target = new
 
-            self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+            self.assertIsInstance(mdf, pdml.ModelFrame)
             self.assertEqual(mdf.shape, (3, 4))
             self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
             self.assert_index_equal(mdf.columns, pd.Index(['.target', 'A', 'B', 'C']))
@@ -399,7 +399,7 @@ class TestModelFrame(tm.TestCase):
         # set target property
         mdf.target = [7, 8, 9]
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 4))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['.target', 'A', 'B', 'C']))
@@ -415,7 +415,7 @@ class TestModelFrame(tm.TestCase):
         # set target property
         mdf.target = None
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 3))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['A', 'B', 'C']))
@@ -448,7 +448,7 @@ class TestModelFrame(tm.TestCase):
                           index=['a', 'b', 'c'])
         mdf = pdml.ModelFrame(df, target=datetime.datetime(2016, 1, 1))
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 3))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         expected = pd.DatetimeIndex(['2014-01-01', '2015-01-01', '2016-01-01'])
@@ -469,7 +469,7 @@ class TestModelFrame(tm.TestCase):
         mdf = pdml.ModelFrame(df)
 
         mdf.target = pd.Series(['A', 'B', 'C'], index=['a', 'b', 'c'], name=5)
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 4))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         expected = pd.Index([5, datetime.datetime(2014, 1, 1),
@@ -482,7 +482,7 @@ class TestModelFrame(tm.TestCase):
 
         # name will be ignored if ModelFrame already has a target
         mdf.target = pd.Series([10, 11, 12], index=['a', 'b', 'c'], name='X')
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 4))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         expected = pd.Index([5,
@@ -512,13 +512,13 @@ class TestModelFrame(tm.TestCase):
             result = df.predict(mod1)
             expected = mod2.predict(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelSeries))
+            self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
             result = df.predict_proba(mod1)
             expected = mod2.predict_proba(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelFrame))
+            self.assertIsInstance(result, pdml.ModelFrame)
             self.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.values, expected)
             self.assert_numpy_array_almost_equal(df.proba.values, expected)
@@ -526,7 +526,7 @@ class TestModelFrame(tm.TestCase):
             result = df.predict_log_proba(mod1)
             expected = mod2.predict_log_proba(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelFrame))
+            self.assertIsInstance(result, pdml.ModelFrame)
             self.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.values, expected)
             self.assert_numpy_array_almost_equal(df.log_proba.values, expected)
@@ -534,7 +534,7 @@ class TestModelFrame(tm.TestCase):
             result = df.decision_function(mod1)
             expected = mod2.decision_function(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelFrame))
+            self.assertIsInstance(result, pdml.ModelFrame)
             self.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.values, expected)
             self.assert_numpy_array_almost_equal(df.decision.values, expected)
@@ -578,14 +578,14 @@ class TestModelFrame(tm.TestCase):
                 result = df.predicted
             expected = mod2.predict(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelSeries))
+            self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
             # with tm.assert_produces_warning(UserWarning):
             result = df.proba
             expected = mod2.predict_proba(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelFrame))
+            self.assertIsInstance(result, pdml.ModelFrame)
             self.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
@@ -593,7 +593,7 @@ class TestModelFrame(tm.TestCase):
                 result = df.log_proba
             expected = mod2.predict_log_proba(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelFrame))
+            self.assertIsInstance(result, pdml.ModelFrame)
             self.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
@@ -601,7 +601,7 @@ class TestModelFrame(tm.TestCase):
             result = df.decision
             expected = mod2.decision_function(iris.data)
 
-            self.assertTrue(isinstance(result, pdml.ModelFrame))
+            self.assertIsInstance(result, pdml.ModelFrame)
             self.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
@@ -618,7 +618,7 @@ class TestModelFrame(tm.TestCase):
 
         self.assertEqual(mdf.target_name, '.target')
         sliced = mdf.iloc[1:2, ]
-        self.assertTrue(isinstance(sliced, pdml.ModelFrame))
+        self.assertIsInstance(sliced, pdml.ModelFrame)
         self.assertTrue(sliced.has_target())
         self.assertEqual(sliced.target_name, '.target')
 
@@ -631,12 +631,12 @@ class TestModelFrame(tm.TestCase):
 
         self.assertEqual(mdf.target_name, 'A')
         sliced = mdf.loc[['a', 'b'], :]
-        self.assertTrue(isinstance(sliced, pdml.ModelFrame))
+        self.assertIsInstance(sliced, pdml.ModelFrame)
         self.assertTrue(sliced.has_target())
         self.assertEqual(sliced.target_name, 'A')
 
         sliced = mdf.iloc[[1, 2], :]
-        self.assertTrue(isinstance(sliced, pdml.ModelFrame))
+        self.assertIsInstance(sliced, pdml.ModelFrame)
         self.assertTrue(sliced.has_target())
         self.assertEqual(sliced.target_name, 'A')
 
@@ -646,13 +646,13 @@ class TestModelFrameMultiTarges(tm.TestCase):
     def test_frame_instance(self):
 
         df = pdml.ModelFrame(datasets.load_digits())
-        self.assertTrue(isinstance(df, pdml.ModelFrame))
+        self.assertIsInstance(df, pdml.ModelFrame)
 
         train_df, test_df = df.cross_validation.train_test_split()
 
-        self.assertTrue(isinstance(train_df, pdml.ModelFrame))
-        self.assertTrue(isinstance(test_df, pdml.ModelFrame))
-        self.assertTrue(isinstance(train_df.iloc[:, 2:3], pdml.ModelFrame))
+        self.assertIsInstance(train_df, pdml.ModelFrame)
+        self.assertIsInstance(test_df, pdml.ModelFrame)
+        self.assertIsInstance(train_df.iloc[:, 2:3], pdml.ModelFrame)
 
     def test_frame_init_df_df(self):
         # initialization by dataframe and dataframe
@@ -666,7 +666,7 @@ class TestModelFrameMultiTarges(tm.TestCase):
                               index=['a', 'b', 'c'])
         mdf = pdml.ModelFrame(df, target=target)
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 5))
         expected = pd.DataFrame({'t1': [10, 11, 12],
                                  't2': [13, 14, 15],
@@ -693,7 +693,7 @@ class TestModelFrameMultiTarges(tm.TestCase):
         # single column DataFrame will results in single target column
         target = pd.DataFrame({'t1': [10, 11, 12]}, index=['a', 'b', 'c'])
         mdf = pdml.ModelFrame(df, target=target)
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 4))
         self.assert_index_equal(mdf.index, pd.Index(['a', 'b', 'c']))
         self.assert_index_equal(mdf.columns, pd.Index(['t1', 'A', 'B', 'C']))
@@ -717,7 +717,7 @@ class TestModelFrameMultiTarges(tm.TestCase):
                               index=['a', 'b', 'c'])
         mdf.target = target
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 5))
         expected = pd.DataFrame({'t1': [10, 11, 12],
                                  't2': [13, 14, 15],
@@ -745,7 +745,7 @@ class TestModelFrameMultiTarges(tm.TestCase):
             # is renamed to existing target ['t1', 't2']
             mdf.target = target
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 5))
         expected = pd.DataFrame({'t1': [20, 21, 22],
                                  't2': [23, 24, 25],
@@ -776,7 +776,7 @@ class TestModelFrameMultiTarges(tm.TestCase):
         # target is being replaced
         mdf.target = target
 
-        self.assertTrue(isinstance(mdf, pdml.ModelFrame))
+        self.assertIsInstance(mdf, pdml.ModelFrame)
         self.assertEqual(mdf.shape, (3, 6))
         expected = pd.DataFrame({'x1': [20, 21, 22],
                                  'x2': [23, 24, 25],

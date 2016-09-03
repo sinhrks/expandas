@@ -14,14 +14,14 @@ class TestBaseRegressor(tm.TestCase):
         from sklearn.base import clone
         obj = base.StatsModelsRegressor(sm.OLS, missing='raise')
         cloned = clone(obj)
-        self.assertTrue(isinstance(cloned, base.StatsModelsRegressor))
+        self.assertIsInstance(cloned, base.StatsModelsRegressor)
         self.assertTrue(cloned.statsmodel is sm.OLS)
 
         params = cloned.get_params()
         self.assertEqual(params, {'statsmodel': sm.OLS, 'missing': 'raise'})
 
         setted = cloned.set_params(statsmodel=sm.GLM, missing='none')
-        self.assertTrue(isinstance(setted, base.StatsModelsRegressor))
+        self.assertIsInstance(setted, base.StatsModelsRegressor)
         self.assertEqual(setted.get_params(), {'statsmodel': sm.GLM, 'missing': 'none'})
 
     def test_OLS(self):
@@ -33,7 +33,7 @@ class TestBaseRegressor(tm.TestCase):
         # estimator.score(diabetes.data, diabetes.target)
 
         import statsmodels.regression.linear_model as lm
-        self.assertTrue(isinstance(fitted, lm.RegressionResultsWrapper))
+        self.assertIsInstance(fitted, lm.RegressionResultsWrapper)
 
         fitted2 = sm.OLS(diabetes.target, diabetes.data).fit()
         expected = fitted2.predict(diabetes.data)
@@ -72,7 +72,7 @@ class TestBaseRegressor(tm.TestCase):
             estimator = base.StatsModelsRegressor(klass, groups=groups)
             fitted = estimator.fit(data, target)
             result = estimator.predict(diabetes.data)
-            self.assertTrue(isinstance(fitted, geq.GEEResultsWrapper))
+            self.assertIsInstance(fitted, geq.GEEResultsWrapper)
 
             expected = klass(target, data, groups=groups).fit().predict(diabetes.data)
             self.assert_numpy_array_almost_equal(result, expected)
@@ -91,7 +91,7 @@ class TestBaseRegressor(tm.TestCase):
             fitted = estimator.fit(data, target)
             # result = estimator.predict(diabetes.data)
             # NotImplementedError
-            self.assertTrue(isinstance(fitted, mlm.MixedLMResultsWrapper))
+            self.assertIsInstance(fitted, mlm.MixedLMResultsWrapper)
 
             # expected = klass(target, data, groups=groups).fit().predict(diabetes.data)
             # self.assert_numpy_array_almost_equal(result, expected)
