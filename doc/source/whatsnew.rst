@@ -2,6 +2,14 @@
 What's new
 ==========
 
+v0.4.0
+------
+
+Enhancement
+^^^^^^^^^^^
+
+- Support scikit-learn v0.17.x
+
 v0.3.1
 ------
 

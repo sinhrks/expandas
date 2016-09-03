@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import sklearn.datasets as datasets
 import sklearn.kernel_ridge as kr
 
 import pandas_ml as pdml
@@ -11,7 +10,6 @@ class TestKernelRidge(tm.TestCase):
 
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
-        print(df.kernel_ridge.__dict__, kr.KernelRidge)
         self.assertIs(df.kernel_ridge.KernelRidge, kr.KernelRidge)
 
 

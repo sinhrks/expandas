@@ -32,8 +32,10 @@ class TestDecomposition(tm.TestCase):
                       decomposition.DictionaryLearning)
         self.assertIs(df.decomposition.MiniBatchDictionaryLearning,
                       decomposition.MiniBatchDictionaryLearning)
-        self.assertIs(df.decomposition.LatentDirichletAllocation,
-                      decomposition.LatentDirichletAllocation)
+
+        if pdml.compat._SKLEARN_ge_017():
+            self.assertIs(df.decomposition.LatentDirichletAllocation,
+                          decomposition.LatentDirichletAllocation)
 
     def test_fastica(self):
         iris = datasets.load_iris()
@@ -194,8 +196,8 @@ class TestDecomposition(tm.TestCase):
 
         self.assertTrue(isinstance(result, pdml.ModelFrame))
         self.assert_series_equal(df.target, result.target)
-        self.assert_numpy_array_almost_equal(result.data.values,
-                                             expected)
+        self.assert_numpy_array_almost_equal(result.data.values[:, :40],
+                                             expected[:, :40])
 
     def test_inverse_transform(self):
         iris = datasets.load_iris()

@@ -72,8 +72,6 @@ def _wrap_func(func, func_name):
         else:
             # ModelSeries
             values = np.atleast_2d(self._df.values)
-            print(values.shape)
-
             if pd.core.common.is_integer_dtype(values):
                 values = values.astype(np.float)
 

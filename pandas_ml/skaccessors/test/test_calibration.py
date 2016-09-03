@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import numpy as np
 import sklearn.calibration as calibration
 
 import pandas_ml as pdml

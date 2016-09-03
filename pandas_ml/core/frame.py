@@ -490,7 +490,6 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
         score = self._call(estimator, 'score', *args, **kwargs)
         return score
 
-
     @property
     @Appender(_shared_docs['skaccessor_nolink'] %
               dict(module='calibration'))

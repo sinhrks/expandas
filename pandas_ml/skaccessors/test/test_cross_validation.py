@@ -13,9 +13,12 @@ class TestCrossValidation(tm.TestCase):
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
         self.assertIs(df.cross_validation.KFold, cv.KFold)
-        self.assertIs(df.cross_validation.LabelKFold, cv.LabelKFold)
-        self.assertIs(df.cross_validation.LabelShuffleSplit,
-                      cv.LabelShuffleSplit)
+
+        if pdml.compat._SKLEARN_ge_017():
+            self.assertIs(df.cross_validation.LabelKFold, cv.LabelKFold)
+            self.assertIs(df.cross_validation.LabelShuffleSplit,
+                          cv.LabelShuffleSplit)
+
         self.assertIs(df.cross_validation.LeaveOneLabelOut,
                       cv.LeaveOneLabelOut)
         self.assertIs(df.cross_validation.LeaveOneOut, cv.LeaveOneOut)

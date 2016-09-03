@@ -34,8 +34,10 @@ class TestEnsemble(tm.TestCase):
                       ensemble.RandomTreesEmbedding)
         self.assertIs(df.ensemble.RandomForestRegressor,
                       ensemble.RandomForestRegressor)
-        self.assertIs(df.ensemble.VotingClassifier,
-                      ensemble.VotingClassifier)
+
+        if pdml.compat._SKLEARN_ge_017():
+            self.assertIs(df.ensemble.VotingClassifier,
+                          ensemble.VotingClassifier)
 
     def test_Regressions(self):
         iris = datasets.load_iris()

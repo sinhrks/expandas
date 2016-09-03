@@ -1,13 +1,21 @@
 #!/usr/bin/env python
 
 import sklearn.datasets as datasets
-import sklearn.discriminant_analysis as da
+try:
+    import sklearn.discriminant_analysis as da
+except ImportError:
+    pass
 
 import pandas_ml as pdml
 import pandas_ml.util.testing as tm
 
 
-class TestLDA(tm.TestCase):
+class TestDiscriminantAnalysis(tm.TestCase):
+
+    def setUp(self):
+        if not pdml.compat._SKLEARN_ge_017():
+            import nose
+            raise nose.SkipTest()
 
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
