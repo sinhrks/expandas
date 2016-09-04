@@ -33,7 +33,7 @@ class TestDecomposition(tm.TestCase):
         self.assertIs(df.decomposition.MiniBatchDictionaryLearning,
                       decomposition.MiniBatchDictionaryLearning)
 
-        if pdml.compat._SKLEARN_ge_017():
+        if pdml.compat._SKLEARN_ge_017:
             self.assertIs(df.decomposition.LatentDirichletAllocation,
                           decomposition.LatentDirichletAllocation)
 

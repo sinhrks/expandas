@@ -35,7 +35,7 @@ class TestEnsemble(tm.TestCase):
         self.assertIs(df.ensemble.RandomForestRegressor,
                       ensemble.RandomForestRegressor)
 
-        if pdml.compat._SKLEARN_ge_017():
+        if pdml.compat._SKLEARN_ge_017:
             self.assertIs(df.ensemble.VotingClassifier,
                           ensemble.VotingClassifier)
 

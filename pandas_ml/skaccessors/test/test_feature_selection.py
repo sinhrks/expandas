@@ -18,7 +18,7 @@ class TestFeatureSelection(tm.TestCase):
         self.assertIs(df.feature_selection.SelectKBest, fs.SelectKBest)
         self.assertIs(df.feature_selection.SelectFpr, fs.SelectFpr)
 
-        if pdml.compat._SKLEARN_ge_017():
+        if pdml.compat._SKLEARN_ge_017:
             self.assertIs(df.feature_selection.SelectFromModel,
                           fs.SelectFromModel)
 

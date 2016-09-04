@@ -2,10 +2,10 @@ language: python
 
 env:
   - PYTHON=2.7 PANDAS=0.17.0 SKLEARN=0.16.1
-  - PYTHON=2.7 PANDAS=0.18.0 SKLEARN=0.17.1
+  - PYTHON=2.7 PANDAS=0.18.0 SKLEARN=0.17.1 IMBALANCE=true
   - PYTHON=3.4 PANDAS=0.16.0 SKLEARN=0.16.1
   - PYTHON=3.4 PANDAS=0.17.0 SKLEARN=0.17.1
-  - PYTHON=3.5 PANDAS=0.18.0 SKLEARN=0.17.1
+  - PYTHON=3.5 PANDAS=0.18.0 SKLEARN=0.17.1 IMBALANCE=true COVERAGE=true
 
 addons:
   apt:
@@ -27,4 +27,6 @@ script:
   - flake8 --ignore E501 pandas_ml
 
 after_success:
-  - coveralls
+  - if [ "$COVERAGE" ]; then
+      coveralls;
+    fi

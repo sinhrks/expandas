@@ -11,6 +11,7 @@ from pandas.util.decorators import Appender, cache_readonly
 from pandas_ml.core.generic import ModelPredictor, _shared_docs
 from pandas_ml.core.series import ModelSeries
 from pandas_ml.core.accessor import _AccessorMethods
+import pandas_ml.imbaccessors as imbaccessors
 import pandas_ml.skaccessors as skaccessors
 import pandas_ml.smaccessors as smaccessors
 import pandas_ml.snsaccessors as snsaccessors
@@ -397,13 +398,47 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
         """
         Wrapper for predict methods
         """
-
         if util._is_1d_varray(predicted):
             predicted = self._constructor_sliced(predicted, index=self.index)
         else:
             predicted = self._constructor(predicted, index=self.index)
         self._predicted = predicted
         return self._predicted
+
+    @Appender(_shared_docs['estimator_methods'] %
+              dict(funcname='fit_sample', returned='returned : sampling result'))
+    def fit_sample(self, estimator, *args, **kwargs):
+        # for imblearn
+        sampled_X, sampled_y = self._call(estimator, 'fit_sample', *args, **kwargs)
+        return self._wrap_sampled(sampled_X, sampled_y)
+
+    @Appender(_shared_docs['estimator_methods'] %
+              dict(funcname='sample', returned='returned : sampling result'))
+    def sample(self, estimator, *args, **kwargs):
+        # for imblearn
+        sampled_X, sampled_y = self._call(estimator, 'sample', *args, **kwargs)
+        return self._wrap_sampled(sampled_X, sampled_y)
+
+    def _wrap_sampled(self, sampled_X, sampled_y):
+        # revert sampled results to ModelFrame, index is being reset
+
+        def _wrap(x, y):
+            y = self._constructor_sliced(y, name=self.target.name)
+            result = self._constructor(data=x, target=y,
+                                       columns=self.data.columns)
+            return result
+
+        if sampled_X.ndim == 3 or sampled_X.ndim == 1:
+            # ensemble
+            # ndim=3 for EasyEnsemble
+            # ndim=1 for BalanceCascade
+            results = []
+            for x, y in zip(sampled_X, sampled_y):
+                result = _wrap(x, y)
+                results.append(result)
+        else:
+            results = _wrap(sampled_X, sampled_y)
+        return results
 
     @Appender(_shared_docs['estimator_methods'] %
               dict(funcname='transform', returned='returned : transformed result'))
@@ -489,6 +524,8 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
     def score(self, estimator, *args, **kwargs):
         score = self._call(estimator, 'score', *args, **kwargs)
         return score
+
+    # accessors
 
     @property
     @Appender(_shared_docs['skaccessor_nolink'] %
@@ -625,6 +662,15 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
     @cache_readonly
     def _grid_search(self):
         return skaccessors.GridSearchMethods(self)
+
+    @property
+    def imbalance(self):
+        """ Property to access ``imblearn``"""
+        return self._imbalance
+
+    @cache_readonly
+    def _imbalance(self):
+        return imbaccessors.ImbalanceMethods(self)
 
     @property
     @Appender(_shared_docs['skaccessor'] % dict(module='isotonic'))

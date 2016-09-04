@@ -7,7 +7,7 @@ from pandas_ml.core.accessor import _AccessorMethods, _attach_methods
 from pandas_ml.compat import _SKLEARN_ge_017
 
 import sklearn.preprocessing as pp
-if _SKLEARN_ge_017():
+if _SKLEARN_ge_017:
     _keep_col_classes = [pp.Binarizer,
                          pp.FunctionTransformer,
                          pp.Imputer,

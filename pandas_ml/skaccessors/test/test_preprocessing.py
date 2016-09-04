@@ -16,7 +16,7 @@ class TestPreprocessing(tm.TestCase):
         df = pdml.ModelFrame([])
         self.assertIs(df.preprocessing.Binarizer, pp.Binarizer)
 
-        if pdml.compat._SKLEARN_ge_017():
+        if pdml.compat._SKLEARN_ge_017:
             self.assertIs(df.preprocessing.FunctionTransformer,
                           pp.FunctionTransformer)
 
@@ -26,7 +26,7 @@ class TestPreprocessing(tm.TestCase):
         self.assertIs(df.preprocessing.LabelEncoder, pp.LabelEncoder)
         self.assertIs(df.preprocessing.MultiLabelBinarizer, pp.MultiLabelBinarizer)
 
-        if pdml.compat._SKLEARN_ge_017():
+        if pdml.compat._SKLEARN_ge_017:
             self.assertIs(df.preprocessing.MaxAbsScaler, pp.MaxAbsScaler)
 
         self.assertIs(df.preprocessing.MinMaxScaler, pp.MinMaxScaler)
@@ -34,7 +34,7 @@ class TestPreprocessing(tm.TestCase):
         self.assertIs(df.preprocessing.OneHotEncoder, pp.OneHotEncoder)
         self.assertIs(df.preprocessing.PolynomialFeatures, pp.PolynomialFeatures)
 
-        if pdml.compat._SKLEARN_ge_017():
+        if pdml.compat._SKLEARN_ge_017:
             self.assertIs(df.preprocessing.RobustScaler, pp.RobustScaler)
 
         self.assertIs(df.preprocessing.StandardScaler, pp.StandardScaler)
@@ -225,7 +225,7 @@ class TestPreprocessing(tm.TestCase):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        if pdml.compat._SKLEARN_ge_017():
+        if pdml.compat._SKLEARN_ge_017:
             models = ['Binarizer', 'Imputer', 'KernelCenterer',
                       'MaxAbsScaler', 'MinMaxScaler', 'Normalizer',
                       'RobustScaler', 'StandardScaler']
@@ -353,7 +353,7 @@ class TestPreprocessing(tm.TestCase):
             self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_FunctionTransformer(self):
-        if not pdml.compat._SKLEARN_ge_017():
+        if not pdml.compat._SKLEARN_ge_017:
             import nose
             raise nose.SkipTest()
 

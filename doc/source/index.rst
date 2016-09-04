@@ -15,6 +15,7 @@ Contents:
    whatsnew
    modelframe
    sklearn
+   imbalance
    xgboost
    patsy
    conf_mat

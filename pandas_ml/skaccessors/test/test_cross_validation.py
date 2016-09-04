@@ -14,7 +14,7 @@ class TestCrossValidation(tm.TestCase):
         df = pdml.ModelFrame([])
         self.assertIs(df.cross_validation.KFold, cv.KFold)
 
-        if pdml.compat._SKLEARN_ge_017():
+        if pdml.compat._SKLEARN_ge_017:
             self.assertIs(df.cross_validation.LabelKFold, cv.LabelKFold)
             self.assertIs(df.cross_validation.LabelShuffleSplit,
                           cv.LabelShuffleSplit)

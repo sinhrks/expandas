@@ -13,7 +13,7 @@ import pandas_ml.util.testing as tm
 class TestDiscriminantAnalysis(tm.TestCase):
 
     def setUp(self):
-        if not pdml.compat._SKLEARN_ge_017():
+        if not pdml.compat._SKLEARN_ge_017:
             import nose
             raise nose.SkipTest()
 
