@@ -10,6 +10,11 @@ Enhancement
 
 - Support scikit-learn v0.17.x
 
+Bug Fix
+^^^^^^^
+
+- ``ModelFrame.columns`` may not be preserved via ``.transform`` using ``FunctionTransformer``, ``KernelCenterer``, ``MaxAbsScaler`` and ``RobustScaler``.
+
 v0.3.1
 ------
 

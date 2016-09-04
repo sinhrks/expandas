@@ -4,7 +4,10 @@ import numpy as np
 import pandas.util.testing as tm
 from pandas.util.testing import (assertRaises, assertRaisesRegexp,  # noqa
                                  assert_produces_warning,           # noqa
-                                 close, RNGContext)                 # noqa
+                                 close, RNGContext,                 # noqa
+                                 assert_index_equal,                # noqa
+                                 assert_series_equal,               # noqa
+                                 assert_frame_equal)                # noqa
 import pandas.tools.plotting as plotting
 
 
