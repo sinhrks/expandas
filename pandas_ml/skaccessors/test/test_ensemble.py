@@ -24,10 +24,16 @@ class TestEnsemble(tm.TestCase):
                       ensemble.ExtraTreesClassifier)
         self.assertIs(df.ensemble.ExtraTreesRegressor,
                       ensemble.ExtraTreesRegressor)
+
         self.assertIs(df.ensemble.GradientBoostingClassifier,
                       ensemble.GradientBoostingClassifier)
         self.assertIs(df.ensemble.GradientBoostingRegressor,
                       ensemble.GradientBoostingRegressor)
+
+        if pdml.compat._SKLEARN_ge_018:
+            self.assertIs(df.ensemble.IsolationForest,
+                          ensemble.IsolationForest)
+
         self.assertIs(df.ensemble.RandomForestClassifier,
                       ensemble.RandomForestClassifier)
         self.assertIs(df.ensemble.RandomTreesEmbedding,

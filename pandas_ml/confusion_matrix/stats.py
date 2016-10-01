@@ -22,6 +22,11 @@ def choose(n, k):
     """
     A fast way to calculate binomial coefficients by Andrew Dalke (contrib).
     """
+    if np.isnan(n):
+        return np.nan
+    else:
+        n = np.int64(n)
+
     if 0 <= k <= n:
         ntok = 1
         ktok = 1
@@ -52,7 +57,7 @@ def class_agreement(df):
     nis2 = ni[ni > 1].map(lambda x: choose(int(x), 2)).sum()
     njs2 = nj[nj > 1].map(lambda x: choose(int(x), 2)).sum()
 
-    num = df[df > 1].dropna(axis=[0, 1], thresh=1).applymap(lambda n: choose(np.int64(n), 2)).sum().sum() - np.float64(nis2 * njs2) / n2
+    num = df[df > 1].dropna(axis=[0, 1], thresh=1).applymap(lambda n: choose(n, 2)).sum().sum() - np.float64(nis2 * njs2) / n2
     den = (np.float64(nis2 + njs2) / 2 - np.float64(nis2 * njs2) / n2)
     crand = num / den
 

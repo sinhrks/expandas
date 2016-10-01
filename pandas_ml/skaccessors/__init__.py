@@ -16,6 +16,7 @@ from pandas_ml.skaccessors.learning_curve import LearningCurveMethods           
 from pandas_ml.skaccessors.linear_model import LinearModelMethods                 # noqa
 from pandas_ml.skaccessors.manifold import ManifoldMethods                        # noqa
 from pandas_ml.skaccessors.metrics import MetricsMethods                          # noqa
+from pandas_ml.skaccessors.model_selection import ModelSelectionMethods           # noqa
 from pandas_ml.skaccessors.neighbors import NeighborsMethods                      # noqa
 from pandas_ml.skaccessors.pipeline import PipelineMethods                        # noqa
 from pandas_ml.skaccessors.preprocessing import PreprocessingMethods              # noqa

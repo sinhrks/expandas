@@ -191,15 +191,14 @@ class TestCrossValidation(tm.TestCase):
             self.assert_numpy_array_equal(idx1[1], idx2[1])
 
         sf1 = df.cross_validation.StratifiedShuffleSplit(random_state=self.random_state)
-        with tm.assert_produces_warning(UserWarning):
-            # StratifiedShuffleSplit is not a subclass of PartitionIterator
-            for train_df, test_df in df.cross_validation.iterate(sf1):
-                self.assertIsInstance(train_df, pdml.ModelFrame)
-                self.assertIsInstance(test_df, pdml.ModelFrame)
-                self.assert_index_equal(df.columns, train_df.columns)
-                self.assert_index_equal(df.columns, test_df.columns)
+        # StratifiedShuffleSplit is not a subclass of PartitionIterator
+        for train_df, test_df in df.cross_validation.iterate(sf1):
+            self.assertIsInstance(train_df, pdml.ModelFrame)
+            self.assertIsInstance(test_df, pdml.ModelFrame)
+            self.assert_index_equal(df.columns, train_df.columns)
+            self.assert_index_equal(df.columns, test_df.columns)
 
-                self.assertTrue(df.shape[0], train_df.shape[0] + test_df.shape[1])
+            self.assertTrue(df.shape[0], train_df.shape[0] + test_df.shape[1])
 
 
 if __name__ == '__main__':

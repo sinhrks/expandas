@@ -16,6 +16,10 @@ class TestLinearModel(tm.TestCase):
         self.assertIs(df.linear_model.BayesianRidge, lm.BayesianRidge)
         self.assertIs(df.linear_model.ElasticNet, lm.ElasticNet)
         self.assertIs(df.linear_model.ElasticNetCV, lm.ElasticNetCV)
+
+        if pdml.compat._SKLEARN_ge_018:
+            self.assertIs(df.linear_model.HuberRegressor, lm.HuberRegressor)
+
         self.assertIs(df.linear_model.Lars, lm.Lars)
         self.assertIs(df.linear_model.LarsCV, lm.LarsCV)
         self.assertIs(df.linear_model.Lasso, lm.Lasso)
@@ -23,6 +27,7 @@ class TestLinearModel(tm.TestCase):
         self.assertIs(df.linear_model.LassoLars, lm.LassoLars)
         self.assertIs(df.linear_model.LassoLarsCV, lm.LassoLarsCV)
         self.assertIs(df.linear_model.LassoLarsIC, lm.LassoLarsIC)
+
         self.assertIs(df.linear_model.LinearRegression, lm.LinearRegression)
         self.assertIs(df.linear_model.LogisticRegression, lm.LogisticRegression)
         self.assertIs(df.linear_model.LogisticRegressionCV, lm.LogisticRegressionCV)
@@ -30,10 +35,12 @@ class TestLinearModel(tm.TestCase):
         self.assertIs(df.linear_model.MultiTaskElasticNet, lm.MultiTaskElasticNet)
         self.assertIs(df.linear_model.MultiTaskLassoCV, lm.MultiTaskLassoCV)
         self.assertIs(df.linear_model.MultiTaskElasticNetCV, lm.MultiTaskElasticNetCV)
+
         self.assertIs(df.linear_model.OrthogonalMatchingPursuit, lm.OrthogonalMatchingPursuit)
         self.assertIs(df.linear_model.OrthogonalMatchingPursuitCV, lm.OrthogonalMatchingPursuitCV)
         self.assertIs(df.linear_model.PassiveAggressiveClassifier, lm.PassiveAggressiveClassifier)
         self.assertIs(df.linear_model.PassiveAggressiveRegressor, lm.PassiveAggressiveRegressor)
+
         self.assertIs(df.linear_model.Perceptron, lm.Perceptron)
         self.assertIs(df.linear_model.RandomizedLasso, lm.RandomizedLasso)
         self.assertIs(df.linear_model.RandomizedLogisticRegression, lm.RandomizedLogisticRegression)

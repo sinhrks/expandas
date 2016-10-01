@@ -16,8 +16,11 @@ class TestDecomposition(tm.TestCase):
                       decomposition.IncrementalPCA)
         self.assertIs(df.decomposition.ProjectedGradientNMF,
                       decomposition.ProjectedGradientNMF)
-        self.assertIs(df.decomposition.RandomizedPCA,
-                      decomposition.RandomizedPCA)
+
+        if not pdml.compat._SKLEARN_ge_018:
+            self.assertIs(df.decomposition.RandomizedPCA,
+                          decomposition.RandomizedPCA)
+
         self.assertIs(df.decomposition.KernelPCA, decomposition.KernelPCA)
         self.assertIs(df.decomposition.FactorAnalysis,
                       decomposition.FactorAnalysis)

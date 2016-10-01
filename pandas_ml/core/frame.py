@@ -398,6 +398,8 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
         """
         Wrapper for predict methods
         """
+        if isinstance(predicted, tuple):
+            return tuple(self._wrap_predicted(p, estimator) for p in predicted)
         if util._is_1d_varray(predicted):
             predicted = self._constructor_sliced(predicted, index=self.index)
         else:
@@ -650,6 +652,11 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
     def gaussian_process(self):
         return self._gaussian_process
 
+    @property
+    @Appender(_shared_docs['skaccessor'] % dict(module='gaussian_process'))
+    def gp(self):
+        return self._gaussian_process
+
     @cache_readonly
     def _gaussian_process(self):
         return skaccessors.GaussianProcessMethods(self)
@@ -761,17 +768,36 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
         return _AccessorMethods(self, module_name='sklearn.mixture')
 
     @property
+    @Appender(_shared_docs['skaccessor'] % dict(module='model_selection'))
+    def model_selection(self):
+        return self._model_selection
+
+    @property
+    @Appender(_shared_docs['skaccessor'] % dict(module='model_selection'))
+    def ms(self):
+        return self._model_selection
+
+    @cache_readonly
+    def _model_selection(self):
+        return skaccessors.ModelSelectionMethods(self)
+
+    @property
     @Appender(_shared_docs['skaccessor'] % dict(module='multiclass'))
     def multiclass(self):
         return self._multiclass
 
     @cache_readonly
     def _multiclass(self):
-        from distutils.version import LooseVersion
-        import sklearn
-        if str(sklearn.__version__) < LooseVersion('0.16.0'):
-            warnings.warn('sklern.multiclass may not be loaded properly')
         return _AccessorMethods(self, module_name='sklearn.multiclass')
+
+    @property
+    @Appender(_shared_docs['skaccessor'] % dict(module='multioutput'))
+    def multioutput(self):
+        return self._multioutput
+
+    @cache_readonly
+    def _multioutput(self):
+        return _AccessorMethods(self, module_name='sklearn.multioutput')
 
     @property
     @Appender(_shared_docs['skaccessor_nolink'] % dict(module='naive_bayes'))
