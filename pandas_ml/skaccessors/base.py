@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
-from sklearn.datasets.base import Bunch
-
 import pandas as pd
+
+try:
+    from sklearn.datasets.base import Bunch
+except ImportError:
+
+    class Bunch(object):
+        pass
 
 
 def _maybe_sklearn_data(data, target):

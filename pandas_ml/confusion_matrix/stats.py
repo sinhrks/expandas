@@ -2,20 +2,16 @@
 # -*- coding: utf8 -*-
 
 import numpy as np
-import scipy
-from scipy.stats import beta
-
-
-try:
-    xrange
-except NameError:
-    xrange = range
+from pandas.compat import range
 
 
 def binom_interval(success, total, confint=0.95):
     """
     Compute two-sided binomial confidence interval in Python. Based on R's binom.test.
     """
+
+    from scipy.stats import beta
+
     quantile = (1 - confint) / 2.
     lower = beta.ppf(quantile, success, total - success + 1)
     upper = beta.ppf(1 - quantile, success + 1, total - success)
@@ -29,7 +25,7 @@ def choose(n, k):
     if 0 <= k <= n:
         ntok = 1
         ktok = 1
-        for t in xrange(1, min(k, n - k) + 1):
+        for t in range(1, min(k, n - k) + 1):
             ntok *= n
             ktok *= t
             n -= 1
@@ -72,6 +68,8 @@ def prop_test(df):
     """
     Inspired from R package caret confusionMatrix.R
     """
+    from scipy.stats import binom
+
     x = np.diag(df).sum()
     n = df.sum().sum()
     p = (df.sum(axis=0) / df.sum().sum()).max()
@@ -79,6 +77,6 @@ def prop_test(df):
         "statistic": x,  # number of successes
         "parameter": n,  # number of trials
         "null.value": p,  # probability of success
-        "p.value": scipy.stats.binom.sf(x - 1, n, p),  # see https://en.wikipedia.org/wiki/Binomial_test
+        "p.value": binom.sf(x - 1, n, p),  # see https://en.wikipedia.org/wiki/Binomial_test
     }
     return(d)

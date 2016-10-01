@@ -4,28 +4,34 @@ import numpy as np
 import pandas as pd
 
 from pandas_ml.core.accessor import _AccessorMethods, _attach_methods
-from pandas_ml.compat import _SKLEARN_ge_017
+from pandas_ml.compat import _SKLEARN_INSTALLED, _SKLEARN_ge_017
 
-import sklearn.preprocessing as pp
-if _SKLEARN_ge_017:
-    _keep_col_classes = [pp.Binarizer,
-                         pp.FunctionTransformer,
-                         pp.Imputer,
-                         pp.KernelCenterer,
-                         pp.LabelEncoder,
-                         pp.MaxAbsScaler,
-                         pp.MinMaxScaler,
-                         pp.Normalizer,
-                         pp.RobustScaler,
-                         pp.StandardScaler]
+
+if _SKLEARN_INSTALLED:
+
+    import sklearn.preprocessing as pp
+
+    if _SKLEARN_ge_017:
+        _keep_col_classes = [pp.Binarizer,
+                             pp.FunctionTransformer,
+                             pp.Imputer,
+                             pp.KernelCenterer,
+                             pp.LabelEncoder,
+                             pp.MaxAbsScaler,
+                             pp.MinMaxScaler,
+                             pp.Normalizer,
+                             pp.RobustScaler,
+                             pp.StandardScaler]
+    else:
+        _keep_col_classes = [pp.Binarizer,
+                             pp.Imputer,
+                             pp.KernelCenterer,
+                             pp.LabelEncoder,
+                             pp.MinMaxScaler,
+                             pp.Normalizer,
+                             pp.StandardScaler]
 else:
-    _keep_col_classes = [pp.Binarizer,
-                         pp.Imputer,
-                         pp.KernelCenterer,
-                         pp.LabelEncoder,
-                         pp.MinMaxScaler,
-                         pp.Normalizer,
-                         pp.StandardScaler]
+    _keep_col_classes = []
 
 
 class PreprocessingMethods(_AccessorMethods):

@@ -3,8 +3,6 @@
 
 import numpy as np
 import pandas as pd
-# import matplotlib as mpl
-import matplotlib.pylab as plt
 import collections
 
 from pandas_ml.confusion_matrix.stats import binom_interval, class_agreement, prop_test
@@ -212,6 +210,9 @@ class ConfusionMatrixAbstract(object):
         """
         Plots confusion matrix
         """
+
+        import matplotlib.pylab as plt
+
         df = self.to_dataframe(normalized)
 
         try:

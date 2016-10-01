@@ -2,8 +2,15 @@
 
 from distutils.version import LooseVersion
 
-import sklearn
-_SKLEARN_ge_017 = sklearn.__version__ >= LooseVersion('0.17.0')
+try:
+    import sklearn
+    _SKLEARN_INSTALLED = True
+    _SKLEARN_ge_017 = sklearn.__version__ >= LooseVersion('0.17.0')
+
+except ImportError:
+    _SKLEARN_INSTALLED = False
+    _SKLEARN_ge_017 = False
+
 
 try:
     import imblearn                 # noqa
