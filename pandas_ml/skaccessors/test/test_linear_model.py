@@ -62,7 +62,8 @@ class TestLinearModel(tm.TestCase):
 
         self.assertEqual(len(result), 3)
         self.assert_numpy_array_equal(result[0], expected[0])
-        self.assert_numpy_array_equal(result[1], expected[1])
+        self.assertEqual(result[1], expected[1])
+        self.assertIsInstance(result[1], list)
         self.assertIsInstance(result[2], pdml.ModelFrame)
         self.assert_index_equal(result[2].index, df.data.columns)
         self.assert_numpy_array_equal(result[2].values, expected[2])

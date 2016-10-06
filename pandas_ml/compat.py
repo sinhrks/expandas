@@ -2,6 +2,17 @@
 
 from distutils.version import LooseVersion
 
+import pandas as pd
+
+PANDAS_VERSION = LooseVersion(pd.__version__)
+if PANDAS_VERSION >= LooseVersion('0.19'):
+    _PANDAS_ge_019 = True
+    from pandas.api.types import is_list_like, is_integer_dtype         # noqa
+
+else:
+    _PANDAS_ge_019 = False
+    from pandas.core.common import is_list_like, is_integer_dtype       # noqa
+
 try:
     import sklearn
     _SKLEARN_INSTALLED = True

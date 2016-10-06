@@ -4,10 +4,10 @@ import warnings
 
 import numpy as np
 import pandas as pd
-import pandas.core.common as com
 import pandas.compat as compat
 from pandas.util.decorators import Appender, cache_readonly
 
+from pandas_ml.compat import is_list_like
 from pandas_ml.core.generic import ModelPredictor, _shared_docs
 from pandas_ml.core.series import ModelSeries
 from pandas_ml.core.accessor import _AccessorMethods
@@ -58,7 +58,7 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
         if data is None and target is None:
             msg = '{0} must have either data or target'
             raise ValueError(msg.format(self.__class__.__name__))
-        elif data is None and not com.is_list_like(target):
+        elif data is None and not is_list_like(target):
             msg = 'target must be list-like when data is None'
             raise ValueError(msg)
 
@@ -71,7 +71,7 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
 
         data, target = self._maybe_convert_data(data, target, *args, **kwargs)
 
-        if target is not None and not com.is_list_like(target):
+        if target is not None and not is_list_like(target):
             if target in data.columns:
                 target_name = target
                 df = data
@@ -127,7 +127,7 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
             if data is not None:
                 data = pd.DataFrame(data, *args, **kwargs)
 
-            if com.is_list_like(target):
+            if is_list_like(target):
                 target = _maybe_convert_target(data, target)
 
         elif not init_df:
@@ -136,7 +136,7 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
                 data = pd.DataFrame(data, index=index, *args, **kwargs)
 
         elif not init_target:
-            if com.is_list_like(target):
+            if is_list_like(target):
                 target = _maybe_convert_target(data, target)
 
         else:
@@ -167,6 +167,8 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
 
         def _add_meta_columns(df, meta_name):
             df = df.copy()
+            if not is_list_like(meta_name):
+                meta_name = [meta_name]
             df.columns = pd.MultiIndex.from_product([meta_name, df.columns])
             return df
 
@@ -326,7 +328,7 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
                 # DataFrame.columns should have values
                 self.target_name = target.columns
 
-        if not com.is_list_like(target):
+        if not is_list_like(target):
             if target in self.columns:
                 self.target_name = target
             else:
