@@ -8,7 +8,7 @@ v0.4.0
 Enhancement
 ^^^^^^^^^^^
 
-- Support scikit-learn v0.17.x.
+- Support scikit-learn v0.17.x and v0.18.0.
 - Support imbalanced-learn via ``.imbalance`` accessor.
 
 Bug Fix

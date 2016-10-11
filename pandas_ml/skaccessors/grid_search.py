@@ -7,7 +7,7 @@ from pandas_ml.core.accessor import _AccessorMethods
 
 class GridSearchMethods(_AccessorMethods):
     """
-    Accessor to ``sklearn.grid_search``.
+    Deprecated. Accessor to ``sklearn.grid_search``.
     """
 
     _module_name = 'sklearn.grid_search'

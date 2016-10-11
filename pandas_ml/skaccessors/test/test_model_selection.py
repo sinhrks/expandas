@@ -239,19 +239,22 @@ class TestSplitter(TestModelSelectionBase):
         self.assertIsInstance(result, ms.KFold)
 
     def test_StratifiedShuffleSplit(self):
-        return
-
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
         sf1 = df.model_selection.StratifiedShuffleSplit(random_state=self.random_state)
-        sf2 = ms.StratifiedShuffleSplit(iris.target, random_state=self.random_state)
+        sf2 = ms.StratifiedShuffleSplit(random_state=self.random_state)
 
         # consume generator
         ind1 = [x for x in sf1.split(df.data.values, df.target.values)]
         ind2 = [x for x in sf2.split(iris.data, iris.target)]
 
-        self.assert_numpy_array_equal(ind1[0], ind1[0])
-        self.assert_numpy_array_equal(ind1[1], ind2[1])
+        for i1, i2 in zip(ind1, ind2):
+            self.assertIsInstance(i1, tuple)
+            self.assertEqual(len(i1), 2)
+            self.assertIsInstance(i2, tuple)
+            self.assertEqual(len(i2), 2)
+            self.assert_numpy_array_equal(i1[0], i1[0])
+            self.assert_numpy_array_equal(i1[1], i2[1])
 
         sf1 = df.model_selection.StratifiedShuffleSplit(random_state=self.random_state)
         with tm.assert_produces_warning(UserWarning):

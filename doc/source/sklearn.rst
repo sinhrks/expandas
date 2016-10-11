@@ -42,36 +42,41 @@ You can create ``ModelFrame`` instance from ``scikit-learn`` datasets directly.
 
 Following table shows ``scikit-learn`` module and corresponding ``ModelFrame`` module. Some accessors has its abbreviated versions.
 
-================================  ==========================================
+================================  ======================================================
 ``scikit-learn``                  ``ModelFrame`` accessor
-================================  ==========================================
+================================  ======================================================
+``sklearn.calibration``           ``ModelFrame.calibration``
 ``sklearn.cluster``               ``ModelFrame.cluster``
 ``sklearn.covariance``            ``ModelFrame.covariance``
 ``sklearn.cross_decomposition``   ``ModelFrame.cross_decomposition``
-``sklearn.cross_validation``      ``ModelFrame.cross_validation``, ``crv``
+``sklearn.cross_validation``      ``ModelFrame.cross_validation``, ``crv`` (deprecated)
 ``sklearn.datasets``              (not accesible from accessor)
 ``sklearn.decomposition``         ``ModelFrame.decomposition``
+``sklearn.discriminant_analysis`` ``ModelFrame.discriminant_analysis``, ``da``
 ``sklearn.dummy``                 ``ModelFrame.dummy``
 ``sklearn.ensemble``              ``ModelFrame.ensemble``
 ``sklearn.feature_extraction``    ``ModelFrame.feature_extraction``
 ``sklearn.feature_selection``     ``ModelFrame.feature_selection``
-``sklearn.gaussian_process``      ``ModelFrame.gaussian_process``
-``sklearn.grid_search``           ``ModelFrame.grid_search``
+``sklearn.gaussian_process``      ``ModelFrame.gaussian_process``, ``gp``
+``sklearn.grid_search``           ``ModelFrame.grid_search`` (deprecated)
 ``sklearn.isotonic``              ``ModelFrame.isotonic``
 ``sklearn.kernel_approximation``  ``ModelFrame.kernel_approximation``
-``sklearn.lda``                   ``ModelFrame.lda``
-``sklearn.learning_curve``        ``ModelFrame.learning_curve``
+``sklearn.kernel_ridge``          ``ModelFrame.kernel_ridge``
+``sklearn.lda``                   ``ModelFrame.lda`` (deprecated)
+``sklearn.learning_curve``        ``ModelFrame.learning_curve`` (deprecated)
 ``sklearn.linear_model``          ``ModelFrame.linear_model``, ``lm``
 ``sklearn.manifold``              ``ModelFrame.manifold``
 ``sklearn.metrics``               ``ModelFrame.metrics``
 ``sklearn.mixture``               ``ModelFrame.mixture``
+``sklearn.model_selection``       ``ModelFrame.model_selection``, ``ms``
 ``sklearn.multiclass``            ``ModelFrame.multiclass``
+``sklearn.multioutput``           ``ModelFrame.multioutput``
 ``sklearn.naive_bayes``           ``ModelFrame.naive_bayes``
 ``sklearn.neighbors``             ``ModelFrame.neighbors``
 ``sklearn.neural_network``        ``ModelFrame.neural_network``
 ``sklearn.pipeline``              ``ModelFrame.pipeline``
 ``sklearn.preprocessing``         ``ModelFrame.preprocessing``, ``pp``
-``sklearn.qda``                   ``ModelFrame.qda``
+``sklearn.qda``                   ``ModelFrame.qda`` (deprecated)
 ``sklearn.semi_supervised``       ``ModelFrame.semi_supervised``
 ``sklearn.svm``                   ``ModelFrame.svm``
 ``sklearn.tree``                  ``ModelFrame.tree``
@@ -277,7 +282,7 @@ Cross Validation
 
 .. code-block:: python
 
-   >>> train_df, test_df = df.cross_validation.train_test_split()
+   >>> train_df, test_df = df.model_selection.train_test_split()
    >>> train_df
         .target  sepal length  sepal width  petal length  petal width
    124        2           6.7          3.3           5.7          2.1
@@ -312,30 +317,17 @@ Cross Validation
    [38 rows x 5 columns]
 
 
-Also, there are some iterative classes which returns indexes for training sets and test sets. You can slice ``ModelFrame`` using these indexes.
+You can iterate over Splitter classes via ``ModelFrame.model_selection.iterate`` which returns ``ModelFrame`` corresponding to training and test data.
 
 .. code-block:: python
 
-   >>> kf = df.cross_validation.KFold(n=150, n_folds=3)
-   >>> for train_index, test_index in kf:
-   ...    print('training set shape: ', df.iloc[train_index, :].shape,
-   ...          'test set shape: ', df.iloc[test_index, :].shape)
-   ('training set shape: ', (100, 5), 'test set shape: ', (50, 5))
-   ('training set shape: ', (100, 5), 'test set shape: ', (50, 5))
-   ('training set shape: ', (100, 5), 'test set shape: ', (50, 5))
-
-
-For further simplification, ``ModelFrame.cross_validation.iterate`` can accept such iterators and returns ``ModelFrame`` corresponding to training and test data.
-
-.. code-block:: python
-
-   >>> kf = df.cross_validation.KFold(n=150, n_folds=3)
+   >>> kf = df.model_selection.KFold(n_splits=3)
    >>> for train_df, test_df in df.cross_validation.iterate(kf):
    ...    print('training set shape: ', train_df.shape,
    ...          'test set shape: ', test_df.shape)
-   ('training set shape: ', (100, 5), 'test set shape: ', (50, 5))
-   ('training set shape: ', (100, 5), 'test set shape: ', (50, 5))
-   ('training set shape: ', (100, 5), 'test set shape: ', (50, 5))
+   training set shape:  (112, 5) test set shape:  (38, 5)
+   training set shape:  (112, 5) test set shape:  (38, 5)
+   training set shape:  (112, 5) test set shape:  (38, 5)
 
 Grid Search
 -----------
@@ -349,8 +341,8 @@ You can perform grid search using ``ModelFrame.fit``.
    ...                    {'kernel': ['linear'], 'C': [1, 10, 100]}]
 
    >>> df = pdml.ModelFrame(datasets.load_digits())
-   >>> cv = df.grid_search.GridSearchCV(df.svm.SVC(C=1), tuned_parameters,
-   ...                                  cv=5, scoring='precision')
+   >>> cv = df.model_selection.GridSearchCV(df.svm.SVC(C=1), tuned_parameters,
+   ...                                      cv=5)
 
    >>> df.fit(cv)
 
@@ -363,7 +355,7 @@ In addition, ``ModelFrame.grid_search`` has a ``describe`` function to organize 
 
 .. code-block:: python
 
-   >>> df.grid_search.describe(cv)
+   >>> df.model_selection.describe(cv)
           mean       std    C   gamma  kernel
    0  0.974108  0.013139    1  0.0010     rbf
    1  0.951416  0.020010    1  0.0001     rbf

@@ -55,7 +55,7 @@ Example
     [5 rows x 65 columns]
 
     # split to training and test data
-    >>> train_df, test_df = df.cross_validation.train_test_split()
+    >>> train_df, test_df = df.model_selection.train_test_split()
 
     # create estimator (accessor is mapped to sklearn namespace)
     >>> estimator = df.svm.LinearSVC()

@@ -5,7 +5,7 @@ from pandas_ml.core.accessor import _AccessorMethods
 
 class LearningCurveMethods(_AccessorMethods):
     """
-    Accessor to ``sklearn.learning_curve``.
+    Deprecated. Accessor to ``sklearn.learning_curve``.
     """
 
     _module_name = 'sklearn.learning_curve'

@@ -23,8 +23,11 @@ class ModelSelectionMethods(_AccessorMethods):
 
         - ``y``: ``ModelFrame.target``
         """
-        target = self._target
-        return self._module.StratifiedShuffleSplit(target.values, *args, **kwargs)
+        if _SKLEARN_ge_018:
+            return self._module.StratifiedShuffleSplit(*args, **kwargs)
+        else:
+            target = self._target
+            return self._module.StratifiedShuffleSplit(target.values, *args, **kwargs)
 
     def iterate(self, cv, reset_index=False):
         """
@@ -45,7 +48,12 @@ class ModelSelectionMethods(_AccessorMethods):
                 msg = "{0} is not a subclass of BaseCrossValidator"
                 warnings.warn(msg.format(cv.__class__.__name__))
 
-            for train_index, test_index in cv.split(self._df.index):
+            if isinstance(cv, self._module.StratifiedShuffleSplit):
+                gen = cv.split(self._df.data.values, self._df.target.values)
+            else:
+                gen = cv.split(self._df.index)
+
+            for train_index, test_index in gen:
                     train_df = self._df.iloc[train_index, :]
                     test_df = self._df.iloc[test_index, :]
                     if reset_index:

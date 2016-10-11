@@ -9,7 +9,7 @@ from pandas_ml.core.accessor import _AccessorMethods
 
 class CrossValidationMethods(_AccessorMethods):
     """
-    Accessor to ``sklearn.cross_validation``.
+    Deprecated. Accessor to ``sklearn.cross_validation``.
     """
 
     _module_name = 'sklearn.cross_validation'
