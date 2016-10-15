@@ -9,7 +9,8 @@ Enhancement
 ^^^^^^^^^^^
 
 - Support scikit-learn v0.17.x and v0.18.0.
-- Support imbalanced-learn via ``.imbalance`` accessor.
+- Support imbalanced-learn via ``.imbalance`` accessor. See :doc:`imbalance`.
+- Added ``pandas_ml.ConfusionMatrix`` class for easier classification results evaluation. See :doc:`conf_mat`.
 
 Bug Fix
 ^^^^^^^
