@@ -7,7 +7,8 @@ from pandas.util.testing import (assertRaises, assertRaisesRegexp,  # noqa
                                  close, RNGContext,                 # noqa
                                  assert_index_equal,                # noqa
                                  assert_series_equal,               # noqa
-                                 assert_frame_equal)                # noqa
+                                 assert_frame_equal,                # noqa
+                                 assert_numpy_array_equal)          # noqa
 import pandas.tools.plotting as plotting
 
 

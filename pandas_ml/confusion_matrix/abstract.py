@@ -211,13 +211,12 @@ class ConfusionMatrixAbstract(object):
         Plots confusion matrix
         """
 
-        import matplotlib.pylab as plt
-
         df = self.to_dataframe(normalized)
 
         try:
             cmap = kwargs['cmap']
         except:
+            import matplotlib.pyplot as plt
             cmap = plt.cm.gray_r
 
         title = self.title
@@ -229,6 +228,7 @@ class ConfusionMatrixAbstract(object):
             backend = self.backend
 
         if backend == Backend.Matplotlib:
+            import matplotlib.pyplot as plt
             # if ax is None:
             fig, ax = plt.subplots(figsize=(9, 8))
             plt.imshow(df, cmap=cmap, interpolation='nearest')  # imshow / matshow

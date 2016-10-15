@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 
-import numpy as np
-import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 
-import sklearn.datasets as datasets
-import xgboost as xgb
+import numpy as np                            # noqa
+import pandas as pd                           # noqa
 
-import pandas_ml as pdml
-import pandas_ml.util.testing as tm
+import pandas_ml as pdml                      # noqa
+import pandas_ml.util.testing as tm           # noqa
+
+import sklearn.datasets as datasets           # noqa
+import xgboost as xgb                         # noqa
 
 
 class TestXGBoost(tm.TestCase):
@@ -84,9 +87,6 @@ class TestXGBoost(tm.TestCase):
 
     def test_plotting(self):
 
-        import matplotlib
-        matplotlib.use('Agg')
-
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
@@ -107,7 +107,14 @@ class TestXGBoost(tm.TestCase):
         from matplotlib.axes import Axes
         from graphviz import Digraph
 
-        ax = df.xgb.plot_importance()
+        try:
+            ax = df.xgb.plot_importance()
+        except ImportError:
+            import nose
+            # matplotlib.use doesn't work on Travis
+            # PYTHON=3.4 PANDAS=0.17.1 SKLEARN=0.16.1
+            raise nose.SkipTest()
+
         self.assertIsInstance(ax, Axes)
         assert ax.get_title() == 'Feature importance'
         assert ax.get_xlabel() == 'F score'

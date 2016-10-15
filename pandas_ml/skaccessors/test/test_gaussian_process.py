@@ -136,11 +136,13 @@ class TestGaussianProcess(tm.TestCase):
 
         k1 = (df.gp.kernels.ConstantKernel(1.0, (1e-3, 1e3)) *
               df.gp.kernels.RBF(10, (1e-2, 1e2)))
-        g1 = df.gp.GaussianProcessRegressor(kernel=k1, n_restarts_optimizer=9)
+        g1 = df.gp.GaussianProcessRegressor(kernel=k1, n_restarts_optimizer=9,
+                                            random_state=self.random_state)
 
         k2 = (gp.kernels.ConstantKernel(1.0, (1e-3, 1e3)) *
               gp.kernels.RBF(10, (1e-2, 1e2)))
-        g2 = gp.GaussianProcessRegressor(kernel=k2, n_restarts_optimizer=9)
+        g2 = gp.GaussianProcessRegressor(kernel=k2, n_restarts_optimizer=9,
+                                         random_state=self.random_state)
 
         g1.fit(X, y)
         g2.fit(X, y)

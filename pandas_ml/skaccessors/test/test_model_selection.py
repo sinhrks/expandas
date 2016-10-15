@@ -267,6 +267,50 @@ class TestSplitter(TestModelSelectionBase):
 
                 self.assertTrue(df.shape[0], train_df.shape[0] + test_df.shape[1])
 
+    def test_nested_cross_validation(self):
+        # http://scikit-learn.org/stable/auto_examples/model_selection/plot_nested_cross_validation_iris.html#sphx-glr-auto-examples-model-selection-plot-nested-cross-validation-iris-py
+
+        # Number of random trials
+        NUM_TRIALS = 30
+
+        # Load the dataset
+        iris = datasets.load_iris()
+        X_iris = iris.data
+        y_iris = iris.target
+
+        p_grid = {"C": [1, 10, 100],
+                  "gamma": [.01, .1]}
+
+        svr = svm.SVC(kernel="rbf")
+        expected = np.zeros(NUM_TRIALS)
+
+        for i in range(NUM_TRIALS):
+            inner_cv = ms.KFold(n_splits=4, shuffle=True, random_state=i)
+            outer_cv = ms.KFold(n_splits=4, shuffle=True, random_state=i)
+
+            clf = ms.GridSearchCV(estimator=svr, param_grid=p_grid, cv=inner_cv)
+            clf.fit(X_iris, y_iris)
+
+            nested_score = ms.cross_val_score(clf, X=X_iris, y=y_iris, cv=outer_cv)
+            expected[i] = nested_score.mean()
+
+        df = pdml.ModelFrame(datasets.load_iris())
+        svr = df.svm.SVC(kernel="rbf")
+
+        result = np.zeros(NUM_TRIALS)
+
+        for i in range(NUM_TRIALS):
+            inner_cv = df.ms.KFold(n_splits=4, shuffle=True, random_state=i)
+            outer_cv = df.ms.KFold(n_splits=4, shuffle=True, random_state=i)
+
+            clf = df.ms.GridSearchCV(estimator=svr, param_grid=p_grid, cv=inner_cv)
+            df.fit(clf)
+
+            nested_score = df.ms.cross_val_score(clf, cv=outer_cv)
+            result[i] = nested_score.mean()
+
+        tm.assert_numpy_array_equal(result, expected)
+
 
 class TestHyperParameterOptimizer(TestModelSelectionBase):
 

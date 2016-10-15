@@ -1,22 +1,32 @@
 #!/usr/bin/env python
 
-import numpy as np
-import sklearn.datasets as datasets
-
-import pandas_ml as pdml
-import pandas_ml.util.testing as tm
-
 import matplotlib
 matplotlib.use('Agg')
-# must be imported after use('Agg')
-import matplotlib.pyplot as plt  # noqa
 
-import seaborn as sns            # noqa
+import numpy as np                       # noqa
+import sklearn.datasets as datasets      # noqa
+
+import pandas_ml as pdml                 # noqa
+import pandas_ml.util.testing as tm      # noqa
+
+try:
+    import seaborn as sns                # noqa
+except ImportError:
+    pass
 
 
 class SeabornCase(tm.PlottingTestCase):
 
     def setUp(self):
+
+        try:
+            import matplotlib.pyplot     # noqa
+        except ImportError:
+            import nose
+            # matplotlib.use doesn't work on Travis
+            # PYTHON=3.4 PANDAS=0.17.1 SKLEARN=0.16.1
+            raise nose.SkipTest()
+
         self.iris = pdml.ModelFrame(datasets.load_iris())
 
         self.diabetes = pdml.ModelFrame(datasets.load_diabetes())
@@ -167,6 +177,8 @@ class TestSeabornDistribution(SeabornCase):
         self.assertIsInstance(ax, matplotlib.axes.Axes)
 
     def test_kde_rug_mix(self):
+        import matplotlib.pyplot as plt
+
         df = pdml.ModelFrame(np.random.randn(100, 5), columns=list('abcde'))
         df.target = df['a']
 
