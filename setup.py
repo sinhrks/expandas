@@ -9,7 +9,7 @@ PACKAGE = 'pandas_ml'
 README = 'README.rst'
 REQUIREMENTS = 'requirements.txt'
 
-VERSION = '0.4.0'
+VERSION = '0.4.1.dev'
 
 def read(fname):
   # file must be read as utf-8 in py3 to avoid to be bytes
