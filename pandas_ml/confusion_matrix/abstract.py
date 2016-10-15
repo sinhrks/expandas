@@ -7,13 +7,6 @@ import collections
 
 from pandas_ml.confusion_matrix.stats import binom_interval, class_agreement, prop_test
 
-from pandas_ml.confusion_matrix.utils import (
-    DISPLAY_SUM_DEFAULT, BACKEND_DEFAULT,
-    TRUE_NAME_DEFAULT, PRED_NAME_DEFAULT,
-    CLASSES_NAME_DEFAULT,
-    SUM_NAME_DEFAULT, COLORBAR_TRIG,
-    Backend)
-
 
 class ConfusionMatrixAbstract(object):
     """
@@ -22,9 +15,13 @@ class ConfusionMatrixAbstract(object):
     You shouldn't instantiate this class.
     You might instantiate ConfusionMatrix or BinaryConfusionMatrix classes
     """
+
+    TRUE_NAME = 'Actual'
+    PRED_NAME = 'Predicted'
+
     def __init__(self, y_true, y_pred, labels=None,
-                 display_sum=DISPLAY_SUM_DEFAULT, backend=BACKEND_DEFAULT,
-                 true_name=TRUE_NAME_DEFAULT, pred_name=PRED_NAME_DEFAULT):
+                 display_sum=True, backend='matplotlib',
+                 true_name='Actual', pred_name='Predicted'):
         self.true_name = true_name
         self.pred_name = pred_name
 
@@ -108,10 +105,11 @@ class ConfusionMatrixAbstract(object):
         if df is None:
             df = self.to_dataframe()
         idx_classes = (df.columns | df.index).copy()
-        idx_classes.name = CLASSES_NAME_DEFAULT
+        idx_classes.name = 'Classes'
         return(idx_classes)
 
-    def to_dataframe(self, normalized=False, calc_sum=False, sum_label=SUM_NAME_DEFAULT):
+    def to_dataframe(self, normalized=False, calc_sum=False,
+                     sum_label='__all__'):
         """
         Returns a Pandas DataFrame
         """
@@ -150,11 +148,11 @@ class ConfusionMatrixAbstract(object):
         s.name = self.pred_name
         return(s)
 
-    def to_array(self, normalized=False, sum=False, sum_label=SUM_NAME_DEFAULT):
+    def to_array(self, normalized=False, sum=False):
         """
         Returns a Numpy Array
         """
-        return(self.to_dataframe(normalized, sum, sum_label).values)
+        return(self.to_dataframe(normalized, sum).values)
 
     def toarray(self, *args, **kwargs):
         """
@@ -206,7 +204,8 @@ class ConfusionMatrixAbstract(object):
         else:
             return("Confusion matrix")
 
-    def plot(self, normalized=False, backend=None, ax=None, **kwargs):
+    def plot(self, normalized=False, backend='matplotlib',
+             ax=None, max_colors=10, **kwargs):
         """
         Plots confusion matrix
         """
@@ -224,10 +223,7 @@ class ConfusionMatrixAbstract(object):
         if normalized:
             title += " (normalized)"
 
-        if backend is None:
-            backend = self.backend
-
-        if backend == Backend.Matplotlib:
+        if backend == 'matplotlib':
             import matplotlib.pyplot as plt
             # if ax is None:
             fig, ax = plt.subplots(figsize=(9, 8))
@@ -247,7 +243,7 @@ class ConfusionMatrixAbstract(object):
 
             # N_min = 0
             N_max = self.max()
-            if N_max > COLORBAR_TRIG:
+            if N_max > max_colors:
                 # Continuous colorbar
                 plt.colorbar()
             else:
@@ -258,19 +254,20 @@ class ConfusionMatrixAbstract(object):
                 # norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
                 # cb = mpl.colorbar.ColorbarBase(ax2, cmap=cmap, norm=norm, spacing='proportional', ticks=bounds, boundaries=bounds, format='%1i')
 
-            return(ax)
+            return ax
 
-        elif backend == Backend.Seaborn:
+        elif backend == 'seaborn':
             import seaborn as sns
             ax = sns.heatmap(df, **kwargs)
-            return(ax)
+            return ax
             # You should test this yourself
             # because I'm facing an issue with Seaborn under Mac OS X (2015-04-26)
             # RuntimeError: Cannot get window extent w/o renderer
             # sns.plt.show()
 
         else:
-            raise(NotImplementedError("backend=%r not allowed" % backend))
+            msg = "'backend' must be either 'matplotlib' or 'seaborn'"
+            raise ValueError(msg)
 
     def binarize(self, select):
         """Returns a binary confusion matrix from

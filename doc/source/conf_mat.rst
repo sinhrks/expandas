@@ -77,13 +77,8 @@ Matplotlib plot of a normalized confusion matrix
 Binary confusion matrix
 -----------------------
 
-Import ``BinaryConfusionMatrix`` and ``Backend``
-
-.. code-block:: python
-
-    from pandas_ml import BinaryConfusionMatrix, Backend
-
-Define actual values (``y_true``) and predicted values (``y_pred``)
+If actual values (``y_true``) and predicted values (``y_pred``) are ``bool``,
+``ConfusionMatrix`` outputs binary confusion matrix.
 
 .. code-block:: python
 
@@ -115,11 +110,7 @@ Define actual values (``y_true``) and predicted values (``y_pred``)
            False, False,  True,  True, False, False, False, False, False,
            False,  True, False, False]
 
-Let's define a binary confusion matrix
-
-.. code-block:: python
-
-    binary_confusion_matrix = BinaryConfusionMatrix(y_true, y_pred)
+    binary_confusion_matrix = ConfusionMatrix(y_true, y_pred)
     print("Binary confusion matrix:\n%s" % binary_confusion_matrix)
 
 It display as a nicely labeled Pandas DataFrame
@@ -171,8 +162,7 @@ Seaborn plot of a binary confusion matrix (ToDo)
 
 .. code-block:: python
 
-    from pandas_ml.confusion_matrix import Backend
-    binary_confusion_matrix.plot(backend=Backend.Seaborn)
+    binary_confusion_matrix.plot(backend='seaborn')
 
 Confusion matrix and class statistics
 -------------------------------------

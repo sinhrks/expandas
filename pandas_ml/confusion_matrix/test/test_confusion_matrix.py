@@ -1,14 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-import pandas as pd
-import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 
-from pandas_ml import (LabeledConfusionMatrix, BinaryConfusionMatrix,
-                       ConfusionMatrix, TRUE_NAME_DEFAULT, PRED_NAME_DEFAULT)
-from pandas_ml import Backend                                      # noqa
-# from sklearn.metrics import confusion_matrix
-from collections import OrderedDict
+import numpy as np                       # noqa
+import pandas as pd                      # noqa
+import pandas_ml.util.testing as tm      # noqa
+
+import pandas_ml as pdml                 # noqa
+from pandas_ml import ConfusionMatrix    # noqa
+from collections import OrderedDict      # noqa
 
 # =========================================================================
 
@@ -29,18 +31,18 @@ def asserts(y_true, y_pred, cm):
     assert N == len(df.columns)
     assert cm.len() == len(df.columns)
 
-    assert df.index.name == TRUE_NAME_DEFAULT, "%r != %r" % (df.index.name, TRUE_NAME_DEFAULT)
-    assert df.columns.name == PRED_NAME_DEFAULT, "%r != %r" % (df.columns.name, PRED_NAME_DEFAULT)
+    assert df.index.name == 'Actual'
+    assert df.columns.name == 'Predicted'
 
-    assert df_with_sum.index.name == TRUE_NAME_DEFAULT, "%r != %r" % (df_with_sum.index.name, TRUE_NAME_DEFAULT)
-    assert df_with_sum.columns.name == PRED_NAME_DEFAULT, "%r != %r" % (df_with_sum.columns.name, PRED_NAME_DEFAULT)
+    assert df_with_sum.index.name == 'Actual'
+    assert df_with_sum.columns.name == 'Predicted'
 
     # np.testing.assert_array_equal(confusion_matrix(y_true, y_pred), cm.toarray())
 
     assert cm.sum() == len(y_true)
 
-    assert cm.true.name == TRUE_NAME_DEFAULT, "%r != %r" % (cm.true.name, TRUE_NAME_DEFAULT)
-    assert cm.pred.name == PRED_NAME_DEFAULT, "%r != %r" % (cm.pred.name, PRED_NAME_DEFAULT)
+    assert cm.true.name == 'Actual'
+    assert cm.pred.name == 'Predicted'
 
 # =========================================================================
 
@@ -48,7 +50,8 @@ def asserts(y_true, y_pred, cm):
 def test_pandas_confusion_cm_strings():
     y_true = ['rabbit', 'cat', 'rabbit', 'rabbit', 'cat', 'dog', 'dog', 'rabbit', 'rabbit', 'cat', 'dog', 'rabbit']
     y_pred = ['cat', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'cat', 'rabbit', 'rabbit']
-    cm = LabeledConfusionMatrix(y_true, y_pred)
+    cm = pdml.ConfusionMatrix(y_true, y_pred)
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
     print("Confusion matrix:\n%s" % cm)
     asserts(y_true, y_pred, cm)
     # cm.print_stats()
@@ -58,7 +61,8 @@ def test_pandas_confusion_cm_int():
     y_true = [2, 0, 2, 2, 0, 1, 1, 2, 2, 0, 1, 2]
     y_pred = [0, 0, 2, 1, 0, 2, 1, 0, 2, 0, 2, 2]
     labels = ["ant", "bird", "cat"]
-    cm = LabeledConfusionMatrix(y_true, y_pred, labels=labels)
+    cm = ConfusionMatrix(y_true, y_pred, labels=labels)
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
     print("Confusion matrix:\n%s" % cm)
     asserts(y_true, y_pred, cm)
     assert cm.len() == len(labels)
@@ -95,9 +99,10 @@ def test_pandas_confusion_binary_cm():
               False, False, True, True, False, False, False, False, False,
               False, True, False, False]
 
-    binary_cm = BinaryConfusionMatrix(y_true, y_pred)
-    print("Binary confusion matrix:\n%s" % binary_cm)
+    binary_cm = ConfusionMatrix(y_true, y_pred)
+    assert isinstance(binary_cm, pdml.confusion_matrix.BinaryConfusionMatrix)
 
+    print("Binary confusion matrix:\n%s" % binary_cm)
     asserts(y_true, y_pred, binary_cm)
 
 
@@ -105,11 +110,13 @@ def test_pandas_confusion_cm_empty_column():
     y_true = [2, 0, 2, 2, 0, 1]
     y_pred = [0, 0, 2, 2, 0, 2]
     # cm = LabeledConfusionMatrix(y_true, y_pred)
-    cm = LabeledConfusionMatrix(y_true, y_pred, labels=["ant", "bird", "cat"])
+    cm = ConfusionMatrix(y_true, y_pred, labels=["ant", "bird", "cat"])
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
 
-    cm = LabeledConfusionMatrix(y_true, y_pred)
+    cm = ConfusionMatrix(y_true, y_pred)
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
+
     print("Confusion matrix:\n%s" % cm)
-
     asserts(y_true, y_pred, cm)
 
     # cm.print_stats()
@@ -119,11 +126,13 @@ def test_pandas_confusion_cm_empty_row():
     y_true = [2, 0, 2, 2, 0, 0]
     y_pred = [0, 0, 2, 2, 1, 2]
     # cm = LabeledConfusionMatrix(y_true, y_pred)
-    cm = LabeledConfusionMatrix(y_true, y_pred, labels=["ant", "bird", "cat"])
+    cm = ConfusionMatrix(y_true, y_pred, labels=["ant", "bird", "cat"])
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
 
-    cm = LabeledConfusionMatrix(y_true, y_pred)
+    cm = ConfusionMatrix(y_true, y_pred)
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
+
     print("Confusion matrix:\n%s" % cm)
-
     asserts(y_true, y_pred, cm)
 
     # cm.print_stats()
@@ -133,10 +142,12 @@ def test_pandas_confusion_cm_binarize():
     y_true = ['rabbit', 'cat', 'rabbit', 'rabbit', 'cat', 'dog', 'dog', 'rabbit', 'rabbit', 'cat', 'dog', 'rabbit']
     y_pred = ['cat', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'cat', 'rabbit', 'rabbit']
 
-    cm = LabeledConfusionMatrix(y_true, y_pred)
-    print("Confusion matrix:\n%s" % cm)
+    cm = ConfusionMatrix(y_true, y_pred)
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
 
+    print("Confusion matrix:\n%s" % cm)
     select = ['cat', 'dog']
+
     print("Binarize with %s" % select)
     binary_cm = cm.binarize(select)
 
@@ -152,7 +163,9 @@ def test_value_counts():
         'Size': ['S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'XL', 'XL', 'XL', 'XL', 'XL', 'XL', 'XL', 'XL'],
         'SizePred': ['S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'L', 'M', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'XL', 'L', 'L', 'XL', 'L', 'XL', 'XL', 'XL'],
     })
-    cm = LabeledConfusionMatrix(df["Size"], df["SizePred"])
+    cm = ConfusionMatrix(df["Size"], df["SizePred"])
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
+
     assert (cm.true - df.Size.value_counts()).sum() == 0
     assert (cm.pred - df.SizePred.value_counts()).sum() == 0
     cm.print_stats()
@@ -163,7 +176,9 @@ def test_pandas_confusion_cm_stats_integers():
     y_pred = [100, 200, 200, 100, 100, 200, 200, 200, 100, 200, 500, 100, 100, 100, 100, 100, 100, 100, 500, 200]
     print("y_true: %s" % y_true)
     print("y_pred: %s" % y_pred)
-    cm = LabeledConfusionMatrix(y_true, y_pred)
+    cm = ConfusionMatrix(y_true, y_pred)
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
+
     assert isinstance(cm.stats(), OrderedDict)
     cm.print_stats()
 
@@ -173,11 +188,15 @@ def test_pandas_confusion_cm_stats_animals():
     y_pred = ['cat', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'cat', 'rabbit', 'rabbit']
     print("y_true: %s" % y_true)
     print("y_pred: %s" % y_pred)
-    cm = LabeledConfusionMatrix(y_true, y_pred)
+
+    cm = ConfusionMatrix(y_true, y_pred)
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
+
     assert isinstance(cm.stats(), OrderedDict)
     assert cm.population == len(y_true)  # 12
     cm.print_stats()
     cm_stats = cm.stats()  # noqa
+
     assert cm.binarize("cat").TP == cm.get("cat")  # cm.get("cat", "cat")
     assert cm.binarize("cat").TP == 3
     assert cm.binarize("dog").TP == cm.get("dog")  # 1
@@ -190,7 +209,10 @@ def test_pandas_confusion_get():
     y_pred = ['cat', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'cat', 'rabbit', 'rabbit']
     print("y_true: %s" % y_true)
     print("y_pred: %s" % y_pred)
-    cm = LabeledConfusionMatrix(y_true, y_pred)
+
+    cm = ConfusionMatrix(y_true, y_pred)
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
+
     assert cm.get("cat") == cm.get("cat", "cat")
     assert cm.get("cat") == 3
     assert cm.get("dog") == 1
@@ -203,7 +225,10 @@ def test_pandas_confusion_max_min():
     y_pred = ['cat', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'cat', 'rabbit', 'rabbit']
     print("y_true: %s" % y_true)
     print("y_pred: %s" % y_pred)
-    cm = LabeledConfusionMatrix(y_true, y_pred)
+
+    cm = ConfusionMatrix(y_true, y_pred)
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
+
     assert cm.max() == 3
     assert cm.min() == 0
 
@@ -237,7 +262,8 @@ def test_pandas_confusion_binary_cm_inverse():
               False, False, True, True, False, False, False, False, False,
               False, True, False, False]
 
-    binary_cm = BinaryConfusionMatrix(y_true, y_pred)
+    binary_cm = ConfusionMatrix(y_true, y_pred)
+    assert isinstance(binary_cm, pdml.confusion_matrix.BinaryConfusionMatrix)
     bcm_sum = binary_cm.sum()
 
     binary_cm_r = binary_cm.inverse()  # reverse not in place
@@ -260,7 +286,9 @@ def test_pandas_confusion_binarize():
 def test_pandas_confusion_normalized():
     y_true = [2, 0, 2, 2, 0, 1, 1, 2, 2, 0, 1, 2]
     y_pred = [0, 0, 2, 1, 0, 2, 1, 0, 2, 0, 2, 2]
-    cm = LabeledConfusionMatrix(y_true, y_pred)
+    cm = ConfusionMatrix(y_true, y_pred)
+    assert isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix)
+
     df = cm.to_dataframe()
     df_norm = cm.to_dataframe(normalized=True)
     assert(df_norm.sum(axis=1).sum() == len(df))
@@ -280,7 +308,9 @@ def test_pandas_confusion_normalized_issue1():
               'business', 'business', 'business', 'business', 'business',
               'health', 'health', 'business', 'health']
 
-    cm = LabeledConfusionMatrix(y_true, y_pred)
+    cm = ConfusionMatrix(y_true, y_pred)
+    assert isinstance(cm, pdml.confusion_matrix.BinaryConfusionMatrix)
+
     df = cm.to_dataframe()
     df_norm = cm.to_dataframe(normalized=True)
     assert(df_norm.sum(axis=1, skipna=False).fillna(1).sum() == len(df))
@@ -291,7 +321,7 @@ def test_pandas_confusion_matrix_auto_labeled():
     y_pred = ['cat', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'cat', 'rabbit', 'rabbit']
 
     cm = ConfusionMatrix(y_true, y_pred)
-    assert(isinstance(cm, LabeledConfusionMatrix))
+    assert(isinstance(cm, pdml.confusion_matrix.LabeledConfusionMatrix))
 
 
 def test_pandas_confusion_matrix_auto_binary():
@@ -324,4 +354,27 @@ def test_pandas_confusion_matrix_auto_binary():
               False, True, False, False]
 
     cm = ConfusionMatrix(y_true, y_pred)
-    assert(isinstance(cm, BinaryConfusionMatrix))
+    assert(isinstance(cm, pdml.confusion_matrix.BinaryConfusionMatrix))
+
+
+def test_plot():
+
+    try:
+        import matplotlib.pyplot        # noqa
+    except ImportError:
+        import nose
+        raise nose.SkipTest()
+
+    y_true = ['rabbit', 'cat', 'rabbit', 'rabbit', 'cat', 'dog',
+              'dog', 'rabbit', 'rabbit', 'cat', 'dog', 'rabbit']
+    y_pred = ['cat', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'dog',
+              'cat', 'rabbit', 'cat', 'rabbit', 'rabbit']
+
+    cm = ConfusionMatrix(y_true, y_pred)
+
+    # check plot works
+    cm.plot()
+    cm.plot(backend='seaborn')
+
+    with tm.assertRaises(ValueError):
+        cm.plot(backend='xxx')

@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 import collections
 
-from pandas_ml.confusion_matrix.utils import (TRUE_NAME_DEFAULT, PRED_NAME_DEFAULT)
 from pandas_ml.confusion_matrix.abstract import ConfusionMatrixAbstract
 
 
@@ -34,11 +33,10 @@ len=%d because y_true.unique()=%s y_pred.unique()=%s" \
         * FN: False Negative
         * TP: True Positive
         """
-        df = pd.DataFrame(
-            [["TN", "FP"], ["FN", "TP"]],
-            columns=[False, True], index=[False, True])
-        df.index.name = TRUE_NAME_DEFAULT
-        df.columns.name = PRED_NAME_DEFAULT
+        df = pd.DataFrame([["TN", "FP"], ["FN", "TP"]],
+                          columns=[False, True], index=[False, True])
+        df.index.name = cls.TRUE_NAME
+        df.columns.name = cls.PRED_NAME
         return(df)
 
     @property
