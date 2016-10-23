@@ -29,7 +29,7 @@ class ModelSelectionMethods(_AccessorMethods):
             target = self._target
             return self._module.StratifiedShuffleSplit(target.values, *args, **kwargs)
 
-    def iterate(self, cv, reset_index=False):
+    def split(self, cv, reset_index=False):
         """
         Generate ``ModelFrame`` using iterators for cross validation
 
@@ -73,6 +73,12 @@ class ModelSelectionMethods(_AccessorMethods):
                     train_df = train_df.reset_index(drop=True)
                     test_df = test_df.reset_index(drop=True)
                 yield train_df, test_df
+
+    def iterate(self, cv, reset_index=False):
+        """ deprecated. Use .split """
+        warnings.warn(".iterate is deprecated. Use .split instead",
+                      FutureWarning, stacklevel=2)
+        return self.split(cv, reset_index=reset_index)
 
     # Splitter Functions
 

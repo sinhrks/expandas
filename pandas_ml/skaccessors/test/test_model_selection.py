@@ -92,7 +92,11 @@ class TestSplitter(TestModelSelectionBase):
     def test_iterate(self):
         df = pdml.ModelFrame(datasets.load_iris())
         kf = df.model_selection.KFold(4, random_state=self.random_state)
-        for train_df, test_df in df.model_selection.iterate(kf):
+
+        with tm.assert_produces_warning(FutureWarning):
+            gen = df.model_selection.iterate(kf)
+
+        for train_df, test_df in gen:
             self.assertIsInstance(train_df, pdml.ModelFrame)
             self.assertIsInstance(test_df, pdml.ModelFrame)
             self.assert_index_equal(df.columns, train_df.columns)
@@ -100,12 +104,26 @@ class TestSplitter(TestModelSelectionBase):
 
             self.assertTrue(df.shape[0], train_df.shape[0] + test_df.shape[1])
 
-    def test_iterate_keep_index(self):
+    def test_split(self):
+        df = pdml.ModelFrame(datasets.load_iris())
+        kf = df.model_selection.KFold(4, random_state=self.random_state)
+
+        gen = df.model_selection.split(kf)
+
+        for train_df, test_df in gen:
+            self.assertIsInstance(train_df, pdml.ModelFrame)
+            self.assertIsInstance(test_df, pdml.ModelFrame)
+            self.assert_index_equal(df.columns, train_df.columns)
+            self.assert_index_equal(df.columns, test_df.columns)
+
+            self.assertTrue(df.shape[0], train_df.shape[0] + test_df.shape[1])
+
+    def test_split_keep_index(self):
         df = pdml.ModelFrame({'A': [1, 2, 3, 4, 5, 6, 7, 8],
                               'B': [1, 2, 3, 4, 5, 6, 7, 8]},
                              index='a b c d e f g h'.split(' '))
         kf = df.model_selection.KFold(3, random_state=self.random_state)
-        folded = [f for f in df.model_selection.iterate(kf)]
+        folded = [f for f in df.model_selection.split(kf)]
         self.assertEqual(len(folded), 3)
         self.assert_frame_equal(folded[0][0], df.iloc[3:, :])
         self.assert_frame_equal(folded[0][1], df.iloc[:3, :])
@@ -114,7 +132,7 @@ class TestSplitter(TestModelSelectionBase):
         self.assert_frame_equal(folded[2][0], df.iloc[:6, :])
         self.assert_frame_equal(folded[2][1], df.iloc[6:, :])
 
-        folded = [f for f in df.model_selection.iterate(kf, reset_index=True)]
+        folded = [f for f in df.model_selection.split(kf, reset_index=True)]
         self.assertEqual(len(folded), 3)
         self.assert_frame_equal(folded[0][0],
                                 df.iloc[3:, :].reset_index(drop=True))
@@ -257,15 +275,17 @@ class TestSplitter(TestModelSelectionBase):
             self.assert_numpy_array_equal(i1[1], i2[1])
 
         sf1 = df.model_selection.StratifiedShuffleSplit(random_state=self.random_state)
-        with tm.assert_produces_warning(UserWarning):
-            # StratifiedShuffleSplit is not a subclass of BaseCrossValidator
-            for train_df, test_df in df.model_selection.iterate(sf1):
-                self.assertIsInstance(train_df, pdml.ModelFrame)
-                self.assertIsInstance(test_df, pdml.ModelFrame)
-                self.assert_index_equal(df.columns, train_df.columns)
-                self.assert_index_equal(df.columns, test_df.columns)
+        with tm.assert_produces_warning(FutureWarning):
+            gen = df.model_selection.iterate(sf1)
 
-                self.assertTrue(df.shape[0], train_df.shape[0] + test_df.shape[1])
+        # StratifiedShuffleSplit is not a subclass of BaseCrossValidator
+        for train_df, test_df in gen:
+            self.assertIsInstance(train_df, pdml.ModelFrame)
+            self.assertIsInstance(test_df, pdml.ModelFrame)
+            self.assert_index_equal(df.columns, train_df.columns)
+            self.assert_index_equal(df.columns, test_df.columns)
+
+            self.assertTrue(df.shape[0], train_df.shape[0] + test_df.shape[1])
 
     def test_nested_cross_validation(self):
         # http://scikit-learn.org/stable/auto_examples/model_selection/plot_nested_cross_validation_iris.html#sphx-glr-auto-examples-model-selection-plot-nested-cross-validation-iris-py

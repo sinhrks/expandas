@@ -576,14 +576,14 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
     @Appender(_shared_docs['skaccessor'] % dict(module='cross_validation'))
     def cross_validation(self):
         msg = '.cross_validation is deprecated. Use .ms or .model_selection'
-        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        warnings.warn(msg, FutureWarning, stacklevel=2)
         return self._cross_validation
 
     @property
     @Appender(_shared_docs['skaccessor'] % dict(module='cross_validation'))
     def crv(self):
         msg = '.crv is deprecated. Use .ms or .model_selection'
-        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        warnings.warn(msg, FutureWarning, stacklevel=2)
         return self._cross_validation
 
     @cache_readonly
@@ -671,7 +671,7 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
     @Appender(_shared_docs['skaccessor'] % dict(module='grid_search'))
     def grid_search(self):
         msg = '.grid_search is deprecated. Use .ms or .model_selection'
-        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        warnings.warn(msg, FutureWarning, stacklevel=2)
         return self._grid_search
 
     @cache_readonly
@@ -722,14 +722,14 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
     @Appender(_shared_docs['skaccessor_nolink'] % dict(module='lda'))
     def lda(self):
         msg = '.lda is deprecated. Use .da or .diccriminant_analysis'
-        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        warnings.warn(msg, FutureWarning, stacklevel=2)
         return self._da
 
     @property
     @Appender(_shared_docs['skaccessor'] % dict(module='learning_curve'))
     def learning_curve(self):
         msg = '.learning_curve is deprecated. Use .ms or .model_selection'
-        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        warnings.warn(msg, FutureWarning, stacklevel=2)
         return self._learning_curve
 
     @cache_readonly
@@ -863,7 +863,7 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
     @Appender(_shared_docs['skaccessor_nolink'] % dict(module='qda'))
     def qda(self):
         msg = '.qda is deprecated. Use .da or .diccriminant_analysis'
-        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        warnings.warn(msg, FutureWarning, stacklevel=2)
         return self._da
 
     @property

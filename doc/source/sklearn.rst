@@ -317,7 +317,7 @@ Cross Validation
    [38 rows x 5 columns]
 
 
-You can iterate over Splitter classes via ``ModelFrame.model_selection.iterate`` which returns ``ModelFrame`` corresponding to training and test data.
+You can iterate over Splitter classes via ``ModelFrame.model_selection.split`` which returns ``ModelFrame`` corresponding to training and test data.
 
 .. code-block:: python
 

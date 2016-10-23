@@ -31,10 +31,10 @@ class TestDiscriminantAnalysis(tm.TestCase):
 
     def test_objectmapper_deprecated(self):
         df = pdml.ModelFrame([])
-        with tm.assert_produces_warning(DeprecationWarning):
+        with tm.assert_produces_warning(FutureWarning):
             self.assertIs(df.lda.LinearDiscriminantAnalysis,
                           da.LinearDiscriminantAnalysis)
-        with tm.assert_produces_warning(DeprecationWarning):
+        with tm.assert_produces_warning(FutureWarning):
             self.assertIs(df.qda.QuadraticDiscriminantAnalysis,
                           da.QuadraticDiscriminantAnalysis)
 
