@@ -14,7 +14,6 @@ from pandas_ml.core.accessor import _AccessorMethods
 import pandas_ml.imbaccessors as imbaccessors
 import pandas_ml.skaccessors as skaccessors
 import pandas_ml.smaccessors as smaccessors
-import pandas_ml.snsaccessors as snsaccessors
 import pandas_ml.xgboost as xgboost
 import pandas_ml.util as util
 
@@ -914,6 +913,7 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
 
     @cache_readonly
     def _seaborn(self):
+        import pandas_ml.snsaccessors as snsaccessors
         return snsaccessors.SeabornMethods(self)
 
     @property
