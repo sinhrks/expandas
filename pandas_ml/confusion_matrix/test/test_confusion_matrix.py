@@ -359,13 +359,6 @@ def test_pandas_confusion_matrix_auto_binary():
 
 
 def test_plot():
-
-    try:
-        import matplotlib.pyplot        # noqa
-    except ImportError:
-        import nose
-        raise nose.SkipTest()
-
     y_true = ['rabbit', 'cat', 'rabbit', 'rabbit', 'cat', 'dog',
               'dog', 'rabbit', 'rabbit', 'cat', 'dog', 'rabbit']
     y_pred = ['cat', 'cat', 'rabbit', 'dog', 'cat', 'rabbit', 'dog',
@@ -375,7 +368,3 @@ def test_plot():
 
     # check plot works
     cm.plot()
-    cm.plot(backend='seaborn')
-
-    with tm.assertRaises(ValueError):
-        cm.plot(backend='xxx')

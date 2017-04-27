@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
+import warnings
+
 import numpy as np
 import pandas as pd
 import collections
@@ -20,7 +22,7 @@ class ConfusionMatrixAbstract(object):
     PRED_NAME = 'Predicted'
 
     def __init__(self, y_true, y_pred, labels=None,
-                 display_sum=True, backend='matplotlib',
+                 display_sum=True,
                  true_name='Actual', pred_name='Predicted'):
         self.true_name = true_name
         self.pred_name = pred_name
@@ -54,17 +56,6 @@ class ConfusionMatrixAbstract(object):
         assert N_true == N_pred, \
             "y_true must have same size - %d != %d" % (N_true, N_pred)
 
-        # from sklearn.metrics import confusion_matrix
-        # a = confusion_matrix(y_true, y_pred, labels=labels)
-        # print(a)
-        # self._df_confusion = pd.DataFrame(a, index=labels, columns=labels)
-        # self._df_confusion.index.name = self.true_name
-        # self._df_confusion.columns.name = self.pred_name
-
-        # df = pd.crosstab(self._y_true, self._y_pred,
-        #   rownames=[self.true_name], colnames=[self.pred_name])
-        # df = pd.crosstab(self._y_true, self._y_pred,
-        #    rownames=self.true_name, colnames=self.pred_name)
         df = pd.crosstab(self._y_true, self._y_pred)
         idx = self._classes(df)
         df = df.loc[idx, idx.copy()].fillna(0)  # if some columns or rows are missing
@@ -75,7 +66,6 @@ class ConfusionMatrixAbstract(object):
 
         self._len = len(idx)
 
-        self.backend = backend
         self.display_sum = display_sum
 
     def _label(self, i, labels):
@@ -85,11 +75,10 @@ class ConfusionMatrixAbstract(object):
             return(i)
 
     def __repr__(self):
-        return(self.to_dataframe(calc_sum=self.display_sum).__repr__())
+        return str(self)
 
     def __str__(self):
         return(self.to_dataframe(calc_sum=self.display_sum).__str__())
-        # return("%s:\n%s" % (self.title, self.to_dataframe(calc_sum=self.display_sum).__str__()))
 
     @property
     def classes(self):
@@ -194,80 +183,72 @@ class ConfusionMatrixAbstract(object):
         else:
             return(self._y_pred.map(func))
 
-    @property
-    def title(self):
-        """
-        Returns title
-        """
-        if self.is_binary:
-            return("Binary confusion matrix")
-        else:
-            return("Confusion matrix")
-
-    def plot(self, normalized=False, backend='matplotlib',
-             ax=None, max_colors=10, **kwargs):
+    def plot(self, normalized=False, backend=None, ax=None,
+             figsize=(7, 7), cmap='Blues', colorbar=True, xrot=45,
+             annotate=False, fontsize=18, **kwargs):
         """
         Plots confusion matrix
         """
 
         df = self.to_dataframe(normalized)
 
-        try:
-            cmap = kwargs['cmap']
-        except:
-            import matplotlib.pyplot as plt
-            cmap = plt.cm.gray_r
+        if backend is not None:
+            warnings.warn("'backend' keyword is deprecated and has no effect")
 
-        title = self.title
+        def _decorate_plot(ax):
 
-        if normalized:
-            title += " (normalized)"
-
-        if backend == 'matplotlib':
-            import matplotlib.pyplot as plt
-            # if ax is None:
-            fig, ax = plt.subplots(figsize=(9, 8))
-            plt.imshow(df, cmap=cmap, interpolation='nearest')  # imshow / matshow
-            ax.set_title(title)
-
-            tick_marks_col = np.arange(len(df.columns))
+            tick_marks_col = np.arange(len(df.columns)) + 0.5
             tick_marks_idx = tick_marks_col.copy()
 
             ax.set_yticks(tick_marks_idx)
             ax.set_xticks(tick_marks_col)
-            ax.set_xticklabels(df.columns, rotation=45, ha='right')
+            ax.set_xticklabels(df.columns, rotation=xrot, ha='right')
             ax.set_yticklabels(df.index)
 
             ax.set_ylabel(df.index.name)
             ax.set_xlabel(df.columns.name)
 
-            # N_min = 0
-            N_max = self.max()
-            if N_max > max_colors:
-                # Continuous colorbar
-                plt.colorbar()
+            ax.xaxis.set_ticks_position('top')
+            ax.xaxis.set_label_position('top')
+            ax.invert_yaxis()
+
+            if annotate:
+                for i, y in enumerate(tick_marks_idx):
+                    for c, x in enumerate(tick_marks_col):
+                        val = df.iloc[i, c]
+                        ax.annotate(val, xy=(x, y), fontsize=fontsize,
+                                    ha='center', va='center')
+
+            return ax
+
+        import matplotlib.pyplot as plt
+        if ax is None:
+            _, ax = plt.subplots(figsize=figsize)
+
+        mesh = ax.pcolormesh(df, cmap=cmap)
+        ax = _decorate_plot(ax)
+
+        if colorbar:
+            from mpl_toolkits.axes_grid1 import make_axes_locatable
+            div = make_axes_locatable(ax)
+
+            cb = div.new_horizontal(size="2%", pad=0.1)
+
+            fig = plt.gcf()
+            fig.add_axes(cb)
+
+            if normalized:
+                cb = fig.colorbar(mesh, cax=cb)
             else:
-                # Discrete colorbar
-                pass
-                # ax2 = fig.add_axes([0.93, 0.1, 0.03, 0.8])
-                # bounds = np.arange(N_min, N_max + 2, 1)
-                # norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
-                # cb = mpl.colorbar.ColorbarBase(ax2, cmap=cmap, norm=norm, spacing='proportional', ticks=bounds, boundaries=bounds, format='%1i')
+                boundaries = np.sort(np.unique(df.values))
+                cb = fig.colorbar(mesh, cax=cb, boundaries=boundaries)
 
-            return ax
+                # adjust label
+                boundaries = np.sort(np.unique(df.values))
+                cb.set_ticks(boundaries + .5)
+                cb.set_ticklabels(boundaries)
 
-        elif backend == 'seaborn':
-            import seaborn as sns
-            ax = sns.heatmap(df, **kwargs)
-            return ax
-            # You should test this yourself
-            # because I'm facing an issue with Seaborn under Mac OS X (2015-04-26)
-            # RuntimeError: Cannot get window extent w/o renderer
-            # sns.plt.show()
-
-        else:
-            msg = "'backend' must be either 'matplotlib' or 'seaborn'"
-            raise ValueError(msg)
+        return ax
 
     def binarize(self, select):
         """Returns a binary confusion matrix from
