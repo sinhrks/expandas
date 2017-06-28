@@ -48,8 +48,8 @@ class TestFeatureSelection(tm.TestCase):
         expected = fs.f_classif(diabetes.data, diabetes.target)
 
         self.assertEqual(len(result), 2)
-        self.assert_numpy_array_equal(result[0], expected[0])
-        self.assert_numpy_array_equal(result[1], expected[1])
+        tm.assert_numpy_array_equal(result[0], expected[0])
+        tm.assert_numpy_array_equal(result[1], expected[1])
 
     def test_f_regression(self):
         diabetes = datasets.load_diabetes()
@@ -59,8 +59,8 @@ class TestFeatureSelection(tm.TestCase):
         expected = fs.f_regression(diabetes.data, diabetes.target)
 
         self.assertEqual(len(result), 2)
-        self.assert_numpy_array_equal(result[0], expected[0])
-        self.assert_numpy_array_equal(result[1], expected[1])
+        self.assert_numpy_array_almost_equal(result[0], expected[0])
+        self.assert_numpy_array_almost_equal(result[1], expected[1])
 
     def test_Selection(self):
         diabetes = datasets.load_diabetes()

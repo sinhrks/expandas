@@ -25,22 +25,22 @@ class TestModelSeries(tm.TestCase):
 
         df = s.to_frame()
         self.assertIsInstance(df, pdml.ModelFrame)
-        self.assert_index_equal(df.columns, pd.Index([0]))
+        tm.assert_index_equal(df.columns, pd.Index([0]))
 
         df = s.to_frame(name='x')
         self.assertIsInstance(df, pdml.ModelFrame)
-        self.assert_index_equal(df.columns, pd.Index(['x']))
+        tm.assert_index_equal(df.columns, pd.Index(['x']))
 
         s = pdml.ModelSeries([1, 2, 3, 4, 5], name='name')
         self.assertIsInstance(s, pdml.ModelSeries)
 
         df = s.to_frame()
         self.assertIsInstance(df, pdml.ModelFrame)
-        self.assert_index_equal(df.columns, pd.Index(['name']))
+        tm.assert_index_equal(df.columns, pd.Index(['name']))
 
         df = s.to_frame(name='x')
         self.assertIsInstance(df, pdml.ModelFrame)
-        self.assert_index_equal(df.columns, pd.Index(['x']))
+        tm.assert_index_equal(df.columns, pd.Index(['x']))
 
     def test_preprocessing_normalize(self):
         s = pdml.ModelSeries([1, 2, 3, 4, 5], index=['A', 'B', 'C', 'D', 'E'])
@@ -50,7 +50,7 @@ class TestModelSeries(tm.TestCase):
 
         self.assertIsInstance(result, pdml.ModelSeries)
         self.assert_numpy_array_almost_equal(result.values, expected)
-        self.assert_index_equal(result.index, s.index)
+        tm.assert_index_equal(result.index, s.index)
 
 
 if __name__ == '__main__':

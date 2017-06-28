@@ -96,12 +96,12 @@ class TestClassificationMetrics(tm.TestCase):
         result = self.df.metrics.confusion_matrix()
         expected = metrics.confusion_matrix(self.target, self.pred)
         self.assertTrue(isinstance(result, pdml.ModelFrame))
-        self.assert_numpy_array_equal(result.values, expected)
+        tm.assert_numpy_array_equal(result.values, expected)
 
         result = self.df.metrics.confusion_matrix(labels=self.labels)
         expected = metrics.confusion_matrix(self.target, self.pred, labels=self.labels)
         self.assertTrue(isinstance(result, pdml.ModelFrame))
-        self.assert_numpy_array_equal(result.values, expected)
+        tm.assert_numpy_array_equal(result.values, expected)
 
     def test_f1_score(self):
         result = self.df.metrics.f1_score(average='weighted')
@@ -153,8 +153,9 @@ class TestClassificationMetrics(tm.TestCase):
             self.df.metrics.log_loss()
 
     def test_matthews_corrcoef(self):
-        with self.assertRaisesRegexp(ValueError, 'multiclass is not supported'):
-            self.df.metrics.matthews_corrcoef()
+        if not pdml.compat._SKLEARN_ge_019:
+            with self.assertRaisesRegexp(ValueError, 'multiclass is not supported'):
+                self.df.metrics.matthews_corrcoef()
 
     def test_precision_recall_curve(self):
         results = self.df.metrics.precision_recall_curve()
@@ -174,7 +175,7 @@ class TestClassificationMetrics(tm.TestCase):
         self.assert_numpy_array_almost_equal(result['support'].values, expected[3])
 
         expected = pd.Index(['precision', 'recall', 'f1-score', 'support'])
-        self.assert_index_equal(result.columns, expected)
+        tm.assert_index_equal(result.columns, expected)
 
     def test_precision_score(self):
         result = self.df.metrics.precision_score(average='weighted')
@@ -547,7 +548,7 @@ class TestClusteringMetrics(tm.TestCase):
         expected = metrics.silhouette_samples(self.data, self.pred)
 
         self.assertTrue(isinstance(result, pdml.ModelSeries))
-        self.assert_index_equal(result.index, self.df.index)
+        tm.assert_index_equal(result.index, self.df.index)
         self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_v_measure_score(self):

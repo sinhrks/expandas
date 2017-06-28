@@ -65,13 +65,13 @@ class TestCrossDecomposition(tm.TestCase):
 
         # check multi target columns
         self.assertTrue(train.has_target())
-        self.assert_numpy_array_equal(train.data.values, X_train)
-        self.assert_numpy_array_equal(train.target.values, Y_train)
-        self.assert_numpy_array_equal(test.data.values, X_test)
-        self.assert_numpy_array_equal(test.target.values, Y_test)
+        tm.assert_numpy_array_equal(train.data.values, X_train)
+        tm.assert_numpy_array_equal(train.target.values, Y_train)
+        tm.assert_numpy_array_equal(test.data.values, X_test)
+        tm.assert_numpy_array_equal(test.target.values, Y_test)
         expected = pd.MultiIndex.from_tuples([('.target', 0), ('.target', 1),
                                               ('.target', 2), ('.target', 3)])
-        self.assert_index_equal(train.target_name, expected)
+        tm.assert_index_equal(train.target_name, expected)
         self.assertEqual(train.data.shape, X_train.shape)
         self.assertEqual(train.target.shape, Y_train.shape)
 

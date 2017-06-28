@@ -109,10 +109,10 @@ class TestGaussianProcess(tm.TestCase):
         y_expected, sigma2_expected = g2.predict(x, eval_MSE=True)
 
         self.assertIsInstance(y_result, pdml.ModelSeries)
-        self.assert_index_equal(y_result.index, tdf.index)
+        tm.assert_index_equal(y_result.index, tdf.index)
 
         self.assertIsInstance(sigma2_result, pdml.ModelSeries)
-        self.assert_index_equal(sigma2_result.index, tdf.index)
+        tm.assert_index_equal(sigma2_result.index, tdf.index)
 
         self.assert_numpy_array_almost_equal(y_result.values, y_expected)
         self.assert_numpy_array_almost_equal(sigma2_result.values,
@@ -122,7 +122,7 @@ class TestGaussianProcess(tm.TestCase):
         y_expected = g2.predict(x)
 
         self.assertIsInstance(y_result, pdml.ModelSeries)
-        self.assert_index_equal(y_result.index, tdf.index)
+        tm.assert_index_equal(y_result.index, tdf.index)
 
         self.assert_numpy_array_almost_equal(y_result, y_expected)
 
@@ -154,10 +154,10 @@ class TestGaussianProcess(tm.TestCase):
         y_expected, std_expected = g2.predict(x, return_std=True)
 
         self.assertIsInstance(y_result, pdml.ModelSeries)
-        self.assert_index_equal(y_result.index, tdf.index)
+        tm.assert_index_equal(y_result.index, tdf.index)
 
         self.assertIsInstance(std_result, pdml.ModelSeries)
-        self.assert_index_equal(std_result.index, tdf.index)
+        tm.assert_index_equal(std_result.index, tdf.index)
 
         self.assert_numpy_array_almost_equal(y_result.values, y_expected)
         self.assert_numpy_array_almost_equal(std_result.values,
@@ -167,7 +167,7 @@ class TestGaussianProcess(tm.TestCase):
         y_expected = g2.predict(x)
 
         self.assertIsInstance(y_result, pdml.ModelSeries)
-        self.assert_index_equal(y_result.index, tdf.index)
+        tm.assert_index_equal(y_result.index, tdf.index)
 
         self.assert_numpy_array_almost_equal(y_result, y_expected)
 

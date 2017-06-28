@@ -40,7 +40,7 @@ class TestGridSearch(tm.TestCase):
                                  'kernel': ['rbf'] * 6 + ['linear'] * 3},
                                 columns=['mean', 'std', 'C', 'gamma', 'kernel'])
         self.assertIsInstance(result, pdml.ModelFrame)
-        self.assert_frame_equal(result, expected)
+        tm.assert_frame_equal(result, expected)
 
 
 if __name__ == '__main__':

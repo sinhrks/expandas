@@ -28,8 +28,8 @@ class TestManifold(tm.TestCase):
 
         self.assertEqual(len(result), 2)
         self.assertIsInstance(result[0], pdml.ModelFrame)
-        self.assert_index_equal(result[0].index, df.index)
-        self.assert_numpy_array_equal(result[0].values, expected[0])
+        tm.assert_index_equal(result[0].index, df.index)
+        tm.assert_numpy_array_equal(result[0].values, expected[0])
 
         self.assertEqual(result[1], expected[1])
 
@@ -45,7 +45,7 @@ class TestManifold(tm.TestCase):
         expected = manifold.spectral_embedding(m, random_state=self.random_state)
 
         self.assertIsInstance(result, pdml.ModelFrame)
-        self.assert_index_equal(result.index, df.index)
+        tm.assert_index_equal(result.index, df.index)
         # signs can be inversed
         self.assert_numpy_array_almost_equal(np.abs(result.data.values),
                                              np.abs(expected))
@@ -66,7 +66,7 @@ class TestManifold(tm.TestCase):
             expected = mod2.transform(iris.data)
 
             self.assertIsInstance(result, pdml.ModelFrame)
-            self.assert_index_equal(result.index, df.index)
+            tm.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.data.values, expected)
 
     def test_MDS(self):
@@ -82,25 +82,25 @@ class TestManifold(tm.TestCase):
             expected = mod2.fit_transform(iris.data)
 
             self.assertIsInstance(result, pdml.ModelFrame)
-            self.assert_index_equal(result.index, df.index)
+            tm.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.data.values, expected)
 
     def test_TSNE(self):
-        iris = datasets.load_iris()
-        df = pdml.ModelFrame(iris)
+        digits = datasets.load_digits()
+        df = pdml.ModelFrame(digits)
 
         models = ['TSNE']
         for model in models:
-            mod1 = getattr(df.manifold, model)(random_state=self.random_state, init='pca')
-            mod2 = getattr(manifold, model)(random_state=self.random_state, init='pca')
+            mod1 = getattr(df.manifold, model)(n_components=2, random_state=self.random_state)
+            mod2 = getattr(manifold, model)(n_components=2, random_state=self.random_state)
 
-            np.random.seed(1)
+            # np.random.seed(1)
             result = df.fit_transform(mod1)
-            np.random.seed(1)
-            expected = mod2.fit_transform(iris.data)
+            # np.random.seed(1)
+            expected = mod2.fit_transform(digits.data)
 
             self.assertIsInstance(result, pdml.ModelFrame)
-            self.assert_index_equal(result.index, df.index)
+            tm.assert_index_equal(result.index, df.index)
             self.assert_numpy_array_almost_equal(result.data.shape, expected.shape)
 
 

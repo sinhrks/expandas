@@ -45,7 +45,7 @@ class TestXGBoost(tm.TestCase):
         y = np.sin(X).ravel()
 
         # Add noise to targets
-        y[::5] += 3 * (0.5 - np.random.rand(X.shape[0] / 5))
+        y[::5] += 3 * (0.5 - np.random.rand(X.shape[0] // 5))
 
         df = pdml.ModelFrame(data=X, target=y)
 
@@ -83,7 +83,7 @@ class TestXGBoost(tm.TestCase):
                                  'n_estimators': [50, 100, 50, 100]},
                                 columns=['mean', 'std', 'max_depth', 'n_estimators'])
         self.assertIsInstance(result, pdml.ModelFrame)
-        self.assert_frame_equal(result, expected)
+        tm.assert_frame_equal(result, expected)
 
     def test_plotting(self):
 
@@ -93,13 +93,13 @@ class TestXGBoost(tm.TestCase):
         df.fit(df.svm.SVC())
 
         # raises if df.estimator is not XGBModel
-        with tm.assertRaises(ValueError):
+        with self.assertRaises(ValueError):
             df.xgb.plot_importance()
 
-        with tm.assertRaises(ValueError):
+        with self.assertRaises(ValueError):
             df.xgb.to_graphviz()
 
-        with tm.assertRaises(ValueError):
+        with self.assertRaises(ValueError):
             df.xgb.plot_tree()
 
         df.fit(df.xgb.XGBClassifier())

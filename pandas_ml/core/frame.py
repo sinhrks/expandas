@@ -19,7 +19,7 @@ import pandas_ml.xgboost as xgboost
 import pandas_ml.util as util
 
 
-class ModelFrame(pd.DataFrame, ModelPredictor):
+class ModelFrame(ModelPredictor, pd.DataFrame):
     """
     Data structure subclassing ``pandas.DataFrame`` to define a metadata to
     specify target (response variable) and data (explanatory variable / features).
@@ -447,12 +447,15 @@ class ModelFrame(pd.DataFrame, ModelPredictor):
     @Appender(_shared_docs['estimator_methods'] %
               dict(funcname='transform', returned='returned : transformed result'))
     def transform(self, estimator, *args, **kwargs):
-        transformed = super(ModelFrame, self).transform(estimator, *args, **kwargs)
+        try:
+            transformed = super(ModelFrame, self).transform(estimator, *args, **kwargs)
 
-        if not isinstance(estimator, compat.string_types):
-            # set inverse columns
-            estimator._pdml_original_columns = self.data.columns
-        return transformed
+            if not isinstance(estimator, compat.string_types):
+                # set inverse columns
+                estimator._pdml_original_columns = self.data.columns
+            return transformed
+        except:     # noqa
+            return pd.DataFrame.transform(self, estimator, *args, **kwargs)
 
     @Appender(_shared_docs['estimator_methods'] %
               dict(funcname='fit_transform', returned='returned : transformed result'))

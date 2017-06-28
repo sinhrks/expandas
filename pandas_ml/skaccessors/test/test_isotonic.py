@@ -21,8 +21,8 @@ class TestIsotonic(tm.TestCase):
         result = df.isotonic.isotonic_regression()
         expected = isotonic.isotonic_regression(data)
         self.assertIsInstance(result, pdml.ModelSeries)
-        self.assert_index_equal(result.index, df.index)
-        self.assert_numpy_array_equal(result.values, expected)
+        tm.assert_index_equal(result.index, df.index)
+        tm.assert_numpy_array_equal(result.values, expected)
 
     def test_check_increasing(self):
         data = np.abs(np.random.randn(100))

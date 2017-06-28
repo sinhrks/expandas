@@ -30,8 +30,8 @@ class TestCovariance(tm.TestCase):
         result = df.covariance.empirical_covariance()
         expected = covariance.empirical_covariance(iris.data)
         self.assertIsInstance(result, pdml.ModelFrame)
-        self.assert_index_equal(result.index, df.data.columns)
-        self.assert_index_equal(result.columns, df.data.columns)
+        tm.assert_index_equal(result.index, df.data.columns)
+        tm.assert_index_equal(result.columns, df.data.columns)
         self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_ledoit_wolf(self):
@@ -44,8 +44,8 @@ class TestCovariance(tm.TestCase):
         self.assertEqual(len(result), 2)
 
         self.assertIsInstance(result[0], pdml.ModelFrame)
-        self.assert_index_equal(result[0].index, df.data.columns)
-        self.assert_index_equal(result[0].columns, df.data.columns)
+        tm.assert_index_equal(result[0].index, df.data.columns)
+        tm.assert_index_equal(result[0].columns, df.data.columns)
         self.assert_numpy_array_almost_equal(result[0].values, expected[0])
 
         self.assert_numpy_array_almost_equal(result[1], expected[1])
@@ -60,8 +60,8 @@ class TestCovariance(tm.TestCase):
         self.assertEqual(len(result), 2)
 
         self.assertIsInstance(result[0], pdml.ModelFrame)
-        self.assert_index_equal(result[0].index, df.data.columns)
-        self.assert_index_equal(result[0].columns, df.data.columns)
+        tm.assert_index_equal(result[0].index, df.data.columns)
+        tm.assert_index_equal(result[0].columns, df.data.columns)
         self.assert_numpy_array_almost_equal(result[0].values, expected[0])
 
         self.assert_numpy_array_almost_equal(result[1], expected[1])

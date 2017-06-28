@@ -28,7 +28,7 @@ class TestModelFrameGroupBy(tm.TestCase):
         self.assertIsInstance(df, pdml.ModelFrame)
 
         expected = pd.Series([1, 3], index=[0, 2], name='.target')
-        self.assert_series_equal(df.target, expected)
+        tm.assert_series_equal(df.target, expected)
         self.assertIsInstance(df.target, pdml.ModelSeries)
 
     def test_transform_standard(self):
@@ -39,8 +39,8 @@ class TestModelFrameGroupBy(tm.TestCase):
                            'C': np.random.randn(8)})
 
         mdf = pdml.ModelFrame(df)
-        self.assert_frame_equal(df.groupby('A').transform('mean'),
-                                mdf.groupby('A').transform('mean'))
+        tm.assert_frame_equal(df.groupby('A').transform('mean'),
+                              mdf.groupby('A').transform('mean'))
 
     def test_grouped_estimator_SVC(self):
         df = pdml.ModelFrame(datasets.load_iris())
@@ -51,7 +51,7 @@ class TestModelFrameGroupBy(tm.TestCase):
             self.assertIsInstance(group, pdml.ModelFrame)
             self.assertEqual(group.target_name, '.target')
             self.assertTrue(group.has_target())
-            self.assert_index_equal(group.columns, df.columns)
+            tm.assert_index_equal(group.columns, df.columns)
         svc = df.svm.SVC(random_state=self.random_state)
         gclf = grouped.fit(svc)
         self.assertIsInstance(gclf, pdml.core.groupby.GroupedEstimator)
@@ -62,8 +62,8 @@ class TestModelFrameGroupBy(tm.TestCase):
         self.assertIsInstance(results.get_group(0), pdml.ModelSeries)
         self.assertIsInstance(results.get_group(1), pdml.ModelSeries)
         # test indexes are preserved
-        self.assert_index_equal(results.get_group(0).index, grouped.get_group(0).index)
-        self.assert_index_equal(results.get_group(1).index, grouped.get_group(1).index)
+        tm.assert_index_equal(results.get_group(0).index, grouped.get_group(0).index)
+        tm.assert_index_equal(results.get_group(1).index, grouped.get_group(1).index)
 
         import sklearn.svm as svm
         svc1 = svm.SVC(random_state=self.random_state)
@@ -77,8 +77,8 @@ class TestModelFrameGroupBy(tm.TestCase):
         svc2.fit(group2.data.values, group2.target.values)
         expected2 = svc2.predict(group2.data.values)
 
-        self.assert_numpy_array_equal(results.get_group(0).values, expected1)
-        self.assert_numpy_array_equal(results.get_group(1).values, expected2)
+        tm.assert_numpy_array_equal(results.get_group(0).values, expected1)
+        tm.assert_numpy_array_equal(results.get_group(1).values, expected2)
 
     def test_grouped_estimator_PCA(self):
         df = pdml.ModelFrame(datasets.load_iris())
@@ -88,7 +88,7 @@ class TestModelFrameGroupBy(tm.TestCase):
             self.assertIsInstance(group, pdml.ModelFrame)
             self.assertEqual(group.target_name, '.target')
             self.assertTrue(group.has_target())
-            self.assert_index_equal(group.columns, df.columns)
+            tm.assert_index_equal(group.columns, df.columns)
         pca = df.decomposition.PCA()
         gclf = grouped.fit(pca)
         self.assertIsInstance(gclf, pdml.core.groupby.GroupedEstimator)
@@ -101,9 +101,9 @@ class TestModelFrameGroupBy(tm.TestCase):
         self.assertIsInstance(results.get_group(1), pdml.ModelFrame)
         self.assertIsInstance(results.get_group(2), pdml.ModelFrame)
         # test indexes are preserved
-        self.assert_index_equal(results.get_group(0).index, grouped.get_group(0).index)
-        self.assert_index_equal(results.get_group(1).index, grouped.get_group(1).index)
-        self.assert_index_equal(results.get_group(2).index, grouped.get_group(2).index)
+        tm.assert_index_equal(results.get_group(0).index, grouped.get_group(0).index)
+        tm.assert_index_equal(results.get_group(1).index, grouped.get_group(1).index)
+        tm.assert_index_equal(results.get_group(2).index, grouped.get_group(2).index)
 
         import sklearn.decomposition as dc
         for i in range(3):
@@ -127,7 +127,7 @@ class TestModelSeriesGroupBy(tm.TestCase):
         gs = grouped.get_group(1)
         self.assertIsInstance(gs, pdml.ModelSeries)
         expected = pd.Series([1, 2, 1], index=[0, 1, 2], name='X')
-        self.assert_series_equal(gs, expected)
+        tm.assert_series_equal(gs, expected)
         self.assertEqual(gs.name, 'X')
 
 

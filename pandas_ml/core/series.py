@@ -8,7 +8,7 @@ import pandas_ml.skaccessors as skaccessors
 import pandas_ml.util as util
 
 
-class ModelSeries(pd.Series, ModelTransformer):
+class ModelSeries(ModelTransformer, pd.Series):
     """
     Wrapper for ``pandas.Series`` to support ``sklearn.preprocessing``
     """
@@ -37,7 +37,17 @@ class ModelSeries(pd.Series, ModelTransformer):
             else:
                 from pandas_ml.core.frame import ModelFrame
                 return ModelFrame(transformed, index=self.index)
-        return self._constructor(transformed, index=self.index, name=self.name)
+        return self._constructor(transformed, index=self.index,
+                                 name=self.name)
+
+    @Appender(_shared_docs['estimator_methods'] %
+              dict(funcname='transform', returned='returned : transformed result'))
+    def transform(self, estimator, *args, **kwargs):
+        try:
+            transformed = super(ModelSeries, self).transform(estimator, *args, **kwargs)
+            return transformed
+        except:    # noqa
+            return pd.Series.transform(self, estimator, *args, **kwargs)
 
     @property
     @Appender(_shared_docs['skaccessor'] % dict(module='preprocessing'))

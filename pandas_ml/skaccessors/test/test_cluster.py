@@ -48,8 +48,8 @@ class TestCluster(tm.TestCase):
         self.assert_numpy_array_almost_equal(result[0], expected[0])
 
         self.assertIsInstance(result[1], pdml.ModelSeries)
-        self.assert_index_equal(result[1].index, df.index)
-        self.assert_numpy_array_equal(result[1].values, expected[1])
+        tm.assert_index_equal(result[1].index, df.index)
+        tm.assert_numpy_array_equal(result[1].values, expected[1])
 
         self.assertAlmostEqual(result[2], expected[2])
 
@@ -87,8 +87,8 @@ class TestCluster(tm.TestCase):
         self.assert_numpy_array_almost_equal(result[0], expected[0])
 
         self.assertIsInstance(result[1], pdml.ModelSeries)
-        self.assert_index_equal(result[1].index, df.index)
-        self.assert_numpy_array_equal(result[1].values, expected[1])
+        tm.assert_index_equal(result[1].index, df.index)
+        tm.assert_numpy_array_equal(result[1].values, expected[1])
 
     def test_affinity_propagation_class(self):
         from sklearn.datasets.samples_generator import make_blobs
@@ -103,10 +103,9 @@ class TestCluster(tm.TestCase):
 
         af2 = cluster.AffinityPropagation(preference=-50).fit(X)
 
-        self.assert_numpy_array_equal(af.cluster_centers_indices_,
-                                      af2.cluster_centers_indices_)
-        self.assert_numpy_array_equal(af.labels_,
-                                      af2.labels_)
+        tm.assert_numpy_array_equal(af.cluster_centers_indices_,
+                                    af2.cluster_centers_indices_)
+        tm.assert_numpy_array_equal(af.labels_, af2.labels_)
 
     def test_dbscan(self):
         iris = datasets.load_iris()
@@ -118,8 +117,8 @@ class TestCluster(tm.TestCase):
         self.assertEqual(len(result), 2)
         self.assert_numpy_array_almost_equal(result[0], expected[0])
         self.assertIsInstance(result[1], pdml.ModelSeries)
-        self.assert_index_equal(result[1].index, df.index)
-        self.assert_numpy_array_equal(result[1].values, expected[1])
+        tm.assert_index_equal(result[1].index, df.index)
+        tm.assert_numpy_array_equal(result[1].values, expected[1])
 
     def test_mean_shift(self):
         iris = datasets.load_iris()
@@ -131,8 +130,8 @@ class TestCluster(tm.TestCase):
         self.assertEqual(len(result), 2)
         self.assert_numpy_array_almost_equal(result[0], expected[0])
         self.assertIsInstance(result[1], pdml.ModelSeries)
-        self.assert_index_equal(result[1].index, df.index)
-        self.assert_numpy_array_equal(result[1].values, expected[1])
+        tm.assert_index_equal(result[1].index, df.index)
+        tm.assert_numpy_array_equal(result[1].values, expected[1])
 
     def test_spectral_clustering(self):
         N = 50
@@ -144,8 +143,8 @@ class TestCluster(tm.TestCase):
         expected = cluster.spectral_clustering(m, random_state=self.random_state)
 
         self.assertIsInstance(result, pdml.ModelSeries)
-        self.assert_index_equal(result.index, df.index)
-        self.assert_numpy_array_equal(result.values, expected)
+        tm.assert_index_equal(result.index, df.index)
+        tm.assert_numpy_array_equal(result.values, expected)
 
     def test_KMeans(self):
         iris = datasets.load_iris()

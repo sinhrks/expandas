@@ -118,7 +118,7 @@ class TestEnsemble(tm.TestCase):
         boston = datasets.load_boston()
         df = pdml.ModelFrame(boston)
 
-        params = {'n_estimators': 500, 'max_depth': 4, 'min_samples_split': 1,
+        params = {'n_estimators': 500, 'max_depth': 4, 'min_samples_split': 0.9,
                   'learning_rate': 0.01, 'loss': 'ls', 'random_state': self.random_state}
         clf1 = ensemble.GradientBoostingRegressor(**params)
         clf2 = df.ensemble.GradientBoostingRegressor(**params)

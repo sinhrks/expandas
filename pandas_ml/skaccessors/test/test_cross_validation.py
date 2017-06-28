@@ -37,8 +37,8 @@ class TestCrossValidation(tm.TestCase):
         for train_df, test_df in df.cross_validation.iterate(kf):
             self.assertIsInstance(train_df, pdml.ModelFrame)
             self.assertIsInstance(test_df, pdml.ModelFrame)
-            self.assert_index_equal(df.columns, train_df.columns)
-            self.assert_index_equal(df.columns, test_df.columns)
+            tm.assert_index_equal(df.columns, train_df.columns)
+            tm.assert_index_equal(df.columns, test_df.columns)
 
             self.assertTrue(df.shape[0], train_df.shape[0] + test_df.shape[1])
 
@@ -50,27 +50,27 @@ class TestCrossValidation(tm.TestCase):
                                        random_state=self.random_state)
         folded = [f for f in df.cross_validation.iterate(kf)]
         self.assertEqual(len(folded), 3)
-        self.assert_frame_equal(folded[0][0], df.iloc[3:, :])
-        self.assert_frame_equal(folded[0][1], df.iloc[:3, :])
-        self.assert_frame_equal(folded[1][0], df.iloc[[0, 1, 2, 6, 7], :])
-        self.assert_frame_equal(folded[1][1], df.iloc[3:6, :])
-        self.assert_frame_equal(folded[2][0], df.iloc[:6, :])
-        self.assert_frame_equal(folded[2][1], df.iloc[6:, :])
+        tm.assert_frame_equal(folded[0][0], df.iloc[3:, :])
+        tm.assert_frame_equal(folded[0][1], df.iloc[:3, :])
+        tm.assert_frame_equal(folded[1][0], df.iloc[[0, 1, 2, 6, 7], :])
+        tm.assert_frame_equal(folded[1][1], df.iloc[3:6, :])
+        tm.assert_frame_equal(folded[2][0], df.iloc[:6, :])
+        tm.assert_frame_equal(folded[2][1], df.iloc[6:, :])
 
         folded = [f for f in df.cross_validation.iterate(kf, reset_index=True)]
         self.assertEqual(len(folded), 3)
-        self.assert_frame_equal(folded[0][0],
-                                df.iloc[3:, :].reset_index(drop=True))
-        self.assert_frame_equal(folded[0][1],
-                                df.iloc[:3, :].reset_index(drop=True))
-        self.assert_frame_equal(folded[1][0],
-                                df.iloc[[0, 1, 2, 6, 7], :].reset_index(drop=True))
-        self.assert_frame_equal(folded[1][1],
-                                df.iloc[3:6, :].reset_index(drop=True))
-        self.assert_frame_equal(folded[2][0],
-                                df.iloc[:6, :].reset_index(drop=True))
-        self.assert_frame_equal(folded[2][1],
-                                df.iloc[6:, :].reset_index(drop=True))
+        tm.assert_frame_equal(folded[0][0],
+                              df.iloc[3:, :].reset_index(drop=True))
+        tm.assert_frame_equal(folded[0][1],
+                              df.iloc[:3, :].reset_index(drop=True))
+        tm.assert_frame_equal(folded[1][0],
+                              df.iloc[[0, 1, 2, 6, 7], :].reset_index(drop=True))
+        tm.assert_frame_equal(folded[1][1],
+                              df.iloc[3:6, :].reset_index(drop=True))
+        tm.assert_frame_equal(folded[2][0],
+                              df.iloc[:6, :].reset_index(drop=True))
+        tm.assert_frame_equal(folded[2][1],
+                              df.iloc[6:, :].reset_index(drop=True))
 
     def test_train_test_split(self):
 
@@ -78,22 +78,22 @@ class TestCrossValidation(tm.TestCase):
         self.assertIsInstance(df, pdml.ModelFrame)
 
         train_df, test_df = df.cross_validation.train_test_split()
-        self.assert_index_equal(df.columns, train_df.columns)
-        self.assert_index_equal(df.columns, test_df.columns)
+        tm.assert_index_equal(df.columns, train_df.columns)
+        tm.assert_index_equal(df.columns, test_df.columns)
 
         self.assertTrue(df.shape[0], train_df.shape[0] + test_df.shape[1])
         self.assertTrue(df.shape[1], train_df.shape[1])
         self.assertTrue(df.shape[1], test_df.shape[1])
 
-        self.assert_index_equal(df.columns, train_df.columns)
-        self.assert_index_equal(df.columns, test_df.columns)
+        tm.assert_index_equal(df.columns, train_df.columns)
+        tm.assert_index_equal(df.columns, test_df.columns)
 
         df = pdml.ModelFrame(datasets.load_digits())
         df.target_name = 'xxx'
 
         train_df, test_df = df.cross_validation.train_test_split()
-        self.assert_index_equal(df.columns, train_df.columns)
-        self.assert_index_equal(df.columns, test_df.columns)
+        tm.assert_index_equal(df.columns, train_df.columns)
+        tm.assert_index_equal(df.columns, test_df.columns)
         self.assertEqual(train_df.target_name, 'xxx')
         self.assertEqual(test_df.target_name, 'xxx')
 
@@ -103,22 +103,22 @@ class TestCrossValidation(tm.TestCase):
         self.assertIsInstance(df, pdml.ModelFrame)
 
         train_df, test_df = df.crv.train_test_split()
-        self.assert_index_equal(df.columns, train_df.columns)
-        self.assert_index_equal(df.columns, test_df.columns)
+        tm.assert_index_equal(df.columns, train_df.columns)
+        tm.assert_index_equal(df.columns, test_df.columns)
 
         self.assertTrue(df.shape[0], train_df.shape[0] + test_df.shape[1])
         self.assertTrue(df.shape[1], train_df.shape[1])
         self.assertTrue(df.shape[1], test_df.shape[1])
 
-        self.assert_index_equal(df.columns, train_df.columns)
-        self.assert_index_equal(df.columns, test_df.columns)
+        tm.assert_index_equal(df.columns, train_df.columns)
+        tm.assert_index_equal(df.columns, test_df.columns)
 
         df = pdml.ModelFrame(datasets.load_digits())
         df.target_name = 'xxx'
 
         train_df, test_df = df.crv.train_test_split()
-        self.assert_index_equal(df.columns, train_df.columns)
-        self.assert_index_equal(df.columns, test_df.columns)
+        tm.assert_index_equal(df.columns, train_df.columns)
+        tm.assert_index_equal(df.columns, test_df.columns)
         self.assertEqual(train_df.target_name, 'xxx')
         self.assertEqual(test_df.target_name, 'xxx')
 
@@ -127,28 +127,28 @@ class TestCrossValidation(tm.TestCase):
                               'B': [1, 2, 3, 4, 5, 6, 7, 8]},
                              index='a b c d e f g h'.split(' '))
         tr, te = df.crv.train_test_split(random_state=self.random_state)
-        self.assert_frame_equal(tr, df.loc[['g', 'a', 'e', 'f', 'd', 'h']])
-        self.assert_frame_equal(te, df.loc[['c', 'b']])
+        tm.assert_frame_equal(tr, df.loc[['g', 'a', 'e', 'f', 'd', 'h']])
+        tm.assert_frame_equal(te, df.loc[['c', 'b']])
 
         tr, te = df.crv.train_test_split(random_state=self.random_state, reset_index=True)
-        self.assert_frame_equal(tr, df.loc[['g', 'a', 'e', 'f', 'd', 'h']].reset_index(drop=True))
-        self.assert_frame_equal(te, df.loc[['c', 'b']].reset_index(drop=True))
+        tm.assert_frame_equal(tr, df.loc[['g', 'a', 'e', 'f', 'd', 'h']].reset_index(drop=True))
+        tm.assert_frame_equal(te, df.loc[['c', 'b']].reset_index(drop=True))
 
         df = pdml.ModelFrame({'A': [1, 2, 3, 4, 5, 6, 7, 8],
                               'B': [1, 2, 3, 4, 5, 6, 7, 8]},
                              index='a b c d e f g h'.split(' '),
                              target=[1, 2, 3, 4, 5, 6, 7, 8])
         tr, te = df.crv.train_test_split(random_state=self.random_state)
-        self.assert_frame_equal(tr, df.loc[['g', 'a', 'e', 'f', 'd', 'h']])
-        self.assert_numpy_array_equal(tr.target.values, np.array([7, 1, 5, 6, 4, 8]))
-        self.assert_frame_equal(te, df.loc[['c', 'b']])
-        self.assert_numpy_array_equal(te.target.values, np.array([3, 2]))
+        tm.assert_frame_equal(tr, df.loc[['g', 'a', 'e', 'f', 'd', 'h']])
+        tm.assert_numpy_array_equal(tr.target.values, np.array([7, 1, 5, 6, 4, 8]))
+        tm.assert_frame_equal(te, df.loc[['c', 'b']])
+        tm.assert_numpy_array_equal(te.target.values, np.array([3, 2]))
 
         tr, te = df.crv.train_test_split(random_state=self.random_state, reset_index=True)
-        self.assert_frame_equal(tr, df.loc[['g', 'a', 'e', 'f', 'd', 'h']].reset_index(drop=True))
-        self.assert_numpy_array_equal(tr.target.values, np.array([7, 1, 5, 6, 4, 8]))
-        self.assert_frame_equal(te, df.loc[['c', 'b']].reset_index(drop=True))
-        self.assert_numpy_array_equal(te.target.values, np.array([3, 2]))
+        tm.assert_frame_equal(tr, df.loc[['g', 'a', 'e', 'f', 'd', 'h']].reset_index(drop=True))
+        tm.assert_numpy_array_equal(tr.target.values, np.array([7, 1, 5, 6, 4, 8]))
+        tm.assert_frame_equal(te, df.loc[['c', 'b']].reset_index(drop=True))
+        tm.assert_numpy_array_equal(te.target.values, np.array([3, 2]))
 
     def test_cross_val_score(self):
         import sklearn.svm as svm
@@ -187,16 +187,16 @@ class TestCrossValidation(tm.TestCase):
         sf1 = df.cross_validation.StratifiedShuffleSplit(random_state=self.random_state)
         sf2 = cv.StratifiedShuffleSplit(iris.target, random_state=self.random_state)
         for idx1, idx2 in zip(sf1, sf2):
-            self.assert_numpy_array_equal(idx1[0], idx2[0])
-            self.assert_numpy_array_equal(idx1[1], idx2[1])
+            tm.assert_numpy_array_equal(idx1[0], idx2[0])
+            tm.assert_numpy_array_equal(idx1[1], idx2[1])
 
         sf1 = df.cross_validation.StratifiedShuffleSplit(random_state=self.random_state)
         # StratifiedShuffleSplit is not a subclass of PartitionIterator
         for train_df, test_df in df.cross_validation.iterate(sf1):
             self.assertIsInstance(train_df, pdml.ModelFrame)
             self.assertIsInstance(test_df, pdml.ModelFrame)
-            self.assert_index_equal(df.columns, train_df.columns)
-            self.assert_index_equal(df.columns, test_df.columns)
+            tm.assert_index_equal(df.columns, train_df.columns)
+            tm.assert_index_equal(df.columns, test_df.columns)
 
             self.assertTrue(df.shape[0], train_df.shape[0] + test_df.shape[1])
 

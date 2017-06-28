@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import collections
 
+import pandas_ml as pdml
 from pandas_ml.confusion_matrix.stats import binom_interval, class_agreement, prop_test
 
 
@@ -54,20 +55,16 @@ class ConfusionMatrixAbstract(object):
         assert N_true == N_pred, \
             "y_true must have same size - %d != %d" % (N_true, N_pred)
 
-        # from sklearn.metrics import confusion_matrix
-        # a = confusion_matrix(y_true, y_pred, labels=labels)
-        # print(a)
-        # self._df_confusion = pd.DataFrame(a, index=labels, columns=labels)
-        # self._df_confusion.index.name = self.true_name
-        # self._df_confusion.columns.name = self.pred_name
-
-        # df = pd.crosstab(self._y_true, self._y_pred,
-        #   rownames=[self.true_name], colnames=[self.pred_name])
-        # df = pd.crosstab(self._y_true, self._y_pred,
-        #    rownames=self.true_name, colnames=self.pred_name)
         df = pd.crosstab(self._y_true, self._y_pred)
         idx = self._classes(df)
-        df = df.loc[idx, idx.copy()].fillna(0)  # if some columns or rows are missing
+
+        if self.is_binary and pdml.compat._PANDAS_ge_021:
+            df = df.reindex([False, True])
+            df = df.reindex([False, True], axis=1)
+            df = df.fillna(0)
+        else:
+            df = df.loc[idx, idx.copy()].fillna(0)  # if some columns or rows are missing
+
         self._df_confusion = df
         self._df_confusion.index.name = self.true_name
         self._df_confusion.columns.name = self.pred_name
@@ -81,7 +78,7 @@ class ConfusionMatrixAbstract(object):
     def _label(self, i, labels):
         try:
             return(labels[i])
-        except:
+        except IndexError:
             return(i)
 
     def __repr__(self):
@@ -214,7 +211,7 @@ class ConfusionMatrixAbstract(object):
 
         try:
             cmap = kwargs['cmap']
-        except:
+        except KeyError:
             import matplotlib.pyplot as plt
             cmap = plt.cm.gray_r
 
@@ -314,13 +311,13 @@ class ConfusionMatrixAbstract(object):
         key = 'Accuracy'
         try:
             d_stats[key] = d_class_agreement['diag']  # 0.35
-        except:
+        except KeyError:
             d_stats[key] = np.nan
 
         key = '95% CI'
         try:
             d_stats[key] = binom_interval(np.sum(np.diag(df)), df.sum().sum())  # (0.1539, 0.5922)
-        except:
+        except:   # noqa
             d_stats[key] = np.nan
 
         d_prop_test = prop_test(df)
@@ -400,7 +397,7 @@ class ConfusionMatrixAbstract(object):
         """
         try:
             return(d_name[key])
-        except:
+        except (KeyError, TypeError):
             return(key)
 
     def _str_dict(self, d, line_feed_key_val='\n',

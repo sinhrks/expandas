@@ -61,12 +61,12 @@ class TestLinearModel(tm.TestCase):
         expected = lm.lars_path(diabetes.data, diabetes.target)
 
         self.assertEqual(len(result), 3)
-        self.assert_numpy_array_equal(result[0], expected[0])
+        tm.assert_numpy_array_equal(result[0], expected[0])
         self.assertEqual(result[1], expected[1])
         self.assertIsInstance(result[1], list)
         self.assertIsInstance(result[2], pdml.ModelFrame)
-        self.assert_index_equal(result[2].index, df.data.columns)
-        self.assert_numpy_array_equal(result[2].values, expected[2])
+        tm.assert_index_equal(result[2].index, df.data.columns)
+        tm.assert_numpy_array_equal(result[2].values, expected[2])
 
     def test_lasso_path(self):
         diabetes = datasets.load_diabetes()
@@ -76,19 +76,19 @@ class TestLinearModel(tm.TestCase):
         expected = lm.lasso_path(diabetes.data, diabetes.target)
 
         self.assertEqual(len(result), 3)
-        self.assert_numpy_array_equal(result[0], expected[0])
+        tm.assert_numpy_array_equal(result[0], expected[0])
         self.assertIsInstance(result[1], pdml.ModelFrame)
-        self.assert_index_equal(result[1].index, df.data.columns)
-        self.assert_numpy_array_equal(result[1].values, expected[1])
-        self.assert_numpy_array_equal(result[2], expected[2])
+        tm.assert_index_equal(result[1].index, df.data.columns)
+        self.assert_numpy_array_almost_equal(result[1].values, expected[1])
+        self.assert_numpy_array_almost_equal(result[2], expected[2])
 
         result = df.linear_model.lasso_path(return_models=True)
         expected = lm.lasso_path(diabetes.data, diabetes.target, return_models=True)
         self.assertEqual(len(result), len(expected))
         self.assertIsInstance(result, tuple)
-        self.assert_numpy_array_equal(result[0], result[0])
-        self.assert_numpy_array_equal(result[1], result[1])
-        self.assert_numpy_array_equal(result[2], result[2])
+        tm.assert_numpy_array_equal(result[0], result[0])
+        tm.assert_numpy_array_equal(result[1], result[1])
+        tm.assert_numpy_array_equal(result[2], result[2])
 
     def test_lasso_stability_path(self):
         diabetes = datasets.load_diabetes()
@@ -99,11 +99,11 @@ class TestLinearModel(tm.TestCase):
                                            random_state=self.random_state)
 
         self.assertEqual(len(result), 2)
-        self.assert_numpy_array_equal(result[0], expected[0])
+        tm.assert_numpy_array_equal(result[0], expected[0])
 
         self.assertIsInstance(result[1], pdml.ModelFrame)
-        self.assert_index_equal(result[1].index, df.data.columns)
-        self.assert_numpy_array_equal(result[1].values, expected[1])
+        tm.assert_index_equal(result[1].index, df.data.columns)
+        tm.assert_numpy_array_equal(result[1].values, expected[1])
 
     def test_orthogonal_mp(self):
         diabetes = datasets.load_diabetes()
@@ -111,11 +111,11 @@ class TestLinearModel(tm.TestCase):
 
         result = df.linear_model.orthogonal_mp()
         expected = lm.orthogonal_mp(diabetes.data, diabetes.target)
-        self.assert_numpy_array_equal(result, expected)
+        tm.assert_numpy_array_equal(result, expected)
 
         result = df.linear_model.orthogonal_mp(return_path=True)
         expected = lm.orthogonal_mp(diabetes.data, diabetes.target, return_path=True)
-        self.assert_numpy_array_equal(result, expected)
+        tm.assert_numpy_array_equal(result, expected)
 
     def test_orthogonal_mp_gram(self):
         diabetes = datasets.load_diabetes()

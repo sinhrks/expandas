@@ -87,9 +87,9 @@ class TestImbalance(tm.TestCase):
             expected_X, expected_y = mod2.sample(X, y)
 
             self.assertIsInstance(result, pdml.ModelFrame)
-            self.assert_numpy_array_equal(result.target.values, expected_y)
-            self.assert_numpy_array_equal(result.data.values, expected_X)
-            self.assert_index_equal(result.columns, df.columns)
+            tm.assert_numpy_array_equal(result.target.values, expected_y)
+            tm.assert_numpy_array_equal(result.data.values, expected_X)
+            tm.assert_index_equal(result.columns, df.columns)
 
             mod1 = model(random_state=self.random_state)
             mod2 = model(random_state=self.random_state)
@@ -98,9 +98,9 @@ class TestImbalance(tm.TestCase):
             expected_X, expected_y = mod2.fit_sample(X, y)
 
             self.assertIsInstance(result, pdml.ModelFrame)
-            self.assert_numpy_array_equal(result.target.values, expected_y)
-            self.assert_numpy_array_equal(result.data.values, expected_X)
-            self.assert_index_equal(result.columns, df.columns)
+            tm.assert_numpy_array_equal(result.target.values, expected_y)
+            tm.assert_numpy_array_equal(result.data.values, expected_X)
+            tm.assert_index_equal(result.columns, df.columns)
 
     def test_sample_ensemble(self):
         from imblearn.ensemble import BalanceCascade, EasyEnsemble
@@ -125,7 +125,7 @@ class TestImbalance(tm.TestCase):
             self.assertIsInstance(results, list)
             for r in results:
                 self.assertIsInstance(r, pdml.ModelFrame)
-                self.assert_index_equal(r.columns, df.columns)
+                tm.assert_index_equal(r.columns, df.columns)
 
             mod1 = model(random_state=self.random_state)
             mod2 = model(random_state=self.random_state)
@@ -136,7 +136,7 @@ class TestImbalance(tm.TestCase):
             self.assertIsInstance(results, list)
             for r in results:
                 self.assertIsInstance(r, pdml.ModelFrame)
-                self.assert_index_equal(r.columns, df.columns)
+                tm.assert_index_equal(r.columns, df.columns)
 
 
 if __name__ == '__main__':

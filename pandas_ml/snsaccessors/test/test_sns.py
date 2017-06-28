@@ -205,16 +205,16 @@ class TestSeabornRegression(SeabornCase):
     def test_lmplot(self):
         df = self.diabetes
 
-        fg = df.sns.lmplot('col2')
+        fg = df.sns.lmplot(df.columns[1])
         self.assertIsInstance(fg, sns.FacetGrid)
-        self.assertEqual(fg.ax.get_xlabel(), 'col2')
+        self.assertEqual(fg.ax.get_xlabel(), df.columns[1])
         self.assertEqual(fg.ax.get_ylabel(), '.target')
         tm.close()
 
-        fg = df.sns.lmplot('col2', 'col3')
+        fg = df.sns.lmplot(df.columns[1], df.columns[2])
         self.assertIsInstance(fg, sns.FacetGrid)
-        self.assertEqual(fg.ax.get_xlabel(), 'col2')
-        self.assertEqual(fg.ax.get_ylabel(), 'col3')
+        self.assertEqual(fg.ax.get_xlabel(), df.columns[1])
+        self.assertEqual(fg.ax.get_ylabel(), df.columns[2])
 
     def test_regression_plot(self):
         df = self.diabetes
@@ -224,16 +224,16 @@ class TestSeabornRegression(SeabornCase):
         for plot in plots:
             func = getattr(df.sns, plot)
 
-            ax = func('col2')
+            ax = func(df.columns[1])
             self.assertIsInstance(ax, matplotlib.axes.Axes)
-            self.assertEqual(ax.get_xlabel(), 'col2')
+            self.assertEqual(ax.get_xlabel(), df.columns[1])
             self.assertEqual(ax.get_ylabel(), '.target')
             tm.close()
 
-            ax = func('col2', 'col3')
+            ax = func(df.columns[1], df.columns[2])
             self.assertIsInstance(ax, matplotlib.axes.Axes)
-            self.assertEqual(ax.get_xlabel(), 'col2')
-            self.assertEqual(ax.get_ylabel(), 'col3')
+            self.assertEqual(ax.get_xlabel(), df.columns[1])
+            self.assertEqual(ax.get_ylabel(), df.columns[2])
             tm.close()
 
     def test_interactplot(self):
@@ -306,25 +306,25 @@ class TestSeabornCategorical(SeabornCase):
             ax = func(df.columns[1])
             self.assertIsInstance(ax, matplotlib.axes.Axes)
             self.assertEqual(ax.get_xlabel(), '.target')
-            self.assertEqual(ax.get_ylabel(), 'mean({0})'.format(df.columns[1]))
+            self.assertEqual(ax.get_ylabel(), '{0}'.format(df.columns[1]))
             tm.close()
 
             ax = func(y=df.columns[1])
             self.assertIsInstance(ax, matplotlib.axes.Axes)
             self.assertEqual(ax.get_xlabel(), '.target')
-            self.assertEqual(ax.get_ylabel(), 'mean({0})'.format(df.columns[1]))
+            self.assertEqual(ax.get_ylabel(), '{0}'.format(df.columns[1]))
             tm.close()
 
             ax = func(x=df.columns[1])
             self.assertIsInstance(ax, matplotlib.axes.Axes)
             self.assertEqual(ax.get_xlabel(), df.columns[1])
-            self.assertEqual(ax.get_ylabel(), 'mean({0})'.format('.target'))
+            self.assertEqual(ax.get_ylabel(), '{0}'.format('.target'))
             tm.close()
 
             ax = func(x=df.columns[1], y=df.columns[2])
             self.assertIsInstance(ax, matplotlib.axes.Axes)
             self.assertEqual(ax.get_xlabel(), df.columns[1])
-            self.assertEqual(ax.get_ylabel(), 'mean({0})'.format(df.columns[2]))
+            self.assertEqual(ax.get_ylabel(), '{0}'.format(df.columns[2]))
             tm.close()
 
     def test_count_plots(self):

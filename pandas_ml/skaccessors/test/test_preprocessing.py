@@ -54,7 +54,7 @@ class TestPreprocessing(tm.TestCase):
 
         self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result.data.values, expected)
-        self.assert_index_equal(result.columns[1:], df.data.columns)
+        tm.assert_index_equal(result.columns[1:], df.data.columns)
 
         s = df['sepal length (cm)']
         self.assertIsInstance(s, pdml.ModelSeries)
@@ -74,14 +74,14 @@ class TestPreprocessing(tm.TestCase):
 
         self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result.data.values, expected)
-        self.assert_index_equal(result.columns, df.data.columns)
+        tm.assert_index_equal(result.columns, df.data.columns)
 
         result = df.preprocessing.binarize(threshold=5)
         expected = pp.binarize(iris.data, threshold=5)
 
         self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result.data.values, expected)
-        self.assert_index_equal(result.columns, df.data.columns)
+        tm.assert_index_equal(result.columns, df.data.columns)
 
         s = df['sepal length (cm)']
         self.assertIsInstance(s, pdml.ModelSeries)
@@ -108,7 +108,7 @@ class TestPreprocessing(tm.TestCase):
 
         self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result.data.values, expected)
-        self.assert_index_equal(result.columns, df.data.columns)
+        tm.assert_index_equal(result.columns, df.data.columns)
 
         s = df['sepal length (cm)']
         self.assertIsInstance(s, pdml.ModelSeries)
@@ -128,7 +128,7 @@ class TestPreprocessing(tm.TestCase):
 
         self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result.data.values, expected)
-        self.assert_index_equal(result.columns, df.data.columns)
+        tm.assert_index_equal(result.columns, df.data.columns)
 
         s = df['sepal length (cm)']
         self.assertIsInstance(s, pdml.ModelSeries)
@@ -148,7 +148,7 @@ class TestPreprocessing(tm.TestCase):
 
         self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result.data.values, expected)
-        self.assert_index_equal(result.columns, df.data.columns)
+        tm.assert_index_equal(result.columns, df.data.columns)
 
         s = df['sepal length (cm)']
         self.assertIsInstance(s, pdml.ModelSeries)
@@ -169,7 +169,7 @@ class TestPreprocessing(tm.TestCase):
         binarized = pp.binarize(np.atleast_2d(iris.data[:, 0]), threshold=6)
         expected = np.hstack([binarized.T, iris.data[:, 1:]])
         self.assert_numpy_array_almost_equal(df.data.values, expected)
-        self.assert_index_equal(df.data.columns, original_columns)
+        tm.assert_index_equal(df.data.columns, original_columns)
 
         # recreate data
         iris = datasets.load_iris()
@@ -181,7 +181,7 @@ class TestPreprocessing(tm.TestCase):
         binarized = pp.binarize(iris.data[:, 0:2], threshold=6)
         expected = np.hstack([binarized, iris.data[:, 2:]])
         self.assert_numpy_array_almost_equal(df.data.values, expected)
-        self.assert_index_equal(df.data.columns, original_columns)
+        tm.assert_index_equal(df.data.columns, original_columns)
 
     def _assert_transform(self, df, exp_data, model1, model2,
                           check_target=True):
@@ -195,14 +195,14 @@ class TestPreprocessing(tm.TestCase):
 
         if df.has_target():
             # target is unchanged
-            self.assert_series_equal(df.target, result.target)
+            tm.assert_series_equal(df.target, result.target)
         else:
             self.assertIsNone(result.target)
 
         self.assert_numpy_array_almost_equal(result.data.values, expected)
         # index and columns are kept
-        self.assert_index_equal(result.index, df.index)
-        self.assert_index_equal(result.columns, df.columns)
+        tm.assert_index_equal(result.index, df.index)
+        tm.assert_index_equal(result.columns, df.columns)
 
     def _assert_fit_transform(self, df, exp_data, model1, model2):
         result = df.fit_transform(model1)
@@ -212,14 +212,14 @@ class TestPreprocessing(tm.TestCase):
         # target is unchanged
         if df.has_target():
             # target is unchanged
-            self.assert_series_equal(df.target, result.target)
+            tm.assert_series_equal(df.target, result.target)
         else:
             self.assertIsNone(result.target)
 
         self.assert_numpy_array_almost_equal(result.data.values, expected)
         # index and columns are kept
-        self.assert_index_equal(result.index, df.index)
-        self.assert_index_equal(result.columns, df.columns)
+        tm.assert_index_equal(result.index, df.index)
+        tm.assert_index_equal(result.columns, df.columns)
 
     def test_transform(self):
         iris = datasets.load_iris()
@@ -303,7 +303,6 @@ class TestPreprocessing(tm.TestCase):
         for model in models:
             mod1 = getattr(s.preprocessing, model)()
             mod2 = getattr(pp, model)()
-
             s.fit(mod1)
             mod2.fit(arr)
 
@@ -401,7 +400,7 @@ class TestPreprocessing(tm.TestCase):
 
         self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result.values, expected)
-        self.assert_index_equal(result.index, s.index)
+        tm.assert_index_equal(result.index, s.index)
 
         mod1 = s.pp.LabelBinarizer()
         result = s.fit_transform(mod1)
@@ -412,7 +411,7 @@ class TestPreprocessing(tm.TestCase):
         inversed = result.inverse_transform(mod1)
         self.assertIsInstance(inversed, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(inversed.values.flatten(), arr)
-        self.assert_index_equal(result.index, s.index)
+        tm.assert_index_equal(result.index, s.index)
 
     def test_LabelBinarizer2(self):
         arr = np.array(['X', 'Y', 'Z', 'X'])
@@ -425,7 +424,7 @@ class TestPreprocessing(tm.TestCase):
         self.assertIsInstance(binarized, pdml.ModelFrame)
 
         expected = pd.DataFrame({0: [1, 0, 0, 1], 1: [0, 1, 0, 0], 2: [0, 0, 1, 0]})
-        self.assert_frame_equal(binarized, expected)
+        tm.assert_frame_equal(binarized, expected)
 
         df = pdml.ModelFrame(datasets.load_iris())
         df.target.fit(lb)
@@ -434,13 +433,13 @@ class TestPreprocessing(tm.TestCase):
         expected = pd.DataFrame({0: [1] * 50 + [0] * 100,
                                  1: [0] * 50 + [1] * 50 + [0] * 50,
                                  2: [0] * 100 + [1] * 50})
-        self.assert_frame_equal(binarized, expected)
+        tm.assert_frame_equal(binarized, expected)
 
         df = pdml.ModelFrame(datasets.load_iris())
         df.target.fit(lb)
         df.target = df.target.transform(lb)
         self.assertEqual(df.shape, (150, 7))
-        self.assert_frame_equal(df.target, expected)
+        tm.assert_frame_equal(df.target, expected)
 
     def test_LabelEncoder_frame(self):
         arr = np.array(['X', 'Y', 'Z', 'X'])
@@ -454,16 +453,16 @@ class TestPreprocessing(tm.TestCase):
 
         self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result.values, expected)
-        self.assert_index_equal(result.columns, df.columns)
-        self.assert_index_equal(result.index, df.index)
+        tm.assert_index_equal(result.columns, df.columns)
+        tm.assert_index_equal(result.index, df.index)
 
         mod1 = df.pp.LabelEncoder()
         result = df.fit_transform(mod1)
 
         self.assertIsInstance(result, pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result.values, expected)
-        self.assert_index_equal(result.columns, df.columns)
-        self.assert_index_equal(result.index, df.index)
+        tm.assert_index_equal(result.columns, df.columns)
+        tm.assert_index_equal(result.index, df.index)
 
         inversed = result.inverse_transform(mod1)
         self.assertIsInstance(inversed, pdml.ModelFrame)
@@ -481,7 +480,7 @@ class TestPreprocessing(tm.TestCase):
 
         self.assertIsInstance(result, pdml.ModelSeries)
         self.assert_numpy_array_almost_equal(result.values, expected)
-        self.assert_index_equal(result.index, s.index)
+        tm.assert_index_equal(result.index, s.index)
 
         mod1 = s.pp.LabelEncoder()
         result = s.fit_transform(mod1)

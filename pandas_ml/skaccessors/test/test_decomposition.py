@@ -14,8 +14,10 @@ class TestDecomposition(tm.TestCase):
         self.assertIs(df.decomposition.PCA, decomposition.PCA)
         self.assertIs(df.decomposition.IncrementalPCA,
                       decomposition.IncrementalPCA)
-        self.assertIs(df.decomposition.ProjectedGradientNMF,
-                      decomposition.ProjectedGradientNMF)
+
+        if not pdml.compat._SKLEARN_ge_019:
+            self.assertIs(df.decomposition.ProjectedGradientNMF,
+                          decomposition.ProjectedGradientNMF)
 
         if not pdml.compat._SKLEARN_ge_018:
             self.assertIs(df.decomposition.RandomizedPCA,
@@ -50,14 +52,14 @@ class TestDecomposition(tm.TestCase):
 
         self.assertEqual(len(result), 3)
         self.assertIsInstance(result[0], pdml.ModelFrame)
-        self.assert_index_equal(result[0].index, df.data.columns)
+        tm.assert_index_equal(result[0].index, df.data.columns)
         self.assert_numpy_array_almost_equal(result[0].values, expected[0])
 
         self.assertIsInstance(result[1], pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result[1].values, expected[1])
 
         self.assertIsInstance(result[2], pdml.ModelFrame)
-        self.assert_index_equal(result[2].index, df.index)
+        tm.assert_index_equal(result[2].index, df.index)
         self.assert_numpy_array_almost_equal(result[2].values, expected[2])
 
         result = df.decomposition.fastica(return_X_mean=True,
@@ -67,14 +69,14 @@ class TestDecomposition(tm.TestCase):
 
         self.assertEqual(len(result), 4)
         self.assertIsInstance(result[0], pdml.ModelFrame)
-        self.assert_index_equal(result[0].index, df.data.columns)
+        tm.assert_index_equal(result[0].index, df.data.columns)
         self.assert_numpy_array_almost_equal(result[0].values, expected[0])
 
         self.assertIsInstance(result[1], pdml.ModelFrame)
         self.assert_numpy_array_almost_equal(result[1].values, expected[1])
 
         self.assertIsInstance(result[2], pdml.ModelFrame)
-        self.assert_index_equal(result[2].index, df.index)
+        tm.assert_index_equal(result[2].index, df.index)
         self.assert_numpy_array_almost_equal(result[2].values, expected[2])
 
         self.assert_numpy_array_almost_equal(result[3], expected[3])
@@ -88,11 +90,11 @@ class TestDecomposition(tm.TestCase):
                                                random_state=self.random_state)
         self.assertEqual(len(result), 3)
         self.assertIsInstance(result[0], pdml.ModelFrame)
-        self.assert_index_equal(result[0].index, df.data.index)
+        tm.assert_index_equal(result[0].index, df.data.index)
         self.assert_numpy_array_almost_equal(result[0].values, expected[0])
 
         self.assertIsInstance(result[1], pdml.ModelFrame)
-        self.assert_index_equal(result[1].columns, df.data.columns)
+        tm.assert_index_equal(result[1].columns, df.data.columns)
         self.assert_numpy_array_almost_equal(result[1].values, expected[1])
 
         self.assert_numpy_array_almost_equal(result[2], expected[2])
@@ -107,11 +109,11 @@ class TestDecomposition(tm.TestCase):
 
         self.assertEqual(len(result), 2)
         self.assertIsInstance(result[0], pdml.ModelFrame)
-        self.assert_index_equal(result[0].index, df.data.index)
+        tm.assert_index_equal(result[0].index, df.data.index)
         self.assert_numpy_array_almost_equal(result[0].values, expected[0])
 
         self.assertIsInstance(result[1], pdml.ModelFrame)
-        self.assert_index_equal(result[1].columns, df.data.columns)
+        tm.assert_index_equal(result[1].columns, df.data.columns)
         self.assert_numpy_array_almost_equal(result[1].values, expected[1])
 
         result = df.decomposition.dict_learning_online(return_code=False,
@@ -120,7 +122,7 @@ class TestDecomposition(tm.TestCase):
                                                       return_code=False,
                                                       random_state=self.random_state)
         self.assertIsInstance(result, pdml.ModelFrame)
-        self.assert_index_equal(result.columns, df.data.columns)
+        tm.assert_index_equal(result.columns, df.data.columns)
         self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_sparse_encode(self):
@@ -133,7 +135,7 @@ class TestDecomposition(tm.TestCase):
         result = df.decomposition.sparse_encode(dictionary)
         expected = decomposition.sparse_encode(iris.data, dictionary)
         self.assertIsInstance(result, pdml.ModelFrame)
-        self.assert_index_equal(result.index, df.data.index)
+        tm.assert_index_equal(result.index, df.data.index)
         self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_Decompositions_PCA(self):
@@ -150,7 +152,7 @@ class TestDecomposition(tm.TestCase):
         expected = mod2.transform(iris.data)
 
         self.assertIsInstance(result, pdml.ModelFrame)
-        self.assert_series_equal(df.target, result.target)
+        tm.assert_series_equal(df.target, result.target)
         self.assert_numpy_array_almost_equal(result.data.values,
                                              expected)
 
@@ -165,7 +167,7 @@ class TestDecomposition(tm.TestCase):
         expected = mod2.fit_transform(iris.data, iris.target)
 
         self.assertIsInstance(result, pdml.ModelFrame)
-        self.assert_series_equal(df.target, result.target)
+        tm.assert_series_equal(df.target, result.target)
         self.assert_numpy_array_almost_equal(result.data.values,
                                              expected)
 
@@ -183,7 +185,7 @@ class TestDecomposition(tm.TestCase):
         expected = mod2.transform(iris.data)
 
         self.assertIsInstance(result, pdml.ModelFrame)
-        self.assert_series_equal(df.target, result.target)
+        tm.assert_series_equal(df.target, result.target)
         self.assert_numpy_array_almost_equal(result.data.values[:, :40],
                                              expected[:, :40])
 
@@ -198,7 +200,7 @@ class TestDecomposition(tm.TestCase):
         expected = mod2.fit_transform(iris.data, iris.target)
 
         self.assertIsInstance(result, pdml.ModelFrame)
-        self.assert_series_equal(df.target, result.target)
+        tm.assert_series_equal(df.target, result.target)
         self.assert_numpy_array_almost_equal(result.data.values[:, :40],
                                              expected[:, :40])
 
@@ -218,16 +220,16 @@ class TestDecomposition(tm.TestCase):
             expected = mod2.transform(iris.data)
 
             self.assertIsInstance(result, pdml.ModelFrame)
-            self.assert_series_equal(df.target, result.target)
+            tm.assert_series_equal(df.target, result.target)
             self.assert_numpy_array_almost_equal(result.data.values, expected)
 
             result = df.inverse_transform(mod1)
             expected = mod2.inverse_transform(iris.data)
 
             self.assertIsInstance(result, pdml.ModelFrame)
-            self.assert_series_equal(df.target, result.target)
+            tm.assert_series_equal(df.target, result.target)
             self.assert_numpy_array_almost_equal(result.data.values, expected)
-            self.assert_index_equal(result.columns, df.columns)
+            tm.assert_index_equal(result.columns, df.columns)
 
 
 if __name__ == '__main__':

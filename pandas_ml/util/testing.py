@@ -1,9 +1,16 @@
 #!/usr/bin/env python
 
+import unittest
+
 import numpy as np
 import pandas.util.testing as tm
-from pandas.util.testing import (assertRaises, assertRaisesRegexp,  # noqa
-                                 assert_produces_warning,           # noqa
+
+try:
+    from pandas.util.testing import assert_raises_regex as assertRaisesRegexp   # noqa
+except ImportError:
+    from pandas.util.testing import assertRaisesRegexp                          # noqa
+
+from pandas.util.testing import (assert_produces_warning,           # noqa
                                  close, RNGContext,                 # noqa
                                  assert_index_equal,                # noqa
                                  assert_series_equal,               # noqa
@@ -12,7 +19,14 @@ from pandas.util.testing import (assertRaises, assertRaisesRegexp,  # noqa
 import pandas.tools.plotting as plotting
 
 
-class TestCase(tm.TestCase):
+try:
+    _flatten = plotting._flatten
+except AttributeError:
+    import pandas.plotting._tools
+    _flatten = pandas.plotting._tools._flatten
+
+
+class TestCase(unittest.TestCase):
 
     @property
     def random_state(self):
@@ -52,7 +66,7 @@ class PlottingTestCase(TestCase):
                 self.assertTrue(len(ax.get_children()) > 0)
 
         if layout is not None:
-            result = self._get_axes_layout(plotting._flatten(axes))
+            result = self._get_axes_layout(_flatten(axes))
             self.assertEqual(result, layout)
 
         if figsize is not None:
@@ -78,6 +92,6 @@ class PlottingTestCase(TestCase):
         axes : matplotlib Axes object, or its list-like
 
         """
-        axes = plotting._flatten(axes)
+        axes = _flatten(axes)
         axes = [ax for ax in axes if ax.get_visible()]
         return axes
