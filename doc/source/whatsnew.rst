@@ -2,6 +2,15 @@
 What's new
 ==========
 
+v0.6.0
+------
+
+Deprecation
+^^^^^^^^^^^
+
+- Drop pandas v0.19.x support.
+- Drop scikit-learn v0.17.x support.
+
 v0.5.0
 ------
 

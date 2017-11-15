@@ -3,33 +3,21 @@
 import numpy as np
 
 from pandas_ml.core.accessor import _AccessorMethods, _attach_methods
-from pandas_ml.compat import (_SKLEARN_INSTALLED, _SKLEARN_ge_017,
-                              is_integer_dtype)
+from pandas_ml.compat import (_SKLEARN_INSTALLED, is_integer_dtype)
 
 
 if _SKLEARN_INSTALLED:
-
     import sklearn.preprocessing as pp
-
-    if _SKLEARN_ge_017:
-        _keep_col_classes = [pp.Binarizer,
-                             pp.FunctionTransformer,
-                             pp.Imputer,
-                             pp.KernelCenterer,
-                             pp.LabelEncoder,
-                             pp.MaxAbsScaler,
-                             pp.MinMaxScaler,
-                             pp.Normalizer,
-                             pp.RobustScaler,
-                             pp.StandardScaler]
-    else:
-        _keep_col_classes = [pp.Binarizer,
-                             pp.Imputer,
-                             pp.KernelCenterer,
-                             pp.LabelEncoder,
-                             pp.MinMaxScaler,
-                             pp.Normalizer,
-                             pp.StandardScaler]
+    _keep_col_classes = [pp.Binarizer,
+                         pp.FunctionTransformer,
+                         pp.Imputer,
+                         pp.KernelCenterer,
+                         pp.LabelEncoder,
+                         pp.MaxAbsScaler,
+                         pp.MinMaxScaler,
+                         pp.Normalizer,
+                         pp.RobustScaler,
+                         pp.StandardScaler]
 else:
     _keep_col_classes = []
 

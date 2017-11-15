@@ -71,12 +71,12 @@ class TestXGBoost(tm.TestCase):
                              'n_estimators': [50, 100]}]
 
         df = pdml.ModelFrame(datasets.load_digits())
-        cv = df.grid_search.GridSearchCV(df.xgb.XGBClassifier(), tuned_parameters, cv=5)
+        cv = df.model_selection.GridSearchCV(df.xgb.XGBClassifier(), tuned_parameters, cv=5)
 
         with tm.RNGContext(1):
             df.fit(cv)
 
-        result = df.grid_search.describe(cv)
+        result = df.model_selection.describe(cv)
         expected = pd.DataFrame({'mean': [0.89705064, 0.91764051, 0.91263216, 0.91930996],
                                  'std': [0.03244061, 0.03259985, 0.02764891, 0.0266436],
                                  'max_depth': [3, 3, 4, 4],

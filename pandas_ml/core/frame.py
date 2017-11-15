@@ -576,24 +576,6 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
                                 attrs=attrs)
 
     @property
-    @Appender(_shared_docs['skaccessor'] % dict(module='cross_validation'))
-    def cross_validation(self):
-        msg = '.cross_validation is deprecated. Use .ms or .model_selection'
-        warnings.warn(msg, FutureWarning, stacklevel=2)
-        return self._cross_validation
-
-    @property
-    @Appender(_shared_docs['skaccessor'] % dict(module='cross_validation'))
-    def crv(self):
-        msg = '.crv is deprecated. Use .ms or .model_selection'
-        warnings.warn(msg, FutureWarning, stacklevel=2)
-        return self._cross_validation
-
-    @cache_readonly
-    def _cross_validation(self):
-        return skaccessors.CrossValidationMethods(self)
-
-    @property
     @Appender(_shared_docs['skaccessor_nolink'] % dict(module='decomposition'))
     def decomposition(self):
         return self._decomposition
@@ -671,17 +653,6 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
         return skaccessors.GaussianProcessMethods(self)
 
     @property
-    @Appender(_shared_docs['skaccessor'] % dict(module='grid_search'))
-    def grid_search(self):
-        msg = '.grid_search is deprecated. Use .ms or .model_selection'
-        warnings.warn(msg, FutureWarning, stacklevel=2)
-        return self._grid_search
-
-    @cache_readonly
-    def _grid_search(self):
-        return skaccessors.GridSearchMethods(self)
-
-    @property
     def imbalance(self):
         """ Property to access ``imblearn``"""
         return self._imbalance
@@ -727,17 +698,6 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
         msg = '.lda is deprecated. Use .da or .diccriminant_analysis'
         warnings.warn(msg, FutureWarning, stacklevel=2)
         return self._da
-
-    @property
-    @Appender(_shared_docs['skaccessor'] % dict(module='learning_curve'))
-    def learning_curve(self):
-        msg = '.learning_curve is deprecated. Use .ms or .model_selection'
-        warnings.warn(msg, FutureWarning, stacklevel=2)
-        return self._learning_curve
-
-    @cache_readonly
-    def _learning_curve(self):
-        return skaccessors.LearningCurveMethods(self)
 
     @property
     @Appender(_shared_docs['skaccessor'] % dict(module='linear_model'))

@@ -5,7 +5,6 @@ import warnings
 import pandas as pd
 
 from pandas_ml.core.accessor import _AccessorMethods
-from pandas_ml.compat import _SKLEARN_ge_018
 
 
 class ModelSelectionMethods(_AccessorMethods):
@@ -23,11 +22,7 @@ class ModelSelectionMethods(_AccessorMethods):
 
         - ``y``: ``ModelFrame.target``
         """
-        if _SKLEARN_ge_018:
-            return self._module.StratifiedShuffleSplit(*args, **kwargs)
-        else:
-            target = self._target
-            return self._module.StratifiedShuffleSplit(target.values, *args, **kwargs)
+        return self._module.StratifiedShuffleSplit(*args, **kwargs)
 
     def split(self, cv, reset_index=False):
         """
@@ -43,30 +38,16 @@ class ModelSelectionMethods(_AccessorMethods):
         -------
         generated : generator of ``ModelFrame``
         """
-        if _SKLEARN_ge_018:
-            if not(isinstance(cv, self._module.BaseCrossValidator)):
-                msg = "{0} is not a subclass of BaseCrossValidator"
-                warnings.warn(msg.format(cv.__class__.__name__))
+        if not(isinstance(cv, self._module.BaseCrossValidator)):
+            msg = "{0} is not a subclass of BaseCrossValidator"
+            warnings.warn(msg.format(cv.__class__.__name__))
 
-            if isinstance(cv, self._module.StratifiedShuffleSplit):
-                gen = cv.split(self._df.data.values, self._df.target.values)
-            else:
-                gen = cv.split(self._df.index)
-
-            for train_index, test_index in gen:
-                    train_df = self._df.iloc[train_index, :]
-                    test_df = self._df.iloc[test_index, :]
-                    if reset_index:
-                        train_df = train_df.reset_index(drop=True)
-                        test_df = test_df.reset_index(drop=True)
-                    yield train_df, test_df
-
+        if isinstance(cv, self._module.StratifiedShuffleSplit):
+            gen = cv.split(self._df.data.values, self._df.target.values)
         else:
-            if not(isinstance(cv, self._module._PartitionIterator)):
-                msg = "{0} is not a subclass of PartitionIterator"
-                warnings.warn(msg.format(cv.__class__.__name__))
+            gen = cv.split(self._df.index)
 
-            for train_index, test_index in cv:
+        for train_index, test_index in gen:
                 train_df = self._df.iloc[train_index, :]
                 test_df = self._df.iloc[test_index, :]
                 if reset_index:
@@ -189,12 +170,8 @@ class ModelSelectionMethods(_AccessorMethods):
         - ``X``: ``ModelFrame.data``
         - ``y``: ``ModelFrame.target``
         """
-        if _SKLEARN_ge_018:
-            func = self._module.check_cv
-            return func(cv, y=self._target, *args, **kwargs)
-        else:
-            func = self._module.check_cv
-            return func(cv, X=self._data, y=self._target, *args, **kwargs)
+        func = self._module.check_cv
+        return func(cv, y=self._target, *args, **kwargs)
 
     def learning_curve(self, estimator, *args, **kwargs):
         """

@@ -23,7 +23,7 @@ class TestModelFrame(tm.TestCase):
         df = pdml.ModelFrame(datasets.load_digits())
         self.assertIsInstance(df, pdml.ModelFrame)
 
-        train_df, test_df = df.cross_validation.train_test_split()
+        train_df, test_df = df.model_selection.train_test_split()
 
         self.assertIsInstance(train_df, pdml.ModelFrame)
         self.assertIsInstance(test_df, pdml.ModelFrame)
@@ -648,7 +648,7 @@ class TestModelFrameMultiTarges(tm.TestCase):
         df = pdml.ModelFrame(datasets.load_digits())
         self.assertIsInstance(df, pdml.ModelFrame)
 
-        train_df, test_df = df.cross_validation.train_test_split()
+        train_df, test_df = df.model_selection.train_test_split()
 
         self.assertIsInstance(train_df, pdml.ModelFrame)
         self.assertIsInstance(test_df, pdml.ModelFrame)

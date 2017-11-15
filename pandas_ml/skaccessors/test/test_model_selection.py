@@ -14,15 +14,7 @@ import pandas_ml as pdml
 import pandas_ml.util.testing as tm
 
 
-class TestModelSelectionBase(tm.TestCase):
-
-    def setUp(self):
-        if not pdml.compat._SKLEARN_ge_018:
-            import nose
-            raise nose.SkipTest()
-
-
-class TestModelSelection(TestModelSelectionBase):
+class TestModelSelection(tm.TestCase):
 
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
@@ -87,7 +79,7 @@ class TestModelSelection(TestModelSelectionBase):
         # Model validation
 
 
-class TestSplitter(TestModelSelectionBase):
+class TestSplitter(tm.TestCase):
 
     def test_iterate(self):
         df = pdml.ModelFrame(datasets.load_iris())
@@ -332,7 +324,7 @@ class TestSplitter(TestModelSelectionBase):
         tm.assert_numpy_array_equal(result, expected)
 
 
-class TestHyperParameterOptimizer(TestModelSelectionBase):
+class TestHyperParameterOptimizer(tm.TestCase):
 
     def test_grid_search(self):
         tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
@@ -359,13 +351,13 @@ class TestHyperParameterOptimizer(TestModelSelectionBase):
         tm.assert_frame_equal(result, expected)
 
 
-class TestModelValidation(TestModelSelectionBase):
+class TestModelValidation(tm.TestCase):
 
     def test_learning_curve(self):
         digits = datasets.load_digits()
         df = pdml.ModelFrame(digits)
 
-        result = df.learning_curve.learning_curve(df.naive_bayes.GaussianNB())
+        result = df.model_selection.learning_curve(df.naive_bayes.GaussianNB())
         expected = ms.learning_curve(nb.GaussianNB(), digits.data, digits.target)
 
         self.assertEqual(len(result), 3)
