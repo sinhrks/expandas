@@ -15,12 +15,10 @@ class TestGaussianProcess(tm.TestCase):
         df = pdml.ModelFrame([])
         dgp = df.gaussian_process
 
-        if pdml.compat._SKLEARN_ge_018:
-            self.assertIs(dgp.GaussianProcessClassifier,
-                          gp.GaussianProcessClassifier)
-            self.assertIs(dgp.GaussianProcessRegressor,
-                          gp.GaussianProcessRegressor)
-
+        self.assertIs(dgp.GaussianProcessClassifier,
+                      gp.GaussianProcessClassifier)
+        self.assertIs(dgp.GaussianProcessRegressor,
+                      gp.GaussianProcessRegressor)
         self.assertIs(dgp.GaussianProcess, gp.GaussianProcess)
         self.assertIs(dgp.correlation_models.absolute_exponential,
                       gp.correlation_models.absolute_exponential)
@@ -39,31 +37,29 @@ class TestGaussianProcess(tm.TestCase):
         df = pdml.ModelFrame([])
         dgp = df.gp
 
-        if pdml.compat._SKLEARN_ge_018:
-            self.assertIs(dgp.GaussianProcessClassifier,
-                          gp.GaussianProcessClassifier)
-            self.assertIs(dgp.GaussianProcessRegressor,
-                          gp.GaussianProcessRegressor)
+        self.assertIs(dgp.GaussianProcessClassifier,
+                      gp.GaussianProcessClassifier)
+        self.assertIs(dgp.GaussianProcessRegressor,
+                      gp.GaussianProcessRegressor)
 
     def test_objectmapper_kernels(self):
         df = pdml.ModelFrame([])
         dgp = df.gaussian_process
 
-        if pdml.compat._SKLEARN_ge_018:
-            self.assertIs(dgp.kernels.Kernel, gp.kernels.Kernel)
-            self.assertIs(dgp.kernels.Sum, gp.kernels.Sum)
-            self.assertIs(dgp.kernels.Product, gp.kernels.Product)
-            self.assertIs(dgp.kernels.Exponentiation, gp.kernels.Exponentiation)
-            self.assertIs(dgp.kernels.ConstantKernel, gp.kernels.ConstantKernel)
-            self.assertIs(dgp.kernels.WhiteKernel, gp.kernels.WhiteKernel)
-            self.assertIs(dgp.kernels.RBF, gp.kernels.RBF)
-            self.assertIs(dgp.kernels.Matern, gp.kernels.Matern)
-            self.assertIs(dgp.kernels.RationalQuadratic, gp.kernels.RationalQuadratic)
-            self.assertIs(dgp.kernels.ExpSineSquared, gp.kernels.ExpSineSquared)
-            self.assertIs(dgp.kernels.DotProduct, gp.kernels.DotProduct)
-            self.assertIs(dgp.kernels.PairwiseKernel, gp.kernels.PairwiseKernel)
-            self.assertIs(dgp.kernels.CompoundKernel, gp.kernels.CompoundKernel)
-            self.assertIs(dgp.kernels.Hyperparameter, gp.kernels.Hyperparameter)
+        self.assertIs(dgp.kernels.Kernel, gp.kernels.Kernel)
+        self.assertIs(dgp.kernels.Sum, gp.kernels.Sum)
+        self.assertIs(dgp.kernels.Product, gp.kernels.Product)
+        self.assertIs(dgp.kernels.Exponentiation, gp.kernels.Exponentiation)
+        self.assertIs(dgp.kernels.ConstantKernel, gp.kernels.ConstantKernel)
+        self.assertIs(dgp.kernels.WhiteKernel, gp.kernels.WhiteKernel)
+        self.assertIs(dgp.kernels.RBF, gp.kernels.RBF)
+        self.assertIs(dgp.kernels.Matern, gp.kernels.Matern)
+        self.assertIs(dgp.kernels.RationalQuadratic, gp.kernels.RationalQuadratic)
+        self.assertIs(dgp.kernels.ExpSineSquared, gp.kernels.ExpSineSquared)
+        self.assertIs(dgp.kernels.DotProduct, gp.kernels.DotProduct)
+        self.assertIs(dgp.kernels.PairwiseKernel, gp.kernels.PairwiseKernel)
+        self.assertIs(dgp.kernels.CompoundKernel, gp.kernels.CompoundKernel)
+        self.assertIs(dgp.kernels.Hyperparameter, gp.kernels.Hyperparameter)
 
     def test_constant(self):
         X = np.atleast_2d([1., 3., 5., 6., 7., 8.]).T
@@ -127,9 +123,6 @@ class TestGaussianProcess(tm.TestCase):
         self.assert_numpy_array_almost_equal(y_result, y_expected)
 
     def test_GaussianProcess_ge_018(self):
-        if not pdml.compat._SKLEARN_ge_018:
-            raise nose.SkipTest()
-
         X = np.atleast_2d([1., 3., 5., 6., 7., 8.]).T
         y = np.sin(X).ravel()
         df = pdml.ModelFrame(X, target=y)

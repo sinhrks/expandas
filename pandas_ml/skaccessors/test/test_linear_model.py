@@ -17,8 +17,7 @@ class TestLinearModel(tm.TestCase):
         self.assertIs(df.linear_model.ElasticNet, lm.ElasticNet)
         self.assertIs(df.linear_model.ElasticNetCV, lm.ElasticNetCV)
 
-        if pdml.compat._SKLEARN_ge_018:
-            self.assertIs(df.linear_model.HuberRegressor, lm.HuberRegressor)
+        self.assertIs(df.linear_model.HuberRegressor, lm.HuberRegressor)
 
         self.assertIs(df.linear_model.Lars, lm.Lars)
         self.assertIs(df.linear_model.LarsCV, lm.LarsCV)

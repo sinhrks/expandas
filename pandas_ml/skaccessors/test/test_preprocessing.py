@@ -339,10 +339,6 @@ class TestPreprocessing(tm.TestCase):
             self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_FunctionTransformer(self):
-        if not pdml.compat._SKLEARN_ge_017:
-            import nose
-            raise nose.SkipTest()
-
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 

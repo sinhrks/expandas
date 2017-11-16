@@ -17,11 +17,8 @@ class TestFeatureSelection(tm.TestCase):
                       fs.SelectPercentile)
         self.assertIs(df.feature_selection.SelectKBest, fs.SelectKBest)
         self.assertIs(df.feature_selection.SelectFpr, fs.SelectFpr)
-
-        if pdml.compat._SKLEARN_ge_017:
-            self.assertIs(df.feature_selection.SelectFromModel,
-                          fs.SelectFromModel)
-
+        self.assertIs(df.feature_selection.SelectFromModel,
+                      fs.SelectFromModel)
         self.assertIs(df.feature_selection.SelectFdr, fs.SelectFdr)
         self.assertIs(df.feature_selection.SelectFwe, fs.SelectFwe)
         self.assertIs(df.feature_selection.RFE, fs.RFE)

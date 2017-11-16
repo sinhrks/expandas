@@ -15,13 +15,8 @@ class TestDecomposition(tm.TestCase):
         self.assertIs(df.decomposition.IncrementalPCA,
                       decomposition.IncrementalPCA)
 
-        if not pdml.compat._SKLEARN_ge_019:
-            self.assertIs(df.decomposition.ProjectedGradientNMF,
-                          decomposition.ProjectedGradientNMF)
-
-        if not pdml.compat._SKLEARN_ge_018:
-            self.assertIs(df.decomposition.RandomizedPCA,
-                          decomposition.RandomizedPCA)
+        self.assertIs(df.decomposition.RandomizedPCA,
+                      decomposition.RandomizedPCA)
 
         self.assertIs(df.decomposition.KernelPCA, decomposition.KernelPCA)
         self.assertIs(df.decomposition.FactorAnalysis,
@@ -38,9 +33,8 @@ class TestDecomposition(tm.TestCase):
         self.assertIs(df.decomposition.MiniBatchDictionaryLearning,
                       decomposition.MiniBatchDictionaryLearning)
 
-        if pdml.compat._SKLEARN_ge_017:
-            self.assertIs(df.decomposition.LatentDirichletAllocation,
-                          decomposition.LatentDirichletAllocation)
+        self.assertIs(df.decomposition.LatentDirichletAllocation,
+                      decomposition.LatentDirichletAllocation)
 
     def test_fastica(self):
         iris = datasets.load_iris()

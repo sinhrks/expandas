@@ -9,7 +9,7 @@ from pandas_ml.skaccessors.ensemble import EnsembleMethods                      
 from pandas_ml.skaccessors.feature_extraction import FeatureExtractionMethods     # noqa
 from pandas_ml.skaccessors.feature_selection import FeatureSelectionMethods       # noqa
 from pandas_ml.skaccessors.gaussian_process import GaussianProcessMethods         # noqa
-from pandas_ml.skaccessors.isotonic import IsotonicMethods                        # noqa           # noqa
+from pandas_ml.skaccessors.isotonic import IsotonicMethods                        # noqa
 from pandas_ml.skaccessors.linear_model import LinearModelMethods                 # noqa
 from pandas_ml.skaccessors.manifold import ManifoldMethods                        # noqa
 from pandas_ml.skaccessors.metrics import MetricsMethods                          # noqa

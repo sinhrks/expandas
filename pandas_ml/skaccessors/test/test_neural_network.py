@@ -12,10 +12,8 @@ class TestNeuralNtwork(tm.TestCase):
     def test_objectmapper(self):
         df = pdml.ModelFrame([])
         self.assertIs(df.neural_network.BernoulliRBM, nn.BernoulliRBM)
-
-        if pdml.compat._SKLEARN_ge_018:
-            self.assertIs(df.neural_network.MLPClassifier, nn.MLPClassifier)
-            self.assertIs(df.neural_network.MLPRegressor, nn.MLPRegressor)
+        self.assertIs(df.neural_network.MLPClassifier, nn.MLPClassifier)
+        self.assertIs(df.neural_network.MLPRegressor, nn.MLPRegressor)
 
     def test_RBM(self):
         digits = datasets.load_digits()

@@ -17,14 +17,10 @@ else:
 try:
     import sklearn
     _SKLEARN_INSTALLED = True
-    _SKLEARN_ge_017 = sklearn.__version__ >= LooseVersion('0.17')
-    _SKLEARN_ge_018 = sklearn.__version__ >= LooseVersion('0.18')
     _SKLEARN_ge_019 = sklearn.__version__ >= LooseVersion('0.19')
 
 except ImportError:
     _SKLEARN_INSTALLED = False
-    _SKLEARN_ge_017 = False
-    _SKLEARN_ge_018 = False
     _SKLEARN_ge_019 = False
 
 

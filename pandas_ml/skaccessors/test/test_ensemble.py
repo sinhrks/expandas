@@ -30,9 +30,8 @@ class TestEnsemble(tm.TestCase):
         self.assertIs(df.ensemble.GradientBoostingRegressor,
                       ensemble.GradientBoostingRegressor)
 
-        if pdml.compat._SKLEARN_ge_018:
-            self.assertIs(df.ensemble.IsolationForest,
-                          ensemble.IsolationForest)
+        self.assertIs(df.ensemble.IsolationForest,
+                      ensemble.IsolationForest)
 
         self.assertIs(df.ensemble.RandomForestClassifier,
                       ensemble.RandomForestClassifier)
@@ -41,9 +40,8 @@ class TestEnsemble(tm.TestCase):
         self.assertIs(df.ensemble.RandomForestRegressor,
                       ensemble.RandomForestRegressor)
 
-        if pdml.compat._SKLEARN_ge_017:
-            self.assertIs(df.ensemble.VotingClassifier,
-                          ensemble.VotingClassifier)
+        self.assertIs(df.ensemble.VotingClassifier,
+                      ensemble.VotingClassifier)
 
     def test_Regressions(self):
         iris = datasets.load_iris()
