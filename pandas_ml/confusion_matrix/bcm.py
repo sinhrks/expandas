@@ -296,12 +296,16 @@ len=%d because y_true.unique()=%s y_pred.unique()=%s" \
     def MCC(self):
         """
         Matthews correlation coefficient (MCC)
-        \frac{ TP \times TN - FP \times FN }
-             {\sqrt{ (TP+FP) ( TP + FN ) ( TN + FP ) ( TN + FN ) }
+        N = TN + TP + FN + FP
+        S = \frac{\left(TP + FN\right)}{N}
+        P = \frac{\left(TP + FP\right)}{N}
+        MCC = \frac{\frac{TP}{N} - \left(S \times P\right)}
+              {\sqrt{PS\left(1 - S\right)\left(1 - P\right)}}
         """
-        return((self.TP * self.TN - self.FP * self.FN) /
-               math.sqrt((self.TP + self.FP) * (self.TP + self.FN) *
-               (self.TN + self.FP) * (self.TN + self.FN)))
+        N = self.TN + self.TP + self.FN + self.FP
+        S = (self.TP + self.FN) / N
+        P = (self.TP + self.FP) / N
+        return ((self.TP / N) - (S * P)) / math.sqrt(P * S * (1 - S) * (1 - P))
 
     @property
     def informedness(self):
