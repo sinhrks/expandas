@@ -305,7 +305,7 @@ len=%d because y_true.unique()=%s y_pred.unique()=%s" \
         N = self.TN + self.TP + self.FN + self.FP
         S = (self.TP + self.FN) / N
         P = (self.TP + self.FP) / N
-        return ((self.TP/N) - (S*P)) / math.sqrt(P*S*(1-S)*(1-P))
+        return ((self.TP / N) - (S * P)) / math.sqrt(P * S * (1 - S) * (1 - P))
 
     @property
     def informedness(self):
