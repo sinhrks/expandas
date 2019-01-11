@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
+import pytest
 
 import matplotlib
 matplotlib.use('Agg')
@@ -362,5 +363,5 @@ class TestConfusionMatrix(tm.TestCase):
         cm.plot()
         cm.plot(backend='seaborn')
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             cm.plot(backend='xxx')

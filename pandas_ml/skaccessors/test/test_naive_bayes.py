@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import sklearn.datasets as datasets
 import sklearn.naive_bayes as nb
@@ -15,26 +16,20 @@ class TestNaiveBayes(tm.TestCase):
         self.assertIs(df.naive_bayes.MultinomialNB, nb.MultinomialNB)
         self.assertIs(df.naive_bayes.BernoulliNB, nb.BernoulliNB)
 
-    def test_Classifications(self):
+    @pytest.mark.parametrize("algo", ['GaussianNB', 'MultinomialNB',
+                                      'BernoulliNB'])
+    def test_Classifications(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['GaussianNB', 'MultinomialNB', 'BernoulliNB']
-        for model in models:
-            mod1 = getattr(df.naive_bayes, model)()
-            mod2 = getattr(nb, model)()
+        mod1 = getattr(df.naive_bayes, algo)()
+        mod2 = getattr(nb, algo)()
 
-            df.fit(mod1)
-            mod2.fit(iris.data, iris.target)
+        df.fit(mod1)
+        mod2.fit(iris.data, iris.target)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(iris.data)
+        result = df.predict(mod1)
+        expected = mod2.predict(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)

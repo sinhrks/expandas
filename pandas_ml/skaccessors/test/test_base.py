@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import sklearn.datasets as datasets
 
@@ -14,11 +15,5 @@ class TestSklearnBase(tm.TestCase):
         self.assertEqual(df.shape, (150, 5))
 
         msg = "'target' can't be specified for sklearn.datasets"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             pdml.ModelFrame(iris, target='X')
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

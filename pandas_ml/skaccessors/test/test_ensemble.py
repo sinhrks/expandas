@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import sklearn.datasets as datasets
 import sklearn.ensemble as ensemble
@@ -43,41 +44,43 @@ class TestEnsemble(tm.TestCase):
         self.assertIs(df.ensemble.VotingClassifier,
                       ensemble.VotingClassifier)
 
-    def test_Regressions(self):
+    @pytest.mark.parametrize("algo", ['AdaBoostClassifier',
+                                      'BaggingClassifier',
+                                      'RandomForestClassifier'])
+    def test_Regressions(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['AdaBoostRegressor', 'BaggingRegressor', 'RandomForestRegressor']
-        for model in models:
-            mod1 = getattr(df.ensemble, model)(random_state=self.random_state)
-            mod2 = getattr(ensemble, model)(random_state=self.random_state)
+        mod1 = getattr(df.ensemble, algo)(random_state=self.random_state)
+        mod2 = getattr(ensemble, algo)(random_state=self.random_state)
 
-            df.fit(mod1)
-            mod2.fit(iris.data, iris.target)
+        df.fit(mod1)
+        mod2.fit(iris.data, iris.target)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(iris.data)
+        result = df.predict(mod1)
+        expected = mod2.predict(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)
 
-    def test_Classifications(self):
+    @pytest.mark.parametrize("algo", ['AdaBoostClassifier',
+                                      'BaggingClassifier',
+                                      'RandomForestClassifier'])
+    def test_Classifications(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['AdaBoostClassifier', 'BaggingClassifier', 'RandomForestClassifier']
-        for model in models:
-            mod1 = getattr(df.ensemble, model)(random_state=self.random_state)
-            mod2 = getattr(ensemble, model)(random_state=self.random_state)
+        mod1 = getattr(df.ensemble, algo)(random_state=self.random_state)
+        mod2 = getattr(ensemble, algo)(random_state=self.random_state)
 
-            df.fit(mod1)
-            mod2.fit(iris.data, iris.target)
+        df.fit(mod1)
+        mod2.fit(iris.data, iris.target)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(iris.data)
+        result = df.predict(mod1)
+        expected = mod2.predict(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_partial_dependence(self):
         samples = [[0, 0, 2], [1, 0, 0]]
@@ -131,9 +134,3 @@ class TestEnsemble(tm.TestCase):
 
         self.assertAlmostEqual(df.metrics.mean_squared_error(),
                                metrics.mean_squared_error(boston.target, expected))
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

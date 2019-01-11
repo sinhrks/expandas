@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import nose
-
 import numpy as np
 import sklearn.gaussian_process as gp
 
@@ -207,8 +205,3 @@ class TestGaussianProcess(tm.TestCase):
 
         self.assert_numpy_array_almost_equal(result.values, expected)
         self.assert_numpy_array_almost_equal(std_result.values, std_expected)
-
-
-if __name__ == '__main__':
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

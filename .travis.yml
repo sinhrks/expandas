@@ -23,7 +23,7 @@ before_script:
 script:
   - export PATH="$HOME/miniconda/bin:$PATH"
   - source activate myenv
-  - python -m nose --with-coverage --cover-package=pandas_ml
+  - pytest --cov=pandas_ml pandas_ml
   - flake8 --ignore E501,W503 pandas_ml
 
 after_success:

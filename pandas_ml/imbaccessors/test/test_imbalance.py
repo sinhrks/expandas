@@ -1,17 +1,15 @@
 #!/usr/bin/env python
+import pytest
 
 import numpy as np
 
 import pandas_ml as pdml
 import pandas_ml.util.testing as tm
 
+imblean = pytest.importorskip("imblearn")
+
 
 class TestImbalance(tm.TestCase):
-
-    def setUp(self):
-        if not pdml.compat._IMBLEARN_INSTALLED:
-            import nose
-            raise nose.SkipTest()
 
     def test_objectmapper_undersampling(self):
         import imblearn.under_sampling as us
@@ -137,9 +135,3 @@ class TestImbalance(tm.TestCase):
             for r in results:
                 self.assertIsInstance(r, pdml.ModelFrame)
                 tm.assert_index_equal(r.columns, df.columns)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

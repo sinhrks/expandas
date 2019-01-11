@@ -51,9 +51,3 @@ class TestModelSeries(tm.TestCase):
         self.assertIsInstance(result, pdml.ModelSeries)
         self.assert_numpy_array_almost_equal(result.values, expected)
         tm.assert_index_equal(result.index, s.index)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

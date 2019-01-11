@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import numpy as np
 import sklearn.datasets as datasets
@@ -27,7 +28,8 @@ class TestSVM(tm.TestCase):
         expected = svm.l1_min_c(iris.data, iris.target)
         self.assertAlmostEqual(result, expected)
 
-    def test_Regressions_curve(self):
+    @pytest.mark.parametrize("algo", ['SVR', 'NuSVR'])
+    def test_Regressions_curve(self, algo):
         # http://scikit-learn.org/stable/auto_examples/plot_kernel_ridge_regression.html
         X = 5 * np.random.rand(1000, 1)
         y = np.sin(X).ravel()
@@ -37,64 +39,54 @@ class TestSVM(tm.TestCase):
 
         df = pdml.ModelFrame(data=X, target=y)
 
-        models = ['SVR', 'NuSVR']
-        for model in models:
-            mod1 = getattr(df.svm, model)()
-            mod2 = getattr(svm, model)()
+        mod1 = getattr(df.svm, algo)()
+        mod2 = getattr(svm, algo)()
 
-            df.fit(mod1)
-            mod2.fit(X, y)
+        df.fit(mod1)
+        mod2.fit(X, y)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(X)
+        result = df.predict(mod1)
+        expected = mod2.predict(X)
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)
 
-            self.assertIsInstance(df.predicted, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(df.predicted.values, expected)
+        self.assertIsInstance(df.predicted, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(df.predicted.values, expected)
 
-    def test_Regressions_iris(self):
+    @pytest.mark.parametrize("algo", ['SVR', 'NuSVR'])
+    def test_Regressions_iris(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['SVR', 'NuSVR']
-        for model in models:
-            mod1 = getattr(df.svm, model)()
-            mod2 = getattr(svm, model)()
+        mod1 = getattr(df.svm, algo)()
+        mod2 = getattr(svm, algo)()
 
-            df.fit(mod1)
-            mod2.fit(iris.data, iris.target)
+        df.fit(mod1)
+        mod2.fit(iris.data, iris.target)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(iris.data)
+        result = df.predict(mod1)
+        expected = mod2.predict(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)
 
-            self.assertIsInstance(df.predicted, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(df.predicted.values, expected)
+        self.assertIsInstance(df.predicted, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(df.predicted.values, expected)
 
-    def test_Classifications(self):
+    @pytest.mark.parametrize("algo", ['LinearSVC', 'NuSVC'])
+    def test_Classifications(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['LinearSVC', 'NuSVC']
-        for model in models:
-            mod1 = getattr(df.svm, model)(random_state=self.random_state)
-            mod2 = getattr(svm, model)(random_state=self.random_state)
+        mod1 = getattr(df.svm, algo)(random_state=self.random_state)
+        mod2 = getattr(svm, algo)(random_state=self.random_state)
 
-            df.fit(mod1)
-            mod2.fit(iris.data, iris.target)
+        df.fit(mod1)
+        mod2.fit(iris.data, iris.target)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(iris.data)
+        result = df.predict(mod1)
+        expected = mod2.predict(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)

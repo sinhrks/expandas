@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import pytest
 import numpy as np
 import pandas as pd
 
@@ -212,23 +212,22 @@ class TestPreprocessing(tm.TestCase):
         tm.assert_index_equal(result.index, df.index)
         tm.assert_index_equal(result.columns, df.columns)
 
-    def test_transform(self):
+    @pytest.mark.parametrize("algo", ['Binarizer', 'Imputer', 'KernelCenterer',
+                                      'MaxAbsScaler', 'MinMaxScaler',
+                                      'Normalizer', 'RobustScaler',
+                                      'StandardScaler'])
+    def test_transform(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['Binarizer', 'Imputer', 'KernelCenterer',
-                  'MaxAbsScaler', 'MinMaxScaler', 'Normalizer',
-                  'RobustScaler', 'StandardScaler']
+        mod1 = getattr(df.preprocessing, algo)()
+        mod2 = getattr(pp, algo)()
 
-        for model in models:
-            mod1 = getattr(df.preprocessing, model)()
-            mod2 = getattr(pp, model)()
+        self._assert_transform(df, iris.data, mod1, mod2)
 
-            self._assert_transform(df, iris.data, mod1, mod2)
-
-            mod1 = getattr(df.preprocessing, model)()
-            mod2 = getattr(pp, model)()
-            self._assert_fit_transform(df, iris.data, mod1, mod2)
+        mod1 = getattr(df.preprocessing, algo)()
+        mod2 = getattr(pp, algo)()
+        self._assert_fit_transform(df, iris.data, mod1, mod2)
 
     def test_transform_1d_frame_int(self):
         arr = np.array([1, 2, 3, 1, 2, 3, 1, 2, 3])
@@ -255,7 +254,9 @@ class TestPreprocessing(tm.TestCase):
             mod2 = getattr(pp, model)()
             self._assert_fit_transform(df, arr, mod1, mod2)
 
-    def test_transform_1d_frame_float(self):
+    @pytest.mark.parametrize("algo", ['Binarizer', 'Imputer', 'StandardScaler',
+                                      'MinMaxScaler'])
+    def test_transform_1d_frame_float(self, algo):
         arr = np.array([1, 2, 3, 1, 2, 3, 1, 2, 3], dtype=np.float)
         idx = pd.Index('a b c d e f g h i'.split(' '))
         df = pdml.ModelFrame(arr, index=idx, columns=['X'])
@@ -264,15 +265,13 @@ class TestPreprocessing(tm.TestCase):
         # reshape arr to 2d
         arr = arr.reshape(-1, 1)
 
-        models = ['Binarizer', 'Imputer', 'StandardScaler', 'MinMaxScaler']
-        for model in models:
-            mod1 = getattr(df.preprocessing, model)()
-            mod2 = getattr(pp, model)()
-            self._assert_transform(df, arr, mod1, mod2)
+        mod1 = getattr(df.preprocessing, algo)()
+        mod2 = getattr(pp, algo)()
+        self._assert_transform(df, arr, mod1, mod2)
 
-            mod1 = getattr(df.preprocessing, model)()
-            mod2 = getattr(pp, model)()
-            self._assert_fit_transform(df, arr, mod1, mod2)
+        mod1 = getattr(df.preprocessing, algo)()
+        mod2 = getattr(pp, algo)()
+        self._assert_fit_transform(df, arr, mod1, mod2)
 
     def test_transform_series_int(self):
         arr = np.array([1, 2, 3, 1, 2, 3, 1, 2, 3])
@@ -308,35 +307,35 @@ class TestPreprocessing(tm.TestCase):
             self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
-    def test_transform_series_float(self):
+    @pytest.mark.parametrize("algo", ['Binarizer', 'Imputer', 'StandardScaler',
+                                      'MinMaxScaler'])
+    def test_transform_series_float(self, algo):
         arr = np.array([1, 2, 3, 1, 2, 3, 1, 2, 3], dtype=np.float)
         s = pdml.ModelSeries(arr, index='a b c d e f g h i'.split(' '))
 
         # reshape arr to 2d
         arr = arr.reshape(-1, 1)
 
-        models = ['Binarizer', 'Imputer', 'StandardScaler', 'MinMaxScaler']
-        for model in models:
-            mod1 = getattr(s.preprocessing, model)()
-            mod2 = getattr(pp, model)()
+        mod1 = getattr(s.preprocessing, algo)()
+        mod2 = getattr(pp, algo)()
 
-            s.fit(mod1)
-            mod2.fit(arr)
+        s.fit(mod1)
+        mod2.fit(arr)
 
-            result = s.transform(mod1)
-            expected = mod2.transform(arr).flatten()
+        result = s.transform(mod1)
+        expected = mod2.transform(arr).flatten()
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)
 
-            mod1 = getattr(s.preprocessing, model)()
-            mod2 = getattr(pp, model)()
+        mod1 = getattr(s.preprocessing, algo)()
+        mod2 = getattr(pp, algo)()
 
-            result = s.fit_transform(mod1)
-            expected = mod2.fit_transform(arr).flatten()
+        result = s.fit_transform(mod1)
+        expected = mod2.fit_transform(arr).flatten()
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_FunctionTransformer(self):
         iris = datasets.load_iris()
@@ -474,9 +473,3 @@ class TestPreprocessing(tm.TestCase):
         inversed = result.inverse_transform(mod1)
         self.assertIsInstance(inversed, pdml.ModelSeries)
         tm.assert_series_equal(inversed, s)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

@@ -129,9 +129,3 @@ class TestModelSeriesGroupBy(tm.TestCase):
         expected = pd.Series([1, 2, 1], index=[0, 1, 2], name='X')
         tm.assert_series_equal(gs, expected)
         self.assertEqual(gs.name, 'X')
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import sklearn.datasets as datasets
 import sklearn.linear_model as lm
@@ -127,23 +128,23 @@ class TestLinearModel(tm.TestCase):
         expected = lm.orthogonal_mp_gram(gram, Xy)
         self.assert_numpy_array_almost_equal(result, expected)
 
-    def test_Regresions(self):
+    @pytest.mark.parametrize("algo", ['LinearRegression', 'Ridge',
+                             'RidgeCV', 'Lasso'])
+    def test_Regresions(self, algo):
         diabetes = datasets.load_diabetes()
         df = pdml.ModelFrame(diabetes)
 
-        models = ['LinearRegression', 'Ridge', 'RidgeCV', 'Lasso']
-        for model in models:
-            mod1 = getattr(df.linear_model, model)()
-            mod2 = getattr(lm, model)()
+        mod1 = getattr(df.linear_model, algo)()
+        mod2 = getattr(lm, algo)()
 
-            df.fit(mod1)
-            mod2.fit(diabetes.data, diabetes.target)
+        df.fit(mod1)
+        mod2.fit(diabetes.data, diabetes.target)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(diabetes.data)
+        result = df.predict(mod1)
+        expected = mod2.predict(diabetes.data)
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_Lasso_Path(self):
         diabetes = datasets.load_diabetes()
@@ -181,7 +182,8 @@ class TestLinearModel(tm.TestCase):
         self.assert_numpy_array_almost_equal(expected[1], result[1])
         self.assert_numpy_array_almost_equal(expected[2], result[2])
 
-    def test_LassoCV(self):
+    @pytest.mark.parametrize("criterion", ['aic', 'bic'])
+    def test_LassoCV(self, criterion):
         diabetes = datasets.load_diabetes()
         X = diabetes.data
         y = diabetes.target
@@ -191,18 +193,17 @@ class TestLinearModel(tm.TestCase):
         df = pdml.ModelFrame(diabetes)
         df.data = df.data.pp.normalize()
 
-        for criterion in ['aic', 'bic']:
-            mod1 = lm.LassoLarsIC(criterion=criterion)
-            mod1.fit(X, y)
+        mod1 = lm.LassoLarsIC(criterion=criterion)
+        mod1.fit(X, y)
 
-            mod2 = df.lm.LassoLarsIC(criterion=criterion)
-            df.fit(mod2)
-            self.assertAlmostEqual(mod1.alpha_, mod2.alpha_)
+        mod2 = df.lm.LassoLarsIC(criterion=criterion)
+        df.fit(mod2)
+        self.assertAlmostEqual(mod1.alpha_, mod2.alpha_)
 
-            expected = mod1.predict(X)
-            predicted = df.predict(mod2)
-            self.assertIsInstance(predicted, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(predicted.values, expected)
+        expected = mod1.predict(X)
+        predicted = df.predict(mod2)
+        self.assertIsInstance(predicted, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(predicted.values, expected)
 
     def test_SGD(self):
         iris = datasets.load_iris()
@@ -230,9 +231,3 @@ class TestLinearModel(tm.TestCase):
         predicted = df.predict(clf2)
         self.assertIsInstance(predicted, pdml.ModelSeries)
         self.assert_numpy_array_almost_equal(predicted.values, expected)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

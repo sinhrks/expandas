@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import matplotlib
 matplotlib.use('Agg')
@@ -17,7 +18,7 @@ except ImportError:
 
 class SeabornCase(tm.PlottingTestCase):
 
-    def setUp(self):
+    def setup_method(self):
 
         try:
             import matplotlib.pyplot     # noqa
@@ -130,14 +131,14 @@ class TestSeabornDistribution(SeabornCase):
         df = pdml.ModelFrame(np.random.randn(100, 5), columns=list('abcde'))
 
         msg = "a can't be ommitted when ModelFrame doesn't have target column"
-        with tm.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             df.sns.distplot()
 
         df.target = df[['a', 'b']]
         self.assertTrue(df.has_multi_targets())
 
         msg = "a can't be ommitted when ModelFrame has multiple target columns"
-        with tm.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             df.sns.distplot()
 
     def test_kdeplot(self):
@@ -405,9 +406,3 @@ class TestSeabornCategorical(SeabornCase):
 
         jg = df.sns.JointGrid(x=df.columns[1], y=df.columns[1])
         self.assertIsInstance(jg, sns.JointGrid)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

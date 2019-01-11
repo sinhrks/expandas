@@ -1,14 +1,7 @@
 #!/usr/bin/env python
 
-import unittest
-
 import numpy as np
 import pandas.util.testing as tm
-
-try:
-    from pandas.util.testing import assert_raises_regex as assertRaisesRegexp   # noqa
-except ImportError:
-    from pandas.util.testing import assertRaisesRegexp                          # noqa
 
 from pandas.util.testing import (assert_produces_warning,           # noqa
                                  close, RNGContext,                 # noqa
@@ -26,11 +19,42 @@ except AttributeError:
     _flatten = pandas.plotting._tools._flatten
 
 
-class TestCase(unittest.TestCase):
+class TestCase(object):
 
     @property
     def random_state(self):
         return np.random.RandomState(1234)
+
+    def format(self, val):
+        return '{} (type: {})'.format(val, type(val))
+
+    def format_values(self, left, right):
+        fmt = """Input vaues are different:
+Left: {}
+Right: {}
+"""
+        return fmt.format(self.format(left), self.format(right))
+
+    def assertEqual(self, left, right):
+        assert left == right, self.format_values(left, right)
+
+    def assertIs(self, left, right):
+        assert left is right, self.format_values(left, right)
+
+    def assertAlmostEqual(self, left, right):
+        assert tm.assert_almost_equal(left, right), self.format_values(left, right)
+
+    def assertIsNone(self, left):
+        assert left is None, self.format(left)
+
+    def assertTrue(self, left):
+        assert left is True or left is np.bool_(True), self.format(left)
+
+    def assertFalse(self, left):
+        assert left is False or left is np.bool_(False), self.format(left)
+
+    def assertIsInstance(self, instance, klass):
+        assert isinstance(instance, klass), self.format(instance)
 
     def assert_numpy_array_almost_equal(self, a, b):
         return np.testing.assert_array_almost_equal(a, b)
@@ -38,7 +62,7 @@ class TestCase(unittest.TestCase):
 
 class PlottingTestCase(TestCase):
 
-    def tearDown(self):
+    def teardown_method(self):
         tm.close()
 
     def _check_axes_shape(self, axes, axes_num=None, layout=None, figsize=(8.0, 6.0)):

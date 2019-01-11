@@ -12,9 +12,3 @@ class TestCalibration(tm.TestCase):
         df = pdml.ModelFrame([])
         self.assertIs(df.calibration.CalibratedClassifierCV,
                       calibration.CalibratedClassifierCV)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

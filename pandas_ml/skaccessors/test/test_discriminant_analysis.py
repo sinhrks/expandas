@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import sklearn.datasets as datasets
 try:
@@ -33,25 +34,18 @@ class TestDiscriminantAnalysis(tm.TestCase):
             self.assertIs(df.qda.QuadraticDiscriminantAnalysis,
                           da.QuadraticDiscriminantAnalysis)
 
-    def test_LDA(self):
+    @pytest.mark.parametrize("algo", ['LinearDiscriminantAnalysis'])
+    def test_LDA(self, algo):
         diabetes = datasets.load_diabetes()
         df = pdml.ModelFrame(diabetes)
 
-        models = ['LinearDiscriminantAnalysis']
-        for model in models:
-            mod1 = getattr(df.da, model)()
-            mod2 = getattr(da, model)()
+        mod1 = getattr(df.da, algo)()
+        mod2 = getattr(da, algo)()
 
-            df.fit(mod1)
-            mod2.fit(diabetes.data, diabetes.target)
+        df.fit(mod1)
+        mod2.fit(diabetes.data, diabetes.target)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(diabetes.data)
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)
+        result = df.predict(mod1)
+        expected = mod2.predict(diabetes.data)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)

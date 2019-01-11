@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import sklearn.datasets as datasets
 import sklearn.covariance as covariance
@@ -66,22 +67,15 @@ class TestCovariance(tm.TestCase):
 
         self.assert_numpy_array_almost_equal(result[1], expected[1])
 
-    def test_Covariance(self):
+    @pytest.mark.parametrize("algo", ['EmpiricalCovariance', 'LedoitWolf'])
+    def test_Covariance(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['EmpiricalCovariance', 'LedoitWolf']
-        for model in models:
-            mod1 = getattr(df.covariance, model)()
-            mod2 = getattr(covariance, model)()
+        mod1 = getattr(df.covariance, algo)()
+        mod2 = getattr(covariance, algo)()
 
-            df.fit(mod1)
-            mod2.fit(iris.data)
+        df.fit(mod1)
+        mod2.fit(iris.data)
 
-            self.assert_numpy_array_almost_equal(mod1.covariance_, mod2.covariance_)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)
+        self.assert_numpy_array_almost_equal(mod1.covariance_, mod2.covariance_)

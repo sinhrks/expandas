@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import numpy as np
 import pandas as pd
@@ -30,7 +31,7 @@ class TestMetricsCommon(tm.TestCase):
 
 class TestClassificationMetrics(tm.TestCase):
 
-    def setUp(self):
+    def setup_method(self):
         import sklearn.svm as svm
         digits = datasets.load_digits()
         self.data = digits.data
@@ -80,7 +81,7 @@ class TestClassificationMetrics(tm.TestCase):
         pass
 
     def test_average_precision_score(self):
-        with self.assertRaisesRegexp(ValueError, 'multiclass format is not supported'):
+        with pytest.raises(ValueError, match='multiclass format is not supported'):
             self.df.metrics.average_precision_score()
 
     def test_classification_report(self):
@@ -113,16 +114,13 @@ class TestClassificationMetrics(tm.TestCase):
         self.assertTrue(isinstance(result, pdml.ModelSeries))
         self.assert_numpy_array_almost_equal(result.values, expected)
 
+    @pytest.mark.parametrize("average", ['weighted', 'macro'])
+    def test_fbeta_score_averaging(self, average):
+        result = self.df.metrics.fbeta_score(beta=0.5, average=average)
+        expected = metrics.fbeta_score(self.target, self.pred, beta=0.5, average=average)
+        self.assertEqual(result, expected)
+
     def test_fbeta_score(self):
-        result = self.df.metrics.fbeta_score(beta=0.5, average='weighted')
-        expected = metrics.fbeta_score(self.target, self.pred, beta=0.5, average='weighted')
-        self.assertEqual(result, expected)
-
-        result = self.df.metrics.fbeta_score(beta=0.5, average='macro')
-        expected = metrics.fbeta_score(self.target, self.pred,
-                                       beta=0.5, average='macro')
-        self.assertEqual(result, expected)
-
         result = self.df.metrics.fbeta_score(beta=0.5, average=None)
         expected = metrics.fbeta_score(self.target, self.pred, beta=0.5, average=None)
         self.assertTrue(isinstance(result, pdml.ModelSeries))
@@ -149,12 +147,12 @@ class TestClassificationMetrics(tm.TestCase):
 
     def test_log_loss(self):
         msg = "class <class 'sklearn.svm.classes.LinearSVC'> doesn't have predict_proba method"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             self.df.metrics.log_loss()
 
     def test_matthews_corrcoef(self):
         if not pdml.compat._SKLEARN_ge_019:
-            with self.assertRaisesRegexp(ValueError, 'multiclass is not supported'):
+            with pytest.raises(ValueError, match='multiclass is not supported'):
                 self.df.metrics.matthews_corrcoef()
 
     def test_precision_recall_curve(self):
@@ -198,7 +196,7 @@ class TestClassificationMetrics(tm.TestCase):
         self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_roc_auc_score(self):
-        with self.assertRaisesRegexp(ValueError, 'multiclass format is not supported'):
+        with pytest.raises(ValueError, match='multiclass format is not supported'):
             self.df.metrics.roc_auc_score()
 
     def test_roc_curve(self):
@@ -218,7 +216,7 @@ class TestClassificationMetrics(tm.TestCase):
 
 class TestClassificationMetrics2Classes(TestClassificationMetrics):
 
-    def setUp(self):
+    def setup_method(self):
         import sklearn.svm as svm
         # 2 class
         iris = datasets.load_iris()
@@ -306,7 +304,7 @@ class TestClassificationMetrics2Classes(TestClassificationMetrics):
 
 class TestClassificationMetrics3Classes(TestClassificationMetrics):
 
-    def setUp(self):
+    def setup_method(self):
         import sklearn.svm as svm
         # 2 class
         iris = datasets.load_iris()
@@ -333,13 +331,13 @@ class TestClassificationMetrics3Classes(TestClassificationMetrics):
         self.assertEqual(result, expected)
 
     def test_average_precision_score(self):
-        with self.assertRaisesRegexp(ValueError, 'multiclass format is not supported'):
+        with pytest.raises(ValueError, match='multiclass format is not supported'):
             self.df.metrics.average_precision_score()
 
 
-class TestAClassificationMetrics3ClassesMultiTargets(TestClassificationMetrics):
+class TestClassificationMetrics3ClassesMultiTargets(TestClassificationMetrics):
 
-    def setUp(self):
+    def setup_method(self):
         import sklearn.svm as svm
         import sklearn.preprocessing as pp
         from sklearn.multiclass import OneVsRestClassifier
@@ -382,7 +380,7 @@ class TestAClassificationMetrics3ClassesMultiTargets(TestClassificationMetrics):
         self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_confusion_matrix(self):
-        with self.assertRaisesRegexp(ValueError, 'multilabel-indicator is not supported'):
+        with pytest.raises(ValueError, match='multilabel-indicator is not supported'):
             self.df.metrics.confusion_matrix()
 
     def test_hinge_loss(self):
@@ -395,7 +393,7 @@ class TestAClassificationMetrics3ClassesMultiTargets(TestClassificationMetrics):
 
     def test_matthews_corrcoef(self):
         msg = 'multilabel-indicator is not supported'
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             self.df.metrics.matthews_corrcoef()
 
     def test_precision_recall_curve(self):
@@ -448,7 +446,7 @@ class TestClassificationMetricsExamples(tm.TestCase):
 
 class TestRegressionMetrics(tm.TestCase):
 
-    def setUp(self):
+    def setup_method(self):
         from sklearn import linear_model
         data = [[0, 0], [1, 1], [2, 2]]
         self.target = [0, 1, 2]
@@ -487,7 +485,7 @@ class TestRegressionMetrics(tm.TestCase):
 
 class TestClusteringMetrics(tm.TestCase):
 
-    def setUp(self):
+    def setup_method(self):
         from sklearn import cluster
         iris = datasets.load_iris()
         self.data = iris.data
@@ -555,9 +553,3 @@ class TestClusteringMetrics(tm.TestCase):
         result = self.df.metrics.v_measure_score()
         expected = metrics.v_measure_score(self.target, self.pred)
         self.assertEqual(result, expected)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

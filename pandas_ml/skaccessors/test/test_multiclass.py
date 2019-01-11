@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import sklearn.datasets as datasets
 import sklearn.multiclass as multiclass
@@ -16,48 +17,41 @@ class TestMultiClass(tm.TestCase):
         self.assertIs(df.multiclass.OneVsOneClassifier, multiclass.OneVsOneClassifier)
         self.assertIs(df.multiclass.OutputCodeClassifier, multiclass.OutputCodeClassifier)
 
-    def test_Classifications(self):
+    @pytest.mark.parametrize("algo", ['OneVsOneClassifier',
+                                      'OneVsOneClassifier'])
+    def test_Classifications(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['OneVsOneClassifier', 'OneVsOneClassifier']
-        for model in models:
-            svm1 = df.svm.LinearSVC(random_state=self.random_state)
-            svm2 = svm.LinearSVC(random_state=self.random_state)
-            mod1 = getattr(df.multiclass, model)(svm1)
-            mod2 = getattr(multiclass, model)(svm2)
+        svm1 = df.svm.LinearSVC(random_state=self.random_state)
+        svm2 = svm.LinearSVC(random_state=self.random_state)
+        mod1 = getattr(df.multiclass, algo)(svm1)
+        mod2 = getattr(multiclass, algo)(svm2)
 
-            df.fit(mod1)
-            mod2.fit(iris.data, iris.target)
+        df.fit(mod1)
+        mod2.fit(iris.data, iris.target)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(iris.data)
+        result = df.predict(mod1)
+        expected = mod2.predict(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)
 
-    def test_Classifications_Random(self):
+    @pytest.mark.parametrize("algo", ['OutputCodeClassifier'])
+    def test_Classifications_Random(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['OutputCodeClassifier']
-        for model in models:
-            svm1 = df.svm.LinearSVC(random_state=self.random_state)
-            svm2 = svm.LinearSVC(random_state=self.random_state)
-            mod1 = getattr(df.multiclass, model)(svm1, random_state=self.random_state)
-            mod2 = getattr(multiclass, model)(svm2, random_state=self.random_state)
+        svm1 = df.svm.LinearSVC(random_state=self.random_state)
+        svm2 = svm.LinearSVC(random_state=self.random_state)
+        mod1 = getattr(df.multiclass, algo)(svm1, random_state=self.random_state)
+        mod2 = getattr(multiclass, algo)(svm2, random_state=self.random_state)
 
-            df.fit(mod1)
-            mod2.fit(iris.data, iris.target)
+        df.fit(mod1)
+        mod2.fit(iris.data, iris.target)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(iris.data)
+        result = df.predict(mod1)
+        expected = mod2.predict(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import numpy as np
 import sklearn.datasets as datasets
@@ -50,61 +51,52 @@ class TestManifold(tm.TestCase):
         self.assert_numpy_array_almost_equal(np.abs(result.data.values),
                                              np.abs(expected))
 
-    def test_Isomap(self):
+    @pytest.mark.parametrize("algo", ['Isomap'])
+    def test_Isomap(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['Isomap']
-        for model in models:
-            mod1 = getattr(df.manifold, model)()
-            mod2 = getattr(manifold, model)()
+        mod1 = getattr(df.manifold, algo)()
+        mod2 = getattr(manifold, algo)()
 
-            df.fit(mod1)
-            mod2.fit(iris.data)
+        df.fit(mod1)
+        mod2.fit(iris.data)
 
-            result = df.transform(mod1)
-            expected = mod2.transform(iris.data)
+        result = df.transform(mod1)
+        expected = mod2.transform(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelFrame)
-            tm.assert_index_equal(result.index, df.index)
-            self.assert_numpy_array_almost_equal(result.data.values, expected)
+        self.assertIsInstance(result, pdml.ModelFrame)
+        tm.assert_index_equal(result.index, df.index)
+        self.assert_numpy_array_almost_equal(result.data.values, expected)
 
-    def test_MDS(self):
+    @pytest.mark.parametrize("algo", ['MDS'])
+    def test_MDS(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['MDS']
-        for model in models:
-            mod1 = getattr(df.manifold, model)(random_state=self.random_state)
-            mod2 = getattr(manifold, model)(random_state=self.random_state)
+        mod1 = getattr(df.manifold, algo)(random_state=self.random_state)
+        mod2 = getattr(manifold, algo)(random_state=self.random_state)
 
-            result = df.fit_transform(mod1)
-            expected = mod2.fit_transform(iris.data)
+        result = df.fit_transform(mod1)
+        expected = mod2.fit_transform(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelFrame)
-            tm.assert_index_equal(result.index, df.index)
-            self.assert_numpy_array_almost_equal(result.data.values, expected)
+        self.assertIsInstance(result, pdml.ModelFrame)
+        tm.assert_index_equal(result.index, df.index)
+        self.assert_numpy_array_almost_equal(result.data.values, expected)
 
-    def test_TSNE(self):
+    @pytest.mark.parametrize("algo", ['TSNE'])
+    def test_TSNE(self, algo):
         digits = datasets.load_digits()
         df = pdml.ModelFrame(digits)
 
-        models = ['TSNE']
-        for model in models:
-            mod1 = getattr(df.manifold, model)(n_components=2, random_state=self.random_state)
-            mod2 = getattr(manifold, model)(n_components=2, random_state=self.random_state)
+        mod1 = getattr(df.manifold, algo)(n_components=2, random_state=self.random_state)
+        mod2 = getattr(manifold, algo)(n_components=2, random_state=self.random_state)
 
-            # np.random.seed(1)
-            result = df.fit_transform(mod1)
-            # np.random.seed(1)
-            expected = mod2.fit_transform(digits.data)
+        # np.random.seed(1)
+        result = df.fit_transform(mod1)
+        # np.random.seed(1)
+        expected = mod2.fit_transform(digits.data)
 
-            self.assertIsInstance(result, pdml.ModelFrame)
-            tm.assert_index_equal(result.index, df.index)
-            self.assert_numpy_array_almost_equal(result.data.shape, expected.shape)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)
+        self.assertIsInstance(result, pdml.ModelFrame)
+        tm.assert_index_equal(result.index, df.index)
+        self.assert_numpy_array_almost_equal(result.data.shape, expected.shape)

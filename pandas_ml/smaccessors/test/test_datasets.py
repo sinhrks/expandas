@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-
-import nose
+import pytest
 
 import pandas as pd
 import statsmodels.api as sm
@@ -59,7 +58,7 @@ class TestStatsModelsDatasets(tm.TestCase):
     def test_elnino(self):
         data = getattr(sm.datasets.elnino, self.load_method)()
         msg = "Unable to read statsmodels Dataset without exog"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             pdml.ModelFrame(data)
 
     def test_engel(self):
@@ -86,7 +85,7 @@ class TestStatsModelsDatasets(tm.TestCase):
     def test_macrodata(self):
         data = getattr(sm.datasets.macrodata, self.load_method)()
         msg = "Unable to read statsmodels Dataset without exog"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             pdml.ModelFrame(data)
 
     def test_modechoice(self):
@@ -99,7 +98,7 @@ class TestStatsModelsDatasets(tm.TestCase):
     def test_nile(self):
         data = getattr(sm.datasets.nile, self.load_method)()
         msg = "Unable to read statsmodels Dataset without exog"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             pdml.ModelFrame(data)
 
     def test_randhie(self):
@@ -133,7 +132,7 @@ class TestStatsModelsDatasets(tm.TestCase):
     def test_star98(self):
         data = getattr(sm.datasets.star98, self.load_method)()
         msg = 'Data must be 1-dimensional'
-        with self.assertRaisesRegexp(Exception, msg):
+        with pytest.raises(Exception, match=msg):
             pdml.ModelFrame(data)
 
     def test_strikes(self):
@@ -146,7 +145,7 @@ class TestStatsModelsDatasets(tm.TestCase):
     def test_sunspots(self):
         data = getattr(sm.datasets.sunspots, self.load_method)()
         msg = "Unable to read statsmodels Dataset without exog"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             pdml.ModelFrame(data)
 
     def test_fair(self):
@@ -170,13 +169,12 @@ class TestStatsModelsDatasets(tm.TestCase):
         self.assertEqual(df.target_name, 'murder')
         tm.assert_index_equal(df.data.columns, pd.Index(data.exog_name))
 
+    @pytest.mark.skip('skip until statsmodels GH#4775 is fixed')
     def test_co2(self):
         # https://github.com/statsmodels/statsmodels/issues/4775
-        raise nose.SkipTest()
-
         data = getattr(sm.datasets.co2, self.load_method)()
         msg = "Unable to read statsmodels Dataset without exog"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             pdml.ModelFrame(data)
 
 
@@ -190,10 +188,5 @@ class TestStatsModelsDatasets_LoadPandas(TestStatsModelsDatasets):
             msg = 'Wrong number of items passed 2, placement implies 303'
         else:
             msg = 'cannot copy sequence with size 2 to array axis with dimension 303'
-        with self.assertRaisesRegexp(Exception, msg):
+        with pytest.raises(Exception, match=msg):
             pdml.ModelFrame(data)
-
-
-if __name__ == '__main__':
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

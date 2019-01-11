@@ -35,9 +35,3 @@ class TestDatasets(tm.TestCase):
         # data = datasets.load_linnerud()
         # df = pdml.ModelFrame(data)
         # self.assertEqual(df.shape, (150, 5))
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

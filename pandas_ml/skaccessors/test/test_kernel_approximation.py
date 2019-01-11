@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import sklearn.datasets as datasets
 import sklearn.kernel_approximation as ka
@@ -18,44 +19,37 @@ class TestKernelApproximation(tm.TestCase):
         self.assertIs(df.kernel_approximation.SkewedChi2Sampler,
                       ka.SkewedChi2Sampler)
 
-    def test_Classifications(self):
+    @pytest.mark.parametrize("algo", ['AdditiveChi2Sampler'])
+    def test_Classifications(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['AdditiveChi2Sampler']
-        for model in models:
-            mod1 = getattr(df.kernel_approximation, model)()
-            mod2 = getattr(ka, model)()
+        mod1 = getattr(df.kernel_approximation, algo)()
+        mod2 = getattr(ka, algo)()
 
-            df.fit(mod1)
-            mod2.fit(iris.data)
+        df.fit(mod1)
+        mod2.fit(iris.data)
 
-            result = df.transform(mod1)
-            expected = mod2.transform(iris.data)
+        result = df.transform(mod1)
+        expected = mod2.transform(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelFrame)
-            self.assert_numpy_array_almost_equal(result.data.values, expected)
+        self.assertIsInstance(result, pdml.ModelFrame)
+        self.assert_numpy_array_almost_equal(result.data.values, expected)
 
-    def test_Classifications_Random(self):
+    @pytest.mark.parametrize("algo", ['Nystroem', 'RBFSampler',
+                                      'SkewedChi2Sampler'])
+    def test_Classifications_Random(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['Nystroem', 'RBFSampler', 'SkewedChi2Sampler']
-        for model in models:
-            mod1 = getattr(df.kernel_approximation, model)(random_state=self.random_state)
-            mod2 = getattr(ka, model)(random_state=self.random_state)
+        mod1 = getattr(df.kernel_approximation, algo)(random_state=self.random_state)
+        mod2 = getattr(ka, algo)(random_state=self.random_state)
 
-            df.fit(mod1)
-            mod2.fit(iris.data)
+        df.fit(mod1)
+        mod2.fit(iris.data)
 
-            result = df.transform(mod1)
-            expected = mod2.transform(iris.data)
+        result = df.transform(mod1)
+        expected = mod2.transform(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelFrame)
-            self.assert_numpy_array_almost_equal(result.data.values, expected)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)
+        self.assertIsInstance(result, pdml.ModelFrame)
+        self.assert_numpy_array_almost_equal(result.data.values, expected)

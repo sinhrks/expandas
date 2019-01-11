@@ -24,9 +24,3 @@ class TestFeatureExtraction(tm.TestCase):
         self.assertIs(df.feature_extraction.text.HashingVectorizer, fe.text.HashingVectorizer)
         self.assertIs(df.feature_extraction.text.TfidfTransformer, fe.text.TfidfTransformer)
         self.assertIs(df.feature_extraction.text.TfidfVectorizer, fe.text.TfidfVectorizer)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

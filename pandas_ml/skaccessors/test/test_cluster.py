@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import numpy as np
 import sklearn.datasets as datasets
@@ -146,23 +147,22 @@ class TestCluster(tm.TestCase):
         tm.assert_index_equal(result.index, df.index)
         tm.assert_numpy_array_equal(result.values, expected)
 
-    def test_KMeans(self):
+    @pytest.mark.parametrize("algo", ['KMeans', 'MiniBatchKMeans'])
+    def test_KMeans(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['KMeans', 'MiniBatchKMeans']
-        for model in models:
-            mod1 = getattr(df.cluster, model)(3, random_state=self.random_state)
-            mod2 = getattr(cluster, model)(3, random_state=self.random_state)
+        mod1 = getattr(df.cluster, algo)(3, random_state=self.random_state)
+        mod2 = getattr(cluster, algo)(3, random_state=self.random_state)
 
-            df.fit(mod1)
-            mod2.fit(iris.data)
+        df.fit(mod1)
+        mod2.fit(iris.data)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(iris.data)
+        result = df.predict(mod1)
+        expected = mod2.predict(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)
 
     def test_KMeans_scores(self):
         digits = datasets.load_digits()
@@ -218,43 +218,36 @@ class TestCluster(tm.TestCase):
             self.assertIsInstance(result, pdml.ModelSeries)
             self.assert_numpy_array_almost_equal(result.values, expected)
 
-    def test_fit_predict(self):
+    @pytest.mark.parametrize("algo", ['KMeans', 'MiniBatchKMeans'])
+    def test_fit_predict(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['KMeans', 'MiniBatchKMeans']
-        for model in models:
-            mod1 = getattr(df.cluster, model)(3, random_state=self.random_state)
-            mod2 = getattr(cluster, model)(3, random_state=self.random_state)
+        mod1 = getattr(df.cluster, algo)(3, random_state=self.random_state)
+        mod2 = getattr(cluster, algo)(3, random_state=self.random_state)
 
-            result = df.fit_predict(mod1)
-            expected = mod2.fit_predict(iris.data)
+        result = df.fit_predict(mod1)
+        expected = mod2.fit_predict(iris.data)
 
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)
 
-            result = df.score(mod1)
-            expected = mod2.score(iris.data)
-            self.assert_numpy_array_almost_equal(result, expected)
+        result = df.score(mod1)
+        expected = mod2.score(iris.data)
+        self.assert_numpy_array_almost_equal(result, expected)
 
-    def test_Bicluster(self):
+    @pytest.mark.parametrize("algo", ['SpectralBiclustering',
+                                      'SpectralCoclustering'])
+    def test_Bicluster(self, algo):
         data, rows, columns = datasets.make_checkerboard(
             shape=(300, 300), n_clusters=5, noise=10,
             shuffle=True, random_state=self.random_state)
         df = pdml.ModelFrame(data)
 
-        models = ['SpectralBiclustering', 'SpectralCoclustering']
-        for model in models:
-            mod1 = getattr(df.cluster.bicluster, model)(3, random_state=self.random_state)
-            mod2 = getattr(cluster.bicluster, model)(3, random_state=self.random_state)
+        mod1 = getattr(df.cluster.bicluster, algo)(3, random_state=self.random_state)
+        mod2 = getattr(cluster.bicluster, algo)(3, random_state=self.random_state)
 
-            df.fit(mod1)
-            mod2.fit(data)
+        df.fit(mod1)
+        mod2.fit(data)
 
-            self.assert_numpy_array_almost_equal(mod1.biclusters_, mod2.biclusters_)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)
+        self.assert_numpy_array_almost_equal(mod1.biclusters_, mod2.biclusters_)

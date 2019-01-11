@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import sklearn.datasets as datasets
 import sklearn.feature_selection as fs
@@ -59,26 +60,19 @@ class TestFeatureSelection(tm.TestCase):
         self.assert_numpy_array_almost_equal(result[0], expected[0])
         self.assert_numpy_array_almost_equal(result[1], expected[1])
 
-    def test_Selection(self):
+    @pytest.mark.parametrize("algo", ['SelectPercentile', 'SelectFpr',
+                                      'SelectFwe', 'VarianceThreshold'])
+    def test_Selection(self, algo):
         diabetes = datasets.load_diabetes()
         df = pdml.ModelFrame(diabetes)
 
-        models = ['SelectPercentile', 'SelectFpr',
-                  'SelectFwe', 'VarianceThreshold']
-        for model in models:
-            mod1 = getattr(df.feature_selection, model)()
-            mod2 = getattr(fs, model)()
+        mod1 = getattr(df.feature_selection, algo)()
+        mod2 = getattr(fs, algo)()
 
-            df.fit(mod1)
-            mod2.fit(diabetes.data, diabetes.target)
+        df.fit(mod1)
+        mod2.fit(diabetes.data, diabetes.target)
 
-            result = df.transform(mod1)
-            expected = mod2.transform(diabetes.data)
-            self.assertIsInstance(result, pdml.ModelFrame)
-            self.assert_numpy_array_almost_equal(result.data.values, expected)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)
+        result = df.transform(mod1)
+        expected = mod2.transform(diabetes.data)
+        self.assertIsInstance(result, pdml.ModelFrame)
+        self.assert_numpy_array_almost_equal(result.data.values, expected)

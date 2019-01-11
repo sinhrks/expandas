@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import datetime
 import warnings
@@ -49,7 +50,7 @@ class TestModelFrame(tm.TestCase):
         self.assertEqual(mdf.target_name, '.target')
 
         s = pd.Series([1, 2, 3])
-        with self.assertRaisesRegexp(ValueError, 'data and target must have equal index'):
+        with pytest.raises(ValueError, match='data and target must have equal index'):
             mdf = pdml.ModelFrame(df, target=s)
 
         s = pd.Series([1, 2, 3], index=['a', 'b', 'c'], name='XXX')
@@ -82,7 +83,7 @@ class TestModelFrame(tm.TestCase):
         self.assertEqual(mdf.target_name, 'A')
 
         msg = "Specified target 'X' is not included in data"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             mdf = pdml.ModelFrame(df, target='X')
 
     def test_frame_init_dict_list(self):
@@ -205,7 +206,7 @@ class TestModelFrame(tm.TestCase):
         s = pd.Series([10, 11, 12], name='A')
 
         msg = "data and target must have unique names"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             pdml.ModelFrame(df, target=s)
 
         df = pdml.ModelFrame({'A': [1, 2, 3],
@@ -221,11 +222,11 @@ class TestModelFrame(tm.TestCase):
 
     def test_frame_data_none(self):
         msg = "ModelFrame must have either data or target"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             mdf = pdml.ModelFrame(None)
 
         msg = "target must be list-like when data is None"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             mdf = pdml.ModelFrame(None, target='X')
 
         # initialization without data
@@ -307,12 +308,12 @@ class TestModelFrame(tm.TestCase):
 
         # unable to set data if passed value has the same column as the target
         msg = "Passed data has the same column name as the target '.target'"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             mdf.data = new
 
         # unable to set ModelFrame with target attribute
         msg = "Cannot update with ModelFrame which has target attribute"
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             mdf.data = mdf
 
         # set delete property
@@ -351,7 +352,7 @@ class TestModelFrame(tm.TestCase):
                               'B': [4, 5, 6]},
                              target=[7, 8, 9],
                              index=['a', 'b', 'c'])
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             df.data = [1, 2, 3]
 
     def test_frame_target_proparty(self):
@@ -393,7 +394,7 @@ class TestModelFrame(tm.TestCase):
             self.assertEqual(mdf.target_name, '.target')
 
         new = pd.Series([4, 5, 6], name='.target')
-        with self.assertRaisesRegexp(ValueError, 'data and target must have equal index'):
+        with pytest.raises(ValueError, match='data and target must have equal index'):
             mdf.target = new
 
         # set target property
@@ -414,7 +415,7 @@ class TestModelFrame(tm.TestCase):
         else:
             msg = 'Wrong number of items passed 2, placement implies 3'
 
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             mdf.target = [1, 2]
 
         # set target property
@@ -431,19 +432,19 @@ class TestModelFrame(tm.TestCase):
         mdf = pdml.ModelFrame(None, target=[1, 2, 3])
         msg = 'ModelFrame must have either data or target'
 
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             del mdf.target
 
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             mdf.target = None
 
         mdf = pdml.ModelFrame([1, 2, 3])
         msg = 'ModelFrame must have either data or target'
 
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             del mdf.data
 
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             mdf.data = None
 
     def test_frame_target_object(self):
@@ -692,7 +693,7 @@ class TestModelFrameMultiTarges(tm.TestCase):
 
         target = pd.DataFrame({'t1': [10, 11, 12], 't2': [13, 14, 15]})
         msg = 'data and target must have equal index'
-        with self.assertRaisesRegexp(ValueError, msg):
+        with pytest.raises(ValueError, match=msg):
             mdf = pdml.ModelFrame(df, target=target)
 
         # single column DataFrame will results in single target column
@@ -824,9 +825,3 @@ class TestModelFrameMultiTarges(tm.TestCase):
                                  ('.data', 'C'): [7, 8, 9]},
                                 columns=cols)
         tm.assert_frame_equal(mdf, expected)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)

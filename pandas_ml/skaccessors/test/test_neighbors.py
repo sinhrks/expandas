@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import pytest
 
 import sklearn.datasets as datasets
 import sklearn.neighbors as neighbors
@@ -45,43 +46,37 @@ class TestNeighbors(tm.TestCase):
 
         self.assert_numpy_array_almost_equal(result.toarray(), expected.toarray())
 
-    def test_NearestNeigbors(self):
+    @pytest.mark.parametrize("algo", ['NearestNeighbors',
+                                      'KNeighborsRegressor'])
+    def test_NearestNeigbors(self, algo):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['NearestNeighbors', 'KNeighborsRegressor']
-        for model in models:
-            mod1 = getattr(df.neighbors, model)(10)
-            mod2 = getattr(neighbors, model)(10)
+        mod1 = getattr(df.neighbors, algo)(10)
+        mod2 = getattr(neighbors, algo)(10)
 
-            df.fit(mod1)
-            mod2.fit(iris.data, iris.target)
+        df.fit(mod1)
+        mod2.fit(iris.data, iris.target)
 
-            # df doesn't have kneighbors
-            result = mod1.kneighbors(df.data)
-            expected = mod2.kneighbors(iris.data)
-            self.assert_numpy_array_almost_equal(result, expected)
+        # df doesn't have kneighbors
+        result = mod1.kneighbors(df.data)
+        expected = mod2.kneighbors(iris.data)
+        self.assert_numpy_array_almost_equal(result, expected)
 
-    def test_Neigbors(self):
+    @pytest.mark.parametrize("algo", ['KNeighborsClassifier',
+                                      'RadiusNeighborsRegressor',
+                                      'NearestCentroid'])
+    def test_Neigbors(self, algo):
         diabetes = datasets.load_diabetes()
         df = pdml.ModelFrame(diabetes)
 
-        models = ['KNeighborsClassifier', 'RadiusNeighborsRegressor',
-                  'NearestCentroid']
-        for model in models:
-            mod1 = getattr(df.neighbors, model)()
-            mod2 = getattr(neighbors, model)()
+        mod1 = getattr(df.neighbors, algo)()
+        mod2 = getattr(neighbors, algo)()
 
-            df.fit(mod1)
-            mod2.fit(diabetes.data, diabetes.target)
+        df.fit(mod1)
+        mod2.fit(diabetes.data, diabetes.target)
 
-            result = df.predict(mod1)
-            expected = mod2.predict(diabetes.data)
-            self.assertIsInstance(result, pdml.ModelSeries)
-            self.assert_numpy_array_almost_equal(result.values, expected)
-
-
-if __name__ == '__main__':
-    import nose
-    nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
-                   exit=False)
+        result = df.predict(mod1)
+        expected = mod2.predict(diabetes.data)
+        self.assertIsInstance(result, pdml.ModelSeries)
+        self.assert_numpy_array_almost_equal(result.values, expected)
