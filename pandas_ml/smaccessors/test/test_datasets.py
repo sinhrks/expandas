@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import nose
+
 import pandas as pd
 import statsmodels.api as sm
 
@@ -169,6 +171,9 @@ class TestStatsModelsDatasets(tm.TestCase):
         tm.assert_index_equal(df.data.columns, pd.Index(data.exog_name))
 
     def test_co2(self):
+        # https://github.com/statsmodels/statsmodels/issues/4775
+        raise nose.SkipTest()
+
         data = getattr(sm.datasets.co2, self.load_method)()
         msg = "Unable to read statsmodels Dataset without exog"
         with self.assertRaisesRegexp(ValueError, msg):
@@ -181,12 +186,14 @@ class TestStatsModelsDatasets_LoadPandas(TestStatsModelsDatasets):
 
     def test_star98(self):
         data = sm.datasets.star98.load_pandas()
-        msg = 'cannot copy sequence with size 2 to array axis with dimension 303'
+        if pdml.compat._PANDAS_ge_023:
+            msg = 'Wrong number of items passed 2, placement implies 303'
+        else:
+            msg = 'cannot copy sequence with size 2 to array axis with dimension 303'
         with self.assertRaisesRegexp(Exception, msg):
             pdml.ModelFrame(data)
 
 
 if __name__ == '__main__':
-    import nose
     nose.runmodule(argv=[__file__, '-vvs', '-x', '--pdb', '--pdb-failure'],
                    exit=False)

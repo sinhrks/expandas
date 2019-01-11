@@ -46,7 +46,7 @@ class SeabornMethods(_AccessorMethods):
                 raise ValueError(msg.format(key=key))
             value = self._df.target
 
-        elif not pd.core.common.is_list_like(value):
+        elif not pd.api.types.is_list_like(value):
             value = self._df[value]
         return value
 
@@ -91,7 +91,7 @@ class SeabornMethods(_AccessorMethods):
         data = self._maybe_target_series(data, key='data')
 
         if data2 is not None:
-            if not pd.core.common.is_list_like(data2):
+            if not pd.api.types.is_list_like(data2):
                 data2 = self._df[data2]
         return self._module.kdeplot(data, data2=data2, *args, **kwargs)
 

@@ -2,6 +2,20 @@
 What's new
 ==========
 
+v0.7.0
+------
+
+Enhancement
+^^^^^^^^^^^
+
+- Support pandas v0.22.0 and scikit-learn 0.20.0.
+
+API Change
+^^^^^^^^^^
+
+- `ModelFrame.model_selection.describe` now returns `ModelFrame` compat with
+  `GridSearchCV.cv_results_`
+
 v0.6.0
 ------
 

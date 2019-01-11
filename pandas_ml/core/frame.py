@@ -413,15 +413,24 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
               dict(funcname='fit_sample', returned='returned : sampling result'))
     def fit_sample(self, estimator, *args, **kwargs):
         # for imblearn
-        sampled_X, sampled_y = self._call(estimator, 'fit_sample', *args, **kwargs)
+        msg = ".fit_sample is deprecated. Use .fit_resample instead"
+        warnings.warn(msg, DeprecationWarning)
+        return self.fit_resample(estimator, *args, **kwargs)
+
+    @Appender(_shared_docs['estimator_methods'] %
+              dict(funcname='fit_resample', returned='returned : resampling result'))
+    def fit_resample(self, estimator, *args, **kwargs):
+        # for imblearn
+        sampled_X, sampled_y = self._call(estimator, 'fit_resample', *args, **kwargs)
         return self._wrap_sampled(sampled_X, sampled_y)
 
     @Appender(_shared_docs['estimator_methods'] %
               dict(funcname='sample', returned='returned : sampling result'))
     def sample(self, estimator, *args, **kwargs):
         # for imblearn
-        sampled_X, sampled_y = self._call(estimator, 'sample', *args, **kwargs)
-        return self._wrap_sampled(sampled_X, sampled_y)
+        msg = ".sample is deprecated. Use .fit_resample instead"
+        warnings.warn(msg, DeprecationWarning)
+        return self.fit_resample(estimator, *args, **kwargs)
 
     def _wrap_sampled(self, sampled_X, sampled_y):
         # revert sampled results to ModelFrame, index is being reset
@@ -454,7 +463,10 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
                 # set inverse columns
                 estimator._pdml_original_columns = self.data.columns
             return transformed
-        except:     # noqa
+        except ImportError:
+            # raise patsy error
+            raise
+        except Exception as e:     # noqa
             return pd.DataFrame.transform(self, estimator, *args, **kwargs)
 
     @Appender(_shared_docs['estimator_methods'] %

@@ -58,7 +58,8 @@ class XGBoostMethods(_AccessorMethods):
 
         if not isinstance(self._df.estimator, xgb.XGBModel):
             raise ValueError('estimator must be XGBRegressor or XGBClassifier')
-        return xgb.plot_importance(self._df.estimator.booster(),
+        # print(type(self._df.estimator.booster), self._df.estimator.booster)
+        return xgb.plot_importance(self._df.estimator,
                                    ax=ax, height=height, xlim=xlim, title=title,
                                    xlabel=xlabel, ylabel=ylabel, grid=True, **kwargs)
 
@@ -91,7 +92,7 @@ class XGBoostMethods(_AccessorMethods):
 
         if not isinstance(self._df.estimator, xgb.XGBModel):
             raise ValueError('estimator must be XGBRegressor or XGBClassifier')
-        return xgb.to_graphviz(self._df.estimator.booster(),
+        return xgb.to_graphviz(self._df.estimator,
                                num_trees=num_trees, rankdir=rankdir,
                                yes_color=yes_color, no_color=no_color, **kwargs)
 
@@ -122,5 +123,5 @@ class XGBoostMethods(_AccessorMethods):
 
         if not isinstance(self._df.estimator, xgb.XGBModel):
             raise ValueError('estimator must be XGBRegressor or XGBClassifier')
-        return xgb.plot_tree(self._df.estimator.booster(),
+        return xgb.plot_tree(self._df.estimator,
                              num_trees=num_trees, rankdir=rankdir, **kwargs)

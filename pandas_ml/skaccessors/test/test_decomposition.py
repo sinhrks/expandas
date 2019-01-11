@@ -14,10 +14,6 @@ class TestDecomposition(tm.TestCase):
         self.assertIs(df.decomposition.PCA, decomposition.PCA)
         self.assertIs(df.decomposition.IncrementalPCA,
                       decomposition.IncrementalPCA)
-
-        self.assertIs(df.decomposition.RandomizedPCA,
-                      decomposition.RandomizedPCA)
-
         self.assertIs(df.decomposition.KernelPCA, decomposition.KernelPCA)
         self.assertIs(df.decomposition.FactorAnalysis,
                       decomposition.FactorAnalysis)

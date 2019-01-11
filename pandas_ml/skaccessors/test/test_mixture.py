@@ -14,13 +14,12 @@ class TestMixture(tm.TestCase):
         self.assertIs(df.mixture.GaussianMixture, mixture.GaussianMixture)
         self.assertIs(df.mixture.BayesianGaussianMixture,
                       mixture.BayesianGaussianMixture)
-        self.assertIs(df.mixture.DPGMM, mixture.DPGMM)
 
     def test_Classifications(self):
         iris = datasets.load_iris()
         df = pdml.ModelFrame(iris)
 
-        models = ['GMM', 'DPGMM', 'VBGMM']
+        models = ['GaussianMixture', 'BayesianGaussianMixture']
         for model in models:
             mod1 = getattr(df.mixture, model)(random_state=self.random_state)
             mod2 = getattr(mixture, model)(random_state=self.random_state)

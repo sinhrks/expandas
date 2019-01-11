@@ -31,8 +31,7 @@ class ModelSeries(ModelTransformer, pd.Series):
         Wrapper for transform methods
         """
         if len(transformed.shape) == 2:
-            if (util._is_1d_harray(transformed) or
-               util._is_1d_varray(transformed)):
+            if (util._is_1d_harray(transformed) or util._is_1d_varray(transformed)):
                 transformed = transformed.flatten()
             else:
                 from pandas_ml.core.frame import ModelFrame
@@ -46,6 +45,9 @@ class ModelSeries(ModelTransformer, pd.Series):
         try:
             transformed = super(ModelSeries, self).transform(estimator, *args, **kwargs)
             return transformed
+        except ImportError:
+            # raise patsy error
+            raise
         except:    # noqa
             return pd.Series.transform(self, estimator, *args, **kwargs)
 

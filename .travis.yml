@@ -1,11 +1,11 @@
 language: python
 
 env:
-  - PYTHON=2.7 PANDAS=0.20.2 SKLEARN=0.18.2
-  - PYTHON=2.7 PANDAS=0.21.0 SKLEARN=0.19.1 IMBALANCE=true
-  - PYTHON=3.5 PANDAS=0.19.1 SKLEARN=0.18.2
-  - PYTHON=3.6 PANDAS=0.20.2 SKLEARN=0.18.2 IMBALANCE=true
-  - PYTHON=3.6 PANDAS=0.21.0 SKLEARN=0.19.1 IMBALANCE=true COVERAGE=true
+  - PYTHON=2.7 PANDAS=0.19.2 SKLEARN=0.19.1
+  - PYTHON=2.7 PANDAS=0.20.2 SKLEARN=0.20.2 IMBALANCE=true
+  - PYTHON=3.5 PANDAS=0.21.1 SKLEARN=0.19.1
+  - PYTHON=3.6 PANDAS=0.22.0 SKLEARN=0.19.1 IMBALANCE=true
+  - PYTHON=3.7 PANDAS=0.23.2 SKLEARN=0.20.2 IMBALANCE=true COVERAGE=true
 
 addons:
   apt:
@@ -24,7 +24,7 @@ script:
   - export PATH="$HOME/miniconda/bin:$PATH"
   - source activate myenv
   - python -m nose --with-coverage --cover-package=pandas_ml
-  - flake8 --ignore E501 pandas_ml
+  - flake8 --ignore E501,W503 pandas_ml
 
 after_success:
   - if [ "$COVERAGE" ]; then

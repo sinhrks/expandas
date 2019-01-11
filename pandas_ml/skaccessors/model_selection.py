@@ -128,16 +128,7 @@ class ModelSelectionMethods(_AccessorMethods):
         -------
         described : ``ModelFrame``
         """
-        results = []
-        for params, mean_score, scores in estimator.grid_scores_:
-            row = dict(mean=mean_score, std=scores.std())
-            row.update(params)
-            results.append(row)
-        df = self._constructor(results)
-
-        scores = pd.Index(['mean', 'std'])
-        df = df[scores.append(df.columns[~df.columns.isin(scores)])]
-        return df
+        return self._constructor(estimator.cv_results_)
 
     # Model validation
 

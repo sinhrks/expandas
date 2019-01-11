@@ -77,55 +77,9 @@ class TestXGBoost(tm.TestCase):
             df.fit(cv)
 
         result = df.model_selection.describe(cv)
-        expected = pd.DataFrame({'mean': [0.89705064, 0.91764051, 0.91263216, 0.91930996],
-                                 'std': [0.03244061, 0.03259985, 0.02764891, 0.0266436],
-                                 'max_depth': [3, 3, 4, 4],
-                                 'n_estimators': [50, 100, 50, 100]},
-                                columns=['mean', 'std', 'max_depth', 'n_estimators'])
+        expected = pd.DataFrame(cv.cv_results_)
         self.assertIsInstance(result, pdml.ModelFrame)
         tm.assert_frame_equal(result, expected)
-
-    def test_plotting(self):
-
-        iris = datasets.load_iris()
-        df = pdml.ModelFrame(iris)
-
-        df.fit(df.svm.SVC())
-
-        # raises if df.estimator is not XGBModel
-        with self.assertRaises(ValueError):
-            df.xgb.plot_importance()
-
-        with self.assertRaises(ValueError):
-            df.xgb.to_graphviz()
-
-        with self.assertRaises(ValueError):
-            df.xgb.plot_tree()
-
-        df.fit(df.xgb.XGBClassifier())
-
-        from matplotlib.axes import Axes
-        from graphviz import Digraph
-
-        try:
-            ax = df.xgb.plot_importance()
-        except ImportError:
-            import nose
-            # matplotlib.use doesn't work on Travis
-            # PYTHON=3.4 PANDAS=0.17.1 SKLEARN=0.16.1
-            raise nose.SkipTest()
-
-        self.assertIsInstance(ax, Axes)
-        assert ax.get_title() == 'Feature importance'
-        assert ax.get_xlabel() == 'F score'
-        assert ax.get_ylabel() == 'Features'
-        assert len(ax.patches) == 4
-
-        g = df.xgb.to_graphviz(num_trees=0)
-        self.assertIsInstance(g, Digraph)
-
-        ax = df.xgb.plot_tree(num_trees=0)
-        self.assertIsInstance(ax, Axes)
 
 
 if __name__ == '__main__':

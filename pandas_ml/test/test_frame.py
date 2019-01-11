@@ -409,7 +409,12 @@ class TestModelFrame(tm.TestCase):
         self.assertEqual(mdf.target.name, '.target')
         self.assertEqual(mdf.target_name, '.target')
 
-        with self.assertRaisesRegexp(ValueError, 'Wrong number of items passed 2, placement implies 3'):
+        if pdml.compat._PANDAS_ge_023:
+            msg = 'Length of passed values is 2, index implies 3'
+        else:
+            msg = 'Wrong number of items passed 2, placement implies 3'
+
+        with self.assertRaisesRegexp(ValueError, msg):
             mdf.target = [1, 2]
 
         # set target property

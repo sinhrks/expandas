@@ -338,15 +338,7 @@ class TestHyperParameterOptimizer(tm.TestCase):
             df.fit(cv)
 
         result = df.model_selection.describe(cv)
-        expected = pd.DataFrame({'mean': [0.97161937, 0.9476906, 0.97273233, 0.95937674, 0.97273233,
-                                          0.96271564, 0.94936004, 0.94936004, 0.94936004],
-                                 'std': [0.01546977, 0.0221161, 0.01406514, 0.02295168, 0.01406514,
-                                         0.01779749, 0.01911084, 0.01911084, 0.01911084],
-                                 'C': [1, 1, 10, 10, 100, 100, 1, 10, 100],
-                                 'gamma': [0.001, 0.0001, 0.001, 0.0001, 0.001, 0.0001,
-                                           np.nan, np.nan, np.nan],
-                                 'kernel': ['rbf'] * 6 + ['linear'] * 3},
-                                columns=['mean', 'std', 'C', 'gamma', 'kernel'])
+        expected = pd.DataFrame(cv.cv_results_)
         self.assertIsInstance(result, pdml.ModelFrame)
         tm.assert_frame_equal(result, expected)
 

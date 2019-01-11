@@ -19,7 +19,6 @@ class TestGaussianProcess(tm.TestCase):
                       gp.GaussianProcessClassifier)
         self.assertIs(dgp.GaussianProcessRegressor,
                       gp.GaussianProcessRegressor)
-        self.assertIs(dgp.GaussianProcess, gp.GaussianProcess)
         self.assertIs(dgp.correlation_models.absolute_exponential,
                       gp.correlation_models.absolute_exponential)
         self.assertIs(dgp.correlation_models.squared_exponential,
@@ -85,34 +84,26 @@ class TestGaussianProcess(tm.TestCase):
         expected = gp.regression_models.quadratic(X)
         self.assert_numpy_array_almost_equal(result, expected)
 
-    def test_GaussianProcess_lt_017(self):
-        # http://scikit-learn.org/stable/modules/gaussian_process.html
+    def test_GaussianProcess_ge_018(self):
         X = np.atleast_2d([1., 3., 5., 6., 7., 8.]).T
         y = np.sin(X).ravel()
         df = pdml.ModelFrame(X, target=y)
 
-        g1 = df.gaussian_process.GaussianProcess(theta0=1e-2, thetaL=1e-4,
-                                                 thetaU=1e-1)
-        g2 = gp.GaussianProcess(theta0=1e-2, thetaL=1e-4, thetaU=1e-1)
+        k1 = (df.gp.kernels.ConstantKernel(1.0, (1e-3, 1e3))
+              * df.gp.kernels.RBF(10, (1e-2, 1e2)))
+        g1 = df.gp.GaussianProcessRegressor(kernel=k1, n_restarts_optimizer=9,
+                                            random_state=self.random_state)
+
+        k2 = (gp.kernels.ConstantKernel(1.0, (1e-3, 1e3))
+              * gp.kernels.RBF(10, (1e-2, 1e2)))
+        g2 = gp.GaussianProcessRegressor(kernel=k2, n_restarts_optimizer=9,
+                                         random_state=self.random_state)
 
         g1.fit(X, y)
         g2.fit(X, y)
 
         x = np.atleast_2d(np.linspace(0, 10, 1000)).T
         tdf = pdml.ModelFrame(x)
-
-        y_result, sigma2_result = tdf.predict(g1, eval_MSE=True)
-        y_expected, sigma2_expected = g2.predict(x, eval_MSE=True)
-
-        self.assertIsInstance(y_result, pdml.ModelSeries)
-        tm.assert_index_equal(y_result.index, tdf.index)
-
-        self.assertIsInstance(sigma2_result, pdml.ModelSeries)
-        tm.assert_index_equal(sigma2_result.index, tdf.index)
-
-        self.assert_numpy_array_almost_equal(y_result.values, y_expected)
-        self.assert_numpy_array_almost_equal(sigma2_result.values,
-                                             sigma2_expected)
 
         y_result = tdf.predict(g1)
         y_expected = g2.predict(x)
@@ -122,18 +113,18 @@ class TestGaussianProcess(tm.TestCase):
 
         self.assert_numpy_array_almost_equal(y_result, y_expected)
 
-    def test_GaussianProcess_ge_018(self):
+    def test_GaussianProcess_std(self):
         X = np.atleast_2d([1., 3., 5., 6., 7., 8.]).T
         y = np.sin(X).ravel()
         df = pdml.ModelFrame(X, target=y)
 
-        k1 = (df.gp.kernels.ConstantKernel(1.0, (1e-3, 1e3)) *
-              df.gp.kernels.RBF(10, (1e-2, 1e2)))
+        k1 = (df.gp.kernels.ConstantKernel(1.0, (1e-3, 1e3))
+              * df.gp.kernels.RBF(10, (1e-2, 1e2)))
         g1 = df.gp.GaussianProcessRegressor(kernel=k1, n_restarts_optimizer=9,
                                             random_state=self.random_state)
 
-        k2 = (gp.kernels.ConstantKernel(1.0, (1e-3, 1e3)) *
-              gp.kernels.RBF(10, (1e-2, 1e2)))
+        k2 = (gp.kernels.ConstantKernel(1.0, (1e-3, 1e3))
+              * gp.kernels.RBF(10, (1e-2, 1e2)))
         g2 = gp.GaussianProcessRegressor(kernel=k2, n_restarts_optimizer=9,
                                          random_state=self.random_state)
 
@@ -156,14 +147,6 @@ class TestGaussianProcess(tm.TestCase):
         self.assert_numpy_array_almost_equal(std_result.values,
                                              std_expected)
 
-        y_result = tdf.predict(g1)
-        y_expected = g2.predict(x)
-
-        self.assertIsInstance(y_result, pdml.ModelSeries)
-        tm.assert_index_equal(y_result.index, tdf.index)
-
-        self.assert_numpy_array_almost_equal(y_result, y_expected)
-
     def test_Gaussian2D(self):
         # http://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gp_probabilistic_classification_after_regression.html
 
@@ -184,16 +167,46 @@ class TestGaussianProcess(tm.TestCase):
         y = g(X)
 
         df = pdml.ModelFrame(X, target=y)
-        gpm1 = df.gaussian_process.GaussianProcess(theta0=5e-1)
+        gpm1 = df.gaussian_process.GaussianProcessRegressor()
         df.fit(gpm1)
-        result, result_MSE = df.predict(gpm1, eval_MSE=True)
+        result = df.predict(gpm1)
 
-        gpm2 = gp.GaussianProcess(theta0=5e-1)
+        gpm2 = gp.GaussianProcessRegressor()
         gpm2.fit(X, y)
-        expected, expected_MSE = gpm2.predict(X, eval_MSE=True)
+        expected = gpm2.predict(X)
 
         self.assert_numpy_array_almost_equal(result.values, expected)
-        self.assert_numpy_array_almost_equal(result_MSE.values, expected_MSE)
+
+    def test_Gaussian2D_std(self):
+        # http://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gp_probabilistic_classification_after_regression.html
+
+        def g(x):
+            """The function to predict (classification will then consist in predicting
+            whether g(x) <= 0 or not)"""
+            return 5. - x[:, 1] - .5 * x[:, 0] ** 2.
+
+        # Design of experiments
+        X = np.array([[-4.61611719, -6.00099547],
+                      [4.10469096, 5.32782448],
+                      [0.00000000, -0.50000000],
+                      [-6.17289014, -4.6984743],
+                      [1.3109306, -6.93271427],
+                      [-5.03823144, 3.10584743],
+                      [-2.87600388, 6.74310541],
+                      [5.21301203, 4.26386883]])
+        y = g(X)
+
+        df = pdml.ModelFrame(X, target=y)
+        gpm1 = df.gaussian_process.GaussianProcessRegressor()
+        df.fit(gpm1)
+        result, std_result = df.predict(gpm1, return_std=True)
+
+        gpm2 = gp.GaussianProcessRegressor()
+        gpm2.fit(X, y)
+        expected, std_expected = gpm2.predict(X, return_std=True)
+
+        self.assert_numpy_array_almost_equal(result.values, expected)
+        self.assert_numpy_array_almost_equal(std_result.values, std_expected)
 
 
 if __name__ == '__main__':

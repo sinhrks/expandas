@@ -251,8 +251,8 @@ _classification_methods = ['accuracy_score', 'classification_report',
 _regression_methods = ['explained_variance_score', 'mean_absolute_error',
                        'mean_squared_error', 'r2_score']
 _cluster_methods = ['mutual_info_score']
-_true_pred_methods = (_classification_methods + _regression_methods +
-                      _cluster_methods)
+_true_pred_methods = (_classification_methods + _regression_methods
+                      + _cluster_methods)
 _attach_methods(MetricsMethods, _wrap_target_pred_func, _true_pred_methods)
 
 

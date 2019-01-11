@@ -83,8 +83,8 @@ class TestImbalance(tm.TestCase):
             df.fit(mod1)
             mod2.fit(X, y)
 
-            result = df.sample(mod1)
-            expected_X, expected_y = mod2.sample(X, y)
+            result = df.fit_resample(mod1)
+            expected_X, expected_y = mod2.fit_resample(X, y)
 
             self.assertIsInstance(result, pdml.ModelFrame)
             tm.assert_numpy_array_equal(result.target.values, expected_y)
@@ -119,8 +119,8 @@ class TestImbalance(tm.TestCase):
             df.fit(mod1)
             mod2.fit(X, y)
 
-            results = df.sample(mod1)
-            expected_X, expected_y = mod2.sample(X, y)
+            results = df.fit_resample(mod1)
+            expected_X, expected_y = mod2.fit_resample(X, y)
 
             self.assertIsInstance(results, list)
             for r in results:
