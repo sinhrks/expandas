@@ -2,7 +2,7 @@
 What's new
 ==========
 
-v0.7.0
+v0.6.0
 ------
 
 Enhancement
@@ -16,14 +16,11 @@ API Change
 - `ModelFrame.model_selection.describe` now returns `ModelFrame` compat with
   `GridSearchCV.cv_results_`
 
-v0.6.0
-------
-
 Deprecation
 ^^^^^^^^^^^
 
-- Drop pandas v0.19.x support.
-- Drop scikit-learn v0.17.x support.
+- Drop support of pandas v0.18.x or earlier
+- Drop support of scikit-learn v0.18.x or earlier.
 
 v0.5.0
 ------
