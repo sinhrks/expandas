@@ -18,12 +18,11 @@ conda install openblas
 conda install numpy scipy matplotlib "scikit-learn=$SKLEARN" "pandas=$PANDAS"
 conda install patsy statsmodels seaborn
 
-python -m pip install python-coveralls coverage
 python -m pip install graphviz
-python -m pip install flake8
 python -m pip install xgboost
 python -m pip install enum34
-python -m pip install pytest pytest-cov
+python -m pip install pytest pytest-cov codecov
+python -m pip install flake8
 
 if [ "$IMBALANCE" ]; then
     python -m pip install imbalanced-learn

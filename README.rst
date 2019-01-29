@@ -2,14 +2,14 @@ pandas-ml
 =========
 
 .. image:: https://img.shields.io/pypi/v/pandas_ml.svg
-    :target: https://pypi.python.org/pypi/pandas_ml/
+  :target: https://pypi.python.org/pypi/pandas_ml/
 .. image:: https://readthedocs.org/projects/pandas-ml/badge/?version=latest
-    :target: http://pandas-ml.readthedocs.org/en/latest/
-    :alt: Latest Docs
+  :target: http://pandas-ml.readthedocs.org/en/latest/
+  :alt: Latest Docs
 .. image:: https://travis-ci.org/pandas-ml/pandas-ml.svg?branch=master
-    :target: https://travis-ci.org/pandas-ml/pandas-ml
-.. image:: https://coveralls.io/repos/pandas-ml/pandas-ml/badge.svg?branch=master&service=github
-    :target: https://coveralls.io/github/pandas-ml/pandas-ml?branch=master
+  :target: https://travis-ci.org/pandas-ml/pandas-ml
+.. image:: https://codecov.io/gh/pandas-ml/pandas-ml/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/pandas-ml/pandas-ml
 
 Overview
 ~~~~~~~~
