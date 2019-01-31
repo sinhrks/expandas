@@ -48,12 +48,12 @@ class ModelSelectionMethods(_AccessorMethods):
             gen = cv.split(self._df.index)
 
         for train_index, test_index in gen:
-                train_df = self._df.iloc[train_index, :]
-                test_df = self._df.iloc[test_index, :]
-                if reset_index:
-                    train_df = train_df.reset_index(drop=True)
-                    test_df = test_df.reset_index(drop=True)
-                yield train_df, test_df
+            train_df = self._df.iloc[train_index, :]
+            test_df = self._df.iloc[test_index, :]
+            if reset_index:
+                train_df = train_df.reset_index(drop=True)
+                test_df = test_df.reset_index(drop=True)
+            yield train_df, test_df
 
     def iterate(self, cv, reset_index=False):
         """ deprecated. Use .split """
