@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import pandas as pd
-from pandas.util.decorators import Appender
+from pandas.util import Appender
 import pandas.compat as compat
 
 from pandas_ml.core.base import _BaseEstimator

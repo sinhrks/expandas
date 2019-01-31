@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-from pandas.util.decorators import cache_readonly
+from pandas.util import cache_readonly
 
 from pandas_ml.core.accessor import _AccessorMethods
 

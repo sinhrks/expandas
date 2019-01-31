@@ -5,7 +5,7 @@ import warnings
 import numpy as np
 import pandas as pd
 import pandas.compat as compat
-from pandas.util.decorators import Appender, cache_readonly
+from pandas.util import Appender, cache_readonly
 
 from pandas_ml.compat import is_list_like
 from pandas_ml.core.generic import ModelPredictor, _shared_docs

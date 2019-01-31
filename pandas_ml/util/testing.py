@@ -9,7 +9,7 @@ from pandas.util.testing import (assert_produces_warning,           # noqa
                                  assert_series_equal,               # noqa
                                  assert_frame_equal,                # noqa
                                  assert_numpy_array_equal)          # noqa
-import pandas.tools.plotting as plotting
+import pandas.plotting as plotting
 
 
 try:

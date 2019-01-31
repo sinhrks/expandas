@@ -3,7 +3,7 @@
 import warnings
 
 import pandas.compat as compat
-from pandas.util.decorators import Appender
+from pandas.util import Appender
 
 import pandas_ml.misc as misc
 
