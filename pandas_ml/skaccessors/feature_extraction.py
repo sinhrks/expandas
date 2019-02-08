@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 
+from distutils.version import LooseVersion
 
-from pandas.util import cache_readonly
+from pandas import __version__
+version = LooseVersion(__version__)
+if version < '0.21.0':
+    from pandas.util.decorators import cache_readonly
+else:
+    from pandas.util import cache_readonly
 
 from pandas_ml.core.accessor import _AccessorMethods
 
