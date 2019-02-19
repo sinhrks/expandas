@@ -3,18 +3,18 @@
 from distutils.version import LooseVersion
 
 import pandas as pd
+import pandas.compat as compat
+
+from pandas_ml.core.base import _BaseEstimator
+from pandas_ml.core.frame import ModelFrame
+from pandas_ml.core.generic import ModelPredictor, _shared_docs
+from pandas_ml.core.series import ModelSeries
 
 version = LooseVersion(pd.__version__)
 if version < '0.21.0':
     from pandas.util.decorators import Appender
 else:
     from pandas.util import Appender
-import pandas.compat as compat
-
-from pandas_ml.core.base import _BaseEstimator
-from pandas_ml.core.generic import ModelPredictor, _shared_docs
-from pandas_ml.core.frame import ModelFrame
-from pandas_ml.core.series import ModelSeries
 
 
 @Appender(pd.core.groupby.GroupBy.__doc__)

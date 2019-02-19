@@ -7,12 +7,6 @@ import numpy as np
 import pandas as pd
 import pandas.compat as compat
 
-version = LooseVersion(pd.__version__)
-if version < '0.21.0':
-    from pandas.util.decorators import Appender, cache_readonly
-else:
-    from pandas.util import Appender, cache_readonly
-
 from pandas_ml.compat import is_list_like
 from pandas_ml.core.generic import ModelPredictor, _shared_docs
 from pandas_ml.core.series import ModelSeries
@@ -23,6 +17,12 @@ import pandas_ml.smaccessors as smaccessors
 import pandas_ml.snsaccessors as snsaccessors
 import pandas_ml.xgboost as xgboost
 import pandas_ml.util as util
+
+version = LooseVersion(pd.__version__)
+if version < '0.21.0':
+    from pandas.util.decorators import Appender, cache_readonly
+else:
+    from pandas.util import Appender, cache_readonly
 
 
 class ModelFrame(ModelPredictor, pd.DataFrame):

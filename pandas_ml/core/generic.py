@@ -4,16 +4,15 @@ import warnings
 from distutils.version import LooseVersion
 
 import pandas.compat as compat
-
 from pandas import __version__
+
+import pandas_ml.misc as misc
+
 version = LooseVersion(__version__)
 if version < '0.21.0':
     from pandas.util.decorators import Appender
 else:
     from pandas.util import Appender
-
-import pandas_ml.misc as misc
-
 
 _shared_docs = dict()
 
