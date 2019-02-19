@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 
+from distutils.version import LooseVersion
+
 import pandas as pd
-from pandas.util import Appender
+
+version = LooseVersion(pd.__version__)
+if version < '0.21.0':
+    from pandas.util.decorators import Appender
+else:
+    from pandas.util import Appender
 import pandas.compat as compat
 
 from pandas_ml.core.base import _BaseEstimator

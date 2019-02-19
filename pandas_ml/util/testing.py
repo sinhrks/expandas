@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from distutils.version import LooseVersion
+
 import numpy as np
 import pandas.util.testing as tm
 
@@ -9,8 +11,13 @@ from pandas.util.testing import (assert_produces_warning,           # noqa
                                  assert_series_equal,               # noqa
                                  assert_frame_equal,                # noqa
                                  assert_numpy_array_equal)          # noqa
-import pandas.plotting as plotting
 
+from pandas import __version__
+version = LooseVersion(__version__)
+if version < '0.21.0':
+    import pandas.tools.plotting as plotting
+else:
+    import pandas.plotting as plotting
 
 try:
     _flatten = plotting._flatten
