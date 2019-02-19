@@ -1,11 +1,19 @@
 #!/usr/bin/env python
 
-import pandas as pd
-from pandas.util import Appender, cache_readonly
+from distutils.version import LooseVersion
 
-from pandas_ml.core.generic import ModelTransformer, _shared_docs
+import pandas as pd
+from pandas import __version__
+
 import pandas_ml.skaccessors as skaccessors
 import pandas_ml.util as util
+from pandas_ml.core.generic import ModelTransformer, _shared_docs
+
+version = LooseVersion(__version__)
+if version < '0.21.0':
+    from pandas.util.decorators import Appender, cache_readonly
+else:
+    from pandas.util import Appender, cache_readonly
 
 
 class ModelSeries(ModelTransformer, pd.Series):
