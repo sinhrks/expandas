@@ -1,16 +1,13 @@
 #!/usr/bin/env python
 
-from distutils.version import LooseVersion
-
 import pandas as pd
-from pandas import __version__
 
 import pandas_ml.skaccessors as skaccessors
 import pandas_ml.util as util
+from pandas_ml.compat import _PANDAS_ge_021
 from pandas_ml.core.generic import ModelTransformer, _shared_docs
 
-version = LooseVersion(__version__)
-if version < '0.21.0':
+if not _PANDAS_ge_021:
     from pandas.util.decorators import Appender, cache_readonly
 else:
     from pandas.util import Appender, cache_readonly

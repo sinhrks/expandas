@@ -1,25 +1,23 @@
 #!/usr/bin/env python
 
 import warnings
-from distutils.version import LooseVersion
 
 import numpy as np
 import pandas as pd
 import pandas.compat as compat
 
-from pandas_ml.compat import is_list_like
-from pandas_ml.core.generic import ModelPredictor, _shared_docs
-from pandas_ml.core.series import ModelSeries
-from pandas_ml.core.accessor import _AccessorMethods
 import pandas_ml.imbaccessors as imbaccessors
 import pandas_ml.skaccessors as skaccessors
 import pandas_ml.smaccessors as smaccessors
 import pandas_ml.snsaccessors as snsaccessors
-import pandas_ml.xgboost as xgboost
 import pandas_ml.util as util
+import pandas_ml.xgboost as xgboost
+from pandas_ml.compat import is_list_like, _PANDAS_ge_021
+from pandas_ml.core.accessor import _AccessorMethods
+from pandas_ml.core.generic import ModelPredictor, _shared_docs
+from pandas_ml.core.series import ModelSeries
 
-version = LooseVersion(pd.__version__)
-if version < '0.21.0':
+if not _PANDAS_ge_021:
     from pandas.util.decorators import Appender, cache_readonly
 else:
     from pandas.util import Appender, cache_readonly
