@@ -4,13 +4,8 @@ import pandas as pd
 
 import pandas_ml.skaccessors as skaccessors
 import pandas_ml.util as util
-from pandas_ml.compat import _PANDAS_ge_021
+from pandas_ml.compat import Appender, cache_readonly
 from pandas_ml.core.generic import ModelTransformer, _shared_docs
-
-if not _PANDAS_ge_021:
-    from pandas.util.decorators import Appender, cache_readonly
-else:
-    from pandas.util import Appender, cache_readonly
 
 
 class ModelSeries(ModelTransformer, pd.Series):

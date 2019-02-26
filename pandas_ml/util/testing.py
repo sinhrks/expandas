@@ -3,7 +3,7 @@
 import numpy as np
 import pandas.util.testing as tm
 
-from pandas_ml.compat import _PANDAS_ge_021
+from pandas_ml.compat import plotting
 from pandas.util.testing import (assert_produces_warning,           # noqa
                                  close, RNGContext,                 # noqa
                                  assert_index_equal,                # noqa
@@ -11,11 +11,6 @@ from pandas.util.testing import (assert_produces_warning,           # noqa
                                  assert_frame_equal,                # noqa
                                  assert_numpy_array_equal)          # noqa
 
-
-if not _PANDAS_ge_021:
-    import pandas.tools.plotting as plotting
-else:
-    import pandas.plotting as plotting
 
 try:
     _flatten = plotting._flatten

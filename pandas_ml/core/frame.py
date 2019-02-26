@@ -12,15 +12,10 @@ import pandas_ml.smaccessors as smaccessors
 import pandas_ml.snsaccessors as snsaccessors
 import pandas_ml.util as util
 import pandas_ml.xgboost as xgboost
-from pandas_ml.compat import is_list_like, _PANDAS_ge_021
+from pandas_ml.compat import is_list_like, Appender, cache_readonly
 from pandas_ml.core.accessor import _AccessorMethods
 from pandas_ml.core.generic import ModelPredictor, _shared_docs
 from pandas_ml.core.series import ModelSeries
-
-if not _PANDAS_ge_021:
-    from pandas.util.decorators import Appender, cache_readonly
-else:
-    from pandas.util import Appender, cache_readonly
 
 
 class ModelFrame(ModelPredictor, pd.DataFrame):

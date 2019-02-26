@@ -18,10 +18,13 @@ else:
     _PANDAS_ge_022 = False
 
 if PANDAS_VERSION >= LooseVersion('0.21'):
+    from pandas.util import Appender, cache_readonly              # noqa
+    import pandas.plotting as plotting                            # noqa
     _PANDAS_ge_021 = True
 else:
+    from pandas.util.decorators import Appender, cache_readonly   # noqa
+    import pandas.tools.plotting as plotting                      # noqa
     _PANDAS_ge_021 = False
-
 
 try:
     import sklearn

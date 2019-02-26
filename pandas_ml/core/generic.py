@@ -5,12 +5,8 @@ import warnings
 import pandas.compat as compat
 
 import pandas_ml.misc as misc
-from pandas_ml.compat import _PANDAS_ge_021
+from pandas_ml.compat import Appender
 
-if not _PANDAS_ge_021:
-    from pandas.util.decorators import Appender
-else:
-    from pandas.util import Appender
 
 _shared_docs = dict()
 
