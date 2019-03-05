@@ -36,7 +36,7 @@ You can use these estimators like ``scikit-learn`` estimators.
 
 .. code-block:: python
 
-   >>> train_df, test_df = df.cross_validation.train_test_split()
+   >>> train_df, test_df = df.model_selection.train_test_split()
 
    >>> estimator = df.xgboost.XGBClassifier()
 
@@ -88,10 +88,10 @@ Following example shows to perform a grid search.
 .. code-block:: python
 
    >>> tuned_parameters = [{'max_depth': [3, 4]}]
-   >>> cv = df.grid_search.GridSearchCV(df.xgb.XGBClassifier(), tuned_parameters, cv=5)
+   >>> cv = df.model_selection.GridSearchCV(df.xgb.XGBClassifier(), tuned_parameters, cv=5)
 
    >>> df.fit(cv)
-   >>> df.grid_search.describe(cv)
+   >>> df.model_selection.describe(cv)
           mean       std  max_depth
    0  0.917641  0.032600          3
    1  0.919310  0.026644          4

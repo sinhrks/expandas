@@ -49,7 +49,6 @@ Following table shows ``scikit-learn`` module and corresponding ``ModelFrame`` m
 ``sklearn.cluster``               ``ModelFrame.cluster``
 ``sklearn.covariance``            ``ModelFrame.covariance``
 ``sklearn.cross_decomposition``   ``ModelFrame.cross_decomposition``
-``sklearn.cross_validation``      ``ModelFrame.cross_validation``, ``crv`` (deprecated)
 ``sklearn.datasets``              (not accesible from accessor)
 ``sklearn.decomposition``         ``ModelFrame.decomposition``
 ``sklearn.discriminant_analysis`` ``ModelFrame.discriminant_analysis``, ``da``
@@ -58,12 +57,9 @@ Following table shows ``scikit-learn`` module and corresponding ``ModelFrame`` m
 ``sklearn.feature_extraction``    ``ModelFrame.feature_extraction``
 ``sklearn.feature_selection``     ``ModelFrame.feature_selection``
 ``sklearn.gaussian_process``      ``ModelFrame.gaussian_process``, ``gp``
-``sklearn.grid_search``           ``ModelFrame.grid_search`` (deprecated)
 ``sklearn.isotonic``              ``ModelFrame.isotonic``
 ``sklearn.kernel_approximation``  ``ModelFrame.kernel_approximation``
 ``sklearn.kernel_ridge``          ``ModelFrame.kernel_ridge``
-``sklearn.lda``                   ``ModelFrame.lda`` (deprecated)
-``sklearn.learning_curve``        ``ModelFrame.learning_curve`` (deprecated)
 ``sklearn.linear_model``          ``ModelFrame.linear_model``, ``lm``
 ``sklearn.manifold``              ``ModelFrame.manifold``
 ``sklearn.metrics``               ``ModelFrame.metrics``
@@ -76,7 +72,6 @@ Following table shows ``scikit-learn`` module and corresponding ``ModelFrame`` m
 ``sklearn.neural_network``        ``ModelFrame.neural_network``
 ``sklearn.pipeline``              ``ModelFrame.pipeline``
 ``sklearn.preprocessing``         ``ModelFrame.preprocessing``, ``pp``
-``sklearn.qda``                   ``ModelFrame.qda`` (deprecated)
 ``sklearn.semi_supervised``       ``ModelFrame.semi_supervised``
 ``sklearn.svm``                   ``ModelFrame.svm``
 ``sklearn.tree``                  ``ModelFrame.tree``
@@ -278,7 +273,7 @@ Above expression is the same as below:
 Cross Validation
 ----------------
 
-``scikit-learn`` has some classes for cross validation. ``cross_validation.train_test_split`` splits data to training and test set. You can access to the function via ``cross_validation`` accessor.
+``scikit-learn`` has some classes for cross validation. ``model_selection.train_test_split`` splits data to training and test set. You can access to the function via ``model_selection`` accessor.
 
 .. code-block:: python
 
@@ -322,7 +317,7 @@ You can iterate over Splitter classes via ``ModelFrame.model_selection.split`` w
 .. code-block:: python
 
    >>> kf = df.model_selection.KFold(n_splits=3)
-   >>> for train_df, test_df in df.cross_validation.iterate(kf):
+   >>> for train_df, test_df in df.model_selection.iterate(kf):
    ...    print('training set shape: ', train_df.shape,
    ...          'test set shape: ', test_df.shape)
    training set shape:  (112, 5) test set shape:  (38, 5)
@@ -351,7 +346,7 @@ You can perform grid search using ``ModelFrame.fit``.
      kernel='rbf', max_iter=-1, probability=False, random_state=None,
      shrinking=True, tol=0.001, verbose=False)
 
-In addition, ``ModelFrame.grid_search`` has a ``describe`` function to organize each grid search result as ``ModelFrame`` accepting estimator.
+In addition, ``ModelFrame.model_selection`` has a ``describe`` function to organize each grid search result as ``ModelFrame`` accepting estimator.
 
 .. code-block:: python
 

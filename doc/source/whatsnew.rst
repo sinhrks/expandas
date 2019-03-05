@@ -2,6 +2,14 @@
 What's new
 ==========
 
+v0.6.1
+------
+
+Enhancement
+^^^^^^^^^^^
+
+- Support pandas v0.24.0.
+
 v0.6.0
 ------
 
