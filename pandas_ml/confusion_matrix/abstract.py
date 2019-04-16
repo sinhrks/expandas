@@ -201,7 +201,7 @@ class ConfusionMatrixAbstract(object):
         else:
             return("Confusion matrix")
 
-    def plot(self, normalized=False, backend='matplotlib',
+    def plot(self, save = False, filename = 'confusion_matrix_plot.png', normalized=False, backend='matplotlib',
              ax=None, max_colors=10, **kwargs):
         """
         Plots confusion matrix
@@ -243,6 +243,15 @@ class ConfusionMatrixAbstract(object):
             if N_max > max_colors:
                 # Continuous colorbar
                 plt.colorbar()
+
+            # Adding tight layout to prevent plot cut offs
+            plt.tight_layout()
+            
+            # Saving plot
+            if save== True:
+                print("Plot saved as default name confusion_matrix_plot.png")
+                plt.savefig(fname = filename)
+
             else:
                 # Discrete colorbar
                 pass
@@ -256,6 +265,11 @@ class ConfusionMatrixAbstract(object):
         elif backend == 'seaborn':
             import seaborn as sns
             ax = sns.heatmap(df, **kwargs)
+            # Saving plot
+            if save == True:
+                print("Plot saved as default name confusion_matrix_plot.png")
+                fig = ax.get_figure()
+                fig.savefig(filename)
             return ax
             # You should test this yourself
             # because I'm facing an issue with Seaborn under Mac OS X (2015-04-26)
@@ -265,6 +279,8 @@ class ConfusionMatrixAbstract(object):
         else:
             msg = "'backend' must be either 'matplotlib' or 'seaborn'"
             raise ValueError(msg)
+
+
 
     def binarize(self, select):
         """Returns a binary confusion matrix from
