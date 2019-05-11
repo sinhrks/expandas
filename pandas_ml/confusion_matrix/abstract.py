@@ -104,9 +104,8 @@ class ConfusionMatrixAbstract(object):
         idx_classes = (df.columns | df.index).copy()
         idx_classes.name = 'Classes'
         return(idx_classes)
-
     def to_dataframe(self, normalized=False, calc_sum=False,
-                     sum_label='__all__'):
+                     sum_label='__all__', multi_index=False):
         """
         Returns a Pandas DataFrame
         """
@@ -125,6 +124,14 @@ class ConfusionMatrixAbstract(object):
             # df = pd.concat([df, pd.DataFrame(df.sum(axis=1), columns=[sum_label])], axis=1)
             df = pd.concat([df, pd.DataFrame(df.sum(axis=0), columns=[sum_label]).T])
             df.index.name = self.true_name
+
+        if multi_index:
+            df = df.copy()
+            index = [(df.index.name, x) for x in df.index]
+            df.index = pd.MultiIndex.from_tuples(index)
+
+            columns = [(df.columns.name, x) for x in df.columns]
+            df.columns = pd.MultiIndex.from_tuples(columns)
         return(df)
 
     @property
