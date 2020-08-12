@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 
 import numpy as np
-from pandas.compat import range
+#from pandas.compat import range
 
 
 def binom_interval(success, total, confint=0.95):
