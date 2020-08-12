@@ -10,7 +10,7 @@ if _SKLEARN_INSTALLED:
     import sklearn.preprocessing as pp
     _keep_col_classes = [pp.Binarizer,
                          pp.FunctionTransformer,
-                         pp.Imputer,
+                    #     pp.Imputer,
                          pp.KernelCenterer,
                          pp.LabelEncoder,
                          pp.MaxAbsScaler,

@@ -246,7 +246,7 @@ class MetricsMethods(_AccessorMethods):
 
 # y_true and y_pred
 _classification_methods = ['accuracy_score', 'classification_report',
-                           'hamming_loss', 'jaccard_similarity_score',
+                           'hamming_loss', 'jaccard_score',
                            'matthews_corrcoef', 'zero_one_loss']
 _regression_methods = ['explained_variance_score', 'mean_absolute_error',
                        'mean_squared_error', 'r2_score']
