@@ -77,7 +77,8 @@ class ModelSeries(ModelTransformer, pd.Series):
 
         return df
 
-    @Appender(pd.core.generic.NDFrame.groupby.__doc__)
+   # @Appender(pd.core.generic.NDFrame.groupby.__doc__)
+    @Appender(pd.DataFrame.groupby.__doc__)
     def groupby(self, by=None, axis=0, level=None, as_index=True, sort=True,
                 group_keys=True, squeeze=False):
         from pandas_ml.core.groupby import groupby

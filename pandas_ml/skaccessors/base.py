@@ -3,7 +3,8 @@
 import pandas as pd
 
 try:
-    from sklearn.datasets.base import Bunch
+   # from sklearn.datasets.base import Bunch
+    from sklearn.utils import Bunch
 except ImportError:
 
     class Bunch(object):
